@@ -19,7 +19,7 @@ simpleStatement
     ;
 
 assignStatement
-    : ID ASSIGN NUM_BOOL
+    : ID ASSIGN NUMBER
     ;
 /* Parser rules - END */
 
@@ -34,7 +34,7 @@ ASSIGN: '=' ;
 
 ID: [a-zA-Z_][a-zA-Z0-9_]* ;
 
-NUM_BOOL
+NUMBER
     : ([1-9][0-9]*)?'.'[0-9]+
     | [1-9][0-9]*'.'[0-9]*
     | [0-9]+
