@@ -1,4 +1,4 @@
-grammar pyathome;
+grammar PyAtHome;
 
 /* Parser rules - START */
 program
