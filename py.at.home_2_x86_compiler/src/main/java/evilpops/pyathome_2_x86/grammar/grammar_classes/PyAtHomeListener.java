@@ -57,4 +57,44 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssignStatement(PyAtHomeParser.AssignStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#numExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterNumExpression(PyAtHomeParser.NumExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#numExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitNumExpression(PyAtHomeParser.NumExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#addSubOperators}.
+	 * @param ctx the parse tree
+	 */
+	void enterAddSubOperators(PyAtHomeParser.AddSubOperatorsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#addSubOperators}.
+	 * @param ctx the parse tree
+	 */
+	void exitAddSubOperators(PyAtHomeParser.AddSubOperatorsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpression(PyAtHomeParser.ExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpression(PyAtHomeParser.ExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#literal}.
+	 * @param ctx the parse tree
+	 */
+	void enterLiteral(PyAtHomeParser.LiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#literal}.
+	 * @param ctx the parse tree
+	 */
+	void exitLiteral(PyAtHomeParser.LiteralContext ctx);
 }

@@ -1,5 +1,26 @@
 grammar PyAtHome;
 
+
+@members {
+	 static class ContextExtention extends ParserRuleContext {
+		protected int refToSymTab;
+		public ContextExtention(ParserRuleContext parent, int invokingState) {
+			 super(parent, invokingState);
+			 refToSymTab = -1;
+	 	}
+		public void setRefToSymTab(int ref) {
+			this.refToSymTab = ref;
+		}
+		public int getRefToSymTab() {
+			return this.refToSymTab;
+		}
+	}
+}
+
+options {
+  contextSuperClass=ContextExtention;
+}
+
 /* Parser rules - START */
 program
     : statementsList
@@ -19,7 +40,26 @@ simpleStatement
     ;
 
 assignStatement
-    : ID ASSIGN NUMBER
+    : ID ASSIGN numExpression
+    ;
+
+numExpression
+    : expression
+    | numExpression addSubOperators numExpression
+    ;
+
+addSubOperators
+    : PLUS
+    ;
+
+expression
+    : literal
+    | ID
+    ;
+
+literal
+    : NUMBER
+    | BOOLEAN
     ;
 /* Parser rules - END */
 
@@ -31,6 +71,12 @@ COMMENT_SKIP: '#'~[\n]* -> skip;
 NEWLINE: '\n' ;
 
 ASSIGN: '=' ;
+PLUS: '+' ;
+
+BOOLEAN
+    : 'True'
+    | 'False'
+    ;
 
 ID: [a-zA-Z_][a-zA-Z0-9_]* ;
 

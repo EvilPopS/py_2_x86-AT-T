@@ -3,6 +3,13 @@ package main.java.evilpops.pyathome_2_x86.sym_tab;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 
 public interface ISymTabController {
-    void addVariable(String name, DataType dataType);
-    void addLiteral(String value, DataType dataType);
+    /* 'Add' methods */
+    int addVariable(String name, DataType dataType);
+    int addLiteral(String value, DataType dataType);
+
+    /* 'Get reference' methods */
+    int getVarRefByName(String name);
+
+    /* 'Get data' methods */
+    DataType getDataTypeByInd(int ind);
 }
