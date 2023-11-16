@@ -30,6 +30,13 @@ public class ListenerHelpers {
         if (ctx.expression() != null)
             return ctx.expression().getRefToSymTab();
         else if (ctx.addSubOperators() != null) {
+            SemanticAnalyzer.areTypesCompatibleForAddition(
+                    ctx.numExpression().get(0).getRefToSymTab(),
+                    ctx.numExpression().get(1).getRefToSymTab()
+            );
+
+
+            /* Here goes Sym tab for registers and other*/
             /* Here goes assembly generator */
         }
         else
