@@ -2,6 +2,7 @@ package main.java.evilpops.pyathome_2_x86.listener.utils;
 
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.listener.exceptions.ListenerNotInSyncWithGrammarException;
+import main.java.evilpops.pyathome_2_x86.semantic_analyzer.SemanticAnalyzer;
 import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
@@ -9,10 +10,9 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.exceptions.VariableNotFoundExce
 
 public class ListenerHelpers {
     private static final String EXC_MESSAGE_F = "ListenerHelpers::%s -> is not in sync with defined grammar!";
-
+    private static final ISymTabController symTabController = SymTabController.getInstance();
 
     public static void processAssignStatementCtxExit(PyAtHomeParser.AssignStatementContext ctx) {
-        ISymTabController symTabController = SymTabController.getInstance();
         int idRef;
         String idName = ctx.ID().getText();
         try {
@@ -38,17 +38,16 @@ public class ListenerHelpers {
     }
 
     public static int processExpressionCtxExit(PyAtHomeParser.ExpressionContext ctx) {
-        ISymTabController symTabController = SymTabController.getInstance();
         if (ctx.literal() != null)
             return ctx.literal().getRefToSymTab();
-        else if (ctx.ID() != null)
+        else if (ctx.ID() != null) {
             return symTabController.getVarRefByName(ctx.ID().getText());
+        }
         else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "transferReferenceToExpressionContext"));
     }
 
     public static int processLiteralCtxExit(PyAtHomeParser.LiteralContext ctx) {
-        ISymTabController symTabController = SymTabController.getInstance();
         if (ctx.NUMBER() != null)
             return symTabController.addLiteral(ctx.NUMBER().getText(), DataType.NUMBER);
         else if (ctx.BOOLEAN() != null)
