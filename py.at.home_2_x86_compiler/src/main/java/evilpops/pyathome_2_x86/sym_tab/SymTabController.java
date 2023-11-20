@@ -3,10 +3,7 @@ package main.java.evilpops.pyathome_2_x86.sym_tab;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.TabType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.exceptions.TabTypeEnumNotInSyncWithTabClassesException;
-import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.ConcreteTableArchetype;
-import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.LiteralTab;
-import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.MainTab;
-import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.VariableTab;
+import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.*;
 import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.ConcreteRowArchetype;
 import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.MainTabRow;
 
@@ -15,12 +12,14 @@ public class SymTabController implements ISymTabController {
     protected final MainTab mainTab;
     protected final VariableTab variableTab;
     protected final LiteralTab literalTab;
+    protected final RegisterTab registerTab;
 
 
     private SymTabController() {
         this.mainTab = new MainTab();
         this.variableTab = new VariableTab();
         this.literalTab = new LiteralTab();
+        this.registerTab = new RegisterTab();
     }
 
     public static ISymTabController getInstance() {
@@ -31,18 +30,26 @@ public class SymTabController implements ISymTabController {
 
     @Override
     public int addVariable(String name, DataType dataType) {
-        int varRef = this.mainTab.getNextFreeRowInd();
-        this.variableTab.add(name, dataType, varRef);
+        int rowRef = this.mainTab.getNextFreeRowInd();
+        this.variableTab.add(name, dataType, rowRef);
         this.mainTab.addVariable(this.variableTab.getLastRowInd());
-        return varRef;
+        return rowRef;
     }
 
     @Override
     public int addLiteral(String value, DataType dataType) {
-        int varRef = this.mainTab.getNextFreeRowInd();
-        this.literalTab.add(value, dataType, varRef);
+        int rowRef = this.mainTab.getNextFreeRowInd();
+        this.literalTab.add(value, dataType, rowRef);
         this.mainTab.addLiteral(this.literalTab.getLastRowInd());
-        return varRef;
+        return rowRef;
+    }
+
+    @Override
+    public int addRegister(DataType dataType) {
+        int rowRef = this.mainTab.getNextFreeRowInd();
+        this.registerTab.add(dataType, rowRef);
+        this.mainTab.addRegister(this.registerTab.getLastRowInd());
+        return rowRef;
     }
 
     @Override
@@ -57,10 +64,21 @@ public class SymTabController implements ISymTabController {
                 .getDataType(rowData.getForeignId());
     }
 
+    @Override
+    public boolean checkIfIsRegByInd(int ind) {
+        return this.mainTab.getByInd(ind).getRefTabType().equals(TabType.REGISTER);
+    }
+
+    @Override
+    public boolean checkIfDataTypeIsFloat(int ind) {
+        return this.getDataTypeByInd(ind) == DataType.FLOAT;
+    }
+
     private ConcreteTableArchetype<? extends ConcreteRowArchetype> getConcreteTableByTabType(TabType tabType) {
         return switch (tabType) {
             case VARIABLE -> this.variableTab;
             case LITERAL -> this.literalTab;
+            case REGISTER -> this.registerTab;
             default -> throw new TabTypeEnumNotInSyncWithTabClassesException();
         };
     }

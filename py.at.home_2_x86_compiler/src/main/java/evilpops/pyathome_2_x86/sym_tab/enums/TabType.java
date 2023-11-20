@@ -5,4 +5,5 @@ public enum TabType {
     LITERAL,
     FUNCTION,
     PARAMETER,
+    REGISTER
 }

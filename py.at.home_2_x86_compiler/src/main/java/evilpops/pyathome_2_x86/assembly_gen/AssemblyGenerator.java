@@ -1,18 +1,74 @@
 package main.java.evilpops.pyathome_2_x86.assembly_gen;
 
-import static main.java.evilpops.pyathome_2_x86.assembly_gen.code_formats.AssemblyCodeFormats.GLOBAL_MAIN;
-import static main.java.evilpops.pyathome_2_x86.assembly_gen.code_formats.AssemblyCodeFormats.SECTION_F;
+import main.java.evilpops.pyathome_2_x86.assembly_gen.enums.AssemblyRegister;
+import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
+import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
 
-public class AssemblyGenerator implements IAssemblyGenerator{
-    public static final IAssemblyGenerator assemblyGen = new AssemblyGenerator();
+import static main.java.evilpops.pyathome_2_x86.assembly_gen.constants.AssemblyCodeFormats.*;
 
-    private String dataSection;
-    private String txtSection;
+public class AssemblyGenerator implements IAssemblyGenerator {
+    public static IAssemblyGenerator assemblyGen;
+    private final ISymTabController symTabController;
+    private final StringBuilder dataSection;
+    private final StringBuilder txtSection;
 
     private AssemblyGenerator() {
-        this.dataSection = String.format(SECTION_F, "data");
-        this.txtSection = String.format(SECTION_F, "text") + GLOBAL_MAIN;
+        this.symTabController = SymTabController.getInstance();
+        this.dataSection = new StringBuilder();
+        this.txtSection = new StringBuilder();
+        this.dataSection.append(String.format(SECTION, "data"));
+        this.txtSection.append(String.format(SECTION, "text"))
+                .append(GLOBAL_MAIN).append(MAIN_LBL)
+                .append(String.format(PUSH_INST, INST_SUFFIX, this.getRegAccess(AssemblyRegister.RBP)))
+                .append(String.format(
+                        MOVE_INST, INST_SUFFIX,
+                        this.getRegAccess(AssemblyRegister.RSP),
+                        this.getRegAccess(AssemblyRegister.RBP)
+                ));
     }
 
+    public static IAssemblyGenerator getInstance() {
+        if (assemblyGen == null)
+            assemblyGen = new AssemblyGenerator();
+        return assemblyGen;
+    }
 
+    @Override
+    public void genMove(int dest, int src) {
+//        this.txtSection.append(String.format(MOVE_INST, ));
+    }
+
+    @Override
+    public void genAdd(int dest, int src) {
+
+    }
+
+    @Override
+    public void genSub(int dest, int src) {
+
+    }
+
+    @Override
+    public void genStackPointerDec(boolean isForFloat) {
+        String instSuffix = isForFloat ? FLOAT_INST_SUFFIX : INST_SUFFIX;
+        String offset = isForFloat ? FLOAT_SIZE : QUAD_SIZE;
+        this.txtSection.append(String.format(
+                SUB_INST,
+                instSuffix,
+                this.getLiteral(offset),
+                this.getRegAccess(AssemblyRegister.RSP)
+        ));
+    }
+
+    @Override
+    public void printToConsole() {
+        System.out.println(this.dataSection.toString() + this.txtSection.toString());
+    }
+
+    private String getRegAccess(AssemblyRegister register) {
+        return String.format(REG_ACCESS, register);
+    }
+    private String getLiteral(String val) {
+        return String.format(LITERAL_F, val);
+    }
 }

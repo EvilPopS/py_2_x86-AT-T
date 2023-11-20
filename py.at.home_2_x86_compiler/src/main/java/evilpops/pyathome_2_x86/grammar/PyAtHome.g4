@@ -1,7 +1,7 @@
 grammar PyAtHome;
 
 
-@members {
+@parser::members {
 	 static class ContextExtention extends ParserRuleContext {
 		protected int refToSymTab;
 		public ContextExtention(ParserRuleContext parent, int invokingState) {
@@ -58,7 +58,8 @@ expression
     ;
 
 literal
-    : NUMBER
+    : INTEGER
+    | FLOAT
     | BOOLEAN
     ;
 /* Parser rules - END */
@@ -80,9 +81,11 @@ BOOLEAN
 
 ID: [a-zA-Z_][a-zA-Z0-9_]* ;
 
-NUMBER
+FLOAT
     : ([1-9][0-9]*)?'.'[0-9]+
     | [1-9][0-9]*'.'[0-9]*
-    | [0-9]+
+    ;
+INTEGER
+    : [0-9]+
     ;
 /* Lexer rules - END */

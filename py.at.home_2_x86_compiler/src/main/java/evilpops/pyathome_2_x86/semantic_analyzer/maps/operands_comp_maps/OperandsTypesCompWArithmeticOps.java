@@ -9,9 +9,21 @@ public class OperandsTypesCompWArithmeticOps {
     /* Addition */
     public static final Map<DataType, Map<DataType, Boolean>> additionOperandsTypesComp = new HashMap<>() {{
         put(
-                DataType.NUMBER,
+                DataType.INTEGER,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, true);
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
+                    put(DataType.BOOLEAN, true);
+                    put(DataType.NONE, false);
+                    put(DataType.STRING, false);
+                    put(DataType.UNKNOWN, false);
+                }}
+        );
+        put(
+                DataType.FLOAT,
+                new HashMap<>() {{
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
                     put(DataType.BOOLEAN, true);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -21,7 +33,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.BOOLEAN,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, true);
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
                     put(DataType.BOOLEAN, true);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -31,7 +44,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.NONE,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -41,7 +55,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.STRING,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, true);
@@ -51,7 +66,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.UNKNOWN,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -63,9 +79,21 @@ public class OperandsTypesCompWArithmeticOps {
     /* Subtraction */
     public static final Map<DataType, Map<DataType, Boolean>> subtractionOperandsTypesComp = new HashMap<>() {{
         put(
-                DataType.NUMBER,
+                DataType.INTEGER,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, true);
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
+                    put(DataType.BOOLEAN, true);
+                    put(DataType.NONE, false);
+                    put(DataType.STRING, false);
+                    put(DataType.UNKNOWN, false);
+                }}
+        );
+        put(
+                DataType.FLOAT,
+                new HashMap<>() {{
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
                     put(DataType.BOOLEAN, true);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -75,7 +103,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.BOOLEAN,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, true);
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
                     put(DataType.BOOLEAN, true);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -85,7 +114,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.NONE,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -95,7 +125,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.STRING,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -105,7 +136,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.UNKNOWN,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -117,9 +149,21 @@ public class OperandsTypesCompWArithmeticOps {
     /* Multiplication */
     public static final Map<DataType, Map<DataType, Boolean>> multiplicationOperandsTypesComp = new HashMap<>() {{
         put(
-                DataType.NUMBER,
+                DataType.INTEGER,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, true);
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
+                    put(DataType.BOOLEAN, true);
+                    put(DataType.NONE, false);
+                    put(DataType.STRING, true);
+                    put(DataType.UNKNOWN, false);
+                }}
+        );
+        put(
+                DataType.FLOAT,
+                new HashMap<>() {{
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
                     put(DataType.BOOLEAN, true);
                     put(DataType.NONE, false);
                     put(DataType.STRING, true);
@@ -129,7 +173,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.BOOLEAN,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, true);
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
                     put(DataType.BOOLEAN, true);
                     put(DataType.NONE, false);
                     put(DataType.STRING, true);
@@ -139,7 +184,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.NONE,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -149,7 +195,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.STRING,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, true);
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, true);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -159,7 +206,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.UNKNOWN,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -171,9 +219,21 @@ public class OperandsTypesCompWArithmeticOps {
     /* Division */
     public static final Map<DataType, Map<DataType, Boolean>> divisionOperandsTypesComp = new HashMap<>() {{
         put(
-                DataType.NUMBER,
+                DataType.INTEGER,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, true);
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
+                    put(DataType.BOOLEAN, true);
+                    put(DataType.NONE, false);
+                    put(DataType.STRING, false);
+                    put(DataType.UNKNOWN, false);
+                }}
+        );
+        put(
+                DataType.FLOAT,
+                new HashMap<>() {{
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
                     put(DataType.BOOLEAN, true);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -183,7 +243,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.BOOLEAN,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, true);
+                    put(DataType.INTEGER, true);
+                    put(DataType.FLOAT, true);
                     put(DataType.BOOLEAN, true);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -193,7 +254,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.NONE,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -203,7 +265,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.STRING,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);
@@ -213,7 +276,8 @@ public class OperandsTypesCompWArithmeticOps {
         put(
                 DataType.UNKNOWN,
                 new HashMap<>() {{
-                    put(DataType.NUMBER, false);
+                    put(DataType.INTEGER, false);
+                    put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
                     put(DataType.STRING, false);

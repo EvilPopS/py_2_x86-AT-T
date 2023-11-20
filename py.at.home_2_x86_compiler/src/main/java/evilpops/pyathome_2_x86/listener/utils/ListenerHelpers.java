@@ -1,5 +1,7 @@
 package main.java.evilpops.pyathome_2_x86.listener.utils;
 
+import main.java.evilpops.pyathome_2_x86.assembly_gen.AssemblyGenerator;
+import main.java.evilpops.pyathome_2_x86.assembly_gen.IAssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.listener.exceptions.ListenerNotInSyncWithGrammarException;
 import main.java.evilpops.pyathome_2_x86.semantic_analyzer.SemanticAnalyzer;
@@ -11,6 +13,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.exceptions.VariableNotFoundExce
 public class ListenerHelpers {
     private static final String EXC_MESSAGE_F = "ListenerHelpers::%s -> is not in sync with defined grammar!";
     private static final ISymTabController symTabController = SymTabController.getInstance();
+    private static final IAssemblyGenerator assemblyGen = AssemblyGenerator.getInstance();
 
     public static void processAssignStatementCtxExit(PyAtHomeParser.AssignStatementContext ctx) {
         int idRef;
@@ -23,6 +26,9 @@ public class ListenerHelpers {
                     symTabController.getDataTypeByInd(ctx.numExpression().getRefToSymTab())
             );
         }
+
+        assemblyGen.genStackPointerDec(symTabController.checkIfDataTypeIsFloat(idRef));
+
         // here goes assembly generator
     }
 
@@ -30,16 +36,21 @@ public class ListenerHelpers {
         if (ctx.expression() != null)
             return ctx.expression().getRefToSymTab();
         else if (ctx.addSubOperators() != null) {
+            int leftExpRef = ctx.numExpression().get(0).getRefToSymTab();
+            int rightExpRef = ctx.numExpression().get(1).getRefToSymTab();
             SemanticAnalyzer.areTypesCompatibleForAddition(
-                    ctx.numExpression().get(0).getRefToSymTab(),
-                    ctx.numExpression().get(1).getRefToSymTab()
+                    leftExpRef,
+                    rightExpRef
             );
+            if (symTabController.checkIfIsRegByInd(leftExpRef)) {
 
+            } else if (symTabController.checkIfIsRegByInd(rightExpRef)) {
 
-            /* Here goes Sym tab for registers and other*/
-            /* Here goes assembly generator */
-        }
-        else
+            } else {
+
+            }
+
+        } else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "processNumExpressionCtxExit"));
         return -1;
     }
@@ -49,14 +60,15 @@ public class ListenerHelpers {
             return ctx.literal().getRefToSymTab();
         else if (ctx.ID() != null) {
             return symTabController.getVarRefByName(ctx.ID().getText());
-        }
-        else
+        } else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "transferReferenceToExpressionContext"));
     }
 
     public static int processLiteralCtxExit(PyAtHomeParser.LiteralContext ctx) {
-        if (ctx.NUMBER() != null)
-            return symTabController.addLiteral(ctx.NUMBER().getText(), DataType.NUMBER);
+        if (ctx.INTEGER() != null)
+            return symTabController.addLiteral(ctx.INTEGER().getText(), DataType.INTEGER);
+        else if (ctx.FLOAT() != null)
+            return symTabController.addLiteral(ctx.FLOAT().getText(), DataType.FLOAT);
         else if (ctx.BOOLEAN() != null)
             return symTabController.addLiteral(ctx.BOOLEAN().getText(), DataType.BOOLEAN);
         else

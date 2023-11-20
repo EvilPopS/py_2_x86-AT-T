@@ -18,7 +18,7 @@ public class PyAtHomeParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		WS_SKIP=1, COMMENT_SKIP=2, NEWLINE=3, ASSIGN=4, PLUS=5, BOOLEAN=6, ID=7, 
-		NUMBER=8;
+		FLOAT=8, INTEGER=9;
 	public static final int
 		RULE_program = 0, RULE_statementsList = 1, RULE_statement = 2, RULE_simpleStatement = 3, 
 		RULE_assignStatement = 4, RULE_numExpression = 5, RULE_addSubOperators = 6, 
@@ -40,7 +40,7 @@ public class PyAtHomeParser extends Parser {
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, "WS_SKIP", "COMMENT_SKIP", "NEWLINE", "ASSIGN", "PLUS", "BOOLEAN", 
-			"ID", "NUMBER"
+			"ID", "FLOAT", "INTEGER"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -501,7 +501,8 @@ public class PyAtHomeParser extends Parser {
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case BOOLEAN:
-			case NUMBER:
+			case FLOAT:
+			case INTEGER:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(53);
@@ -532,7 +533,8 @@ public class PyAtHomeParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralContext extends ContextExtention {
-		public TerminalNode NUMBER() { return getToken(PyAtHomeParser.NUMBER, 0); }
+		public TerminalNode INTEGER() { return getToken(PyAtHomeParser.INTEGER, 0); }
+		public TerminalNode FLOAT() { return getToken(PyAtHomeParser.FLOAT, 0); }
 		public TerminalNode BOOLEAN() { return getToken(PyAtHomeParser.BOOLEAN, 0); }
 		public LiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -557,7 +559,7 @@ public class PyAtHomeParser extends Parser {
 			{
 			setState(57);
 			_la = _input.LA(1);
-			if ( !(_la==BOOLEAN || _la==NUMBER) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 832L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -594,7 +596,7 @@ public class PyAtHomeParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\b<\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\t<\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0001\u0000\u0001\u0000\u0001\u0001\u0004\u0001\u0016\b\u0001"+
@@ -605,7 +607,7 @@ public class PyAtHomeParser extends Parser {
 		"/\b\u0005\n\u0005\f\u00052\t\u0005\u0001\u0006\u0001\u0006\u0001\u0007"+
 		"\u0001\u0007\u0003\u00078\b\u0007\u0001\b\u0001\b\u0001\b\u0000\u0001"+
 		"\n\t\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0000\u0001\u0002\u0000"+
-		"\u0006\u0006\b\b6\u0000\u0012\u0001\u0000\u0000\u0000\u0002\u0015\u0001"+
+		"\u0006\u0006\b\t6\u0000\u0012\u0001\u0000\u0000\u0000\u0002\u0015\u0001"+
 		"\u0000\u0000\u0000\u0004\u001f\u0001\u0000\u0000\u0000\u0006!\u0001\u0000"+
 		"\u0000\u0000\b#\u0001\u0000\u0000\u0000\n\'\u0001\u0000\u0000\u0000\f"+
 		"3\u0001\u0000\u0000\u0000\u000e7\u0001\u0000\u0000\u0000\u00109\u0001"+

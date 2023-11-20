@@ -5,7 +5,8 @@ ASSIGN=4
 PLUS=5
 BOOLEAN=6
 ID=7
-NUMBER=8
+FLOAT=8
+INTEGER=9
 '\n'=3
 '='=4
 '+'=5

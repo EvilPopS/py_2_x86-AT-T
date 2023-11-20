@@ -1,5 +1,6 @@
 package main.java.evilpops.pyathome_2_x86;
 
+import main.java.evilpops.pyathome_2_x86.assembly_gen.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeLexer;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.listener.PyAtHomeListener;
@@ -24,6 +25,7 @@ public class App {
         parser.addParseListener(new PyAtHomeListener());
         parser.program();
         ISymTabController a = SymTabController.getInstance();
+        AssemblyGenerator.getInstance().printToConsole();
 
     }
 }

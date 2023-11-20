@@ -16,6 +16,9 @@ public class MainTab extends TableArchetype<MainTabRow> {
     public void addLiteral(int foreignId) {
         this.add(TabType.LITERAL, foreignId);
     }
+    public void addRegister(int foreignId) {
+        this.add(TabType.REGISTER, foreignId);
+    }
 
     private void add(TabType tabType, int foreignId) {
         this.table.add(new MainTabRow(tabType, foreignId));
