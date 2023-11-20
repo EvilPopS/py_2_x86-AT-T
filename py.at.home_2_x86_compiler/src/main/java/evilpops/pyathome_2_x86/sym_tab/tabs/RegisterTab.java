@@ -11,11 +11,15 @@ import java.util.Map;
 public class RegisterTab extends ConcreteTableArchetype<RegisterTabRow> {
     public static final Map<AssemblyRegister, Boolean> registerAvailability = new HashMap<>() {{
         for (AssemblyRegister ar : AssemblyRegister.values())
-            put(ar, false);
+            put(ar, true);
     }};
 
     public void add(DataType dataType, int mainTabFK) {
         this.table.add(new RegisterTabRow(getNextFreeRegister(dataType), dataType, mainTabFK));
+    }
+
+    public AssemblyRegister getRegisterNameByInd(int ind) {
+        return this.table.get(ind).getRegisterName();
     }
 
     private AssemblyRegister getNextFreeRegister(DataType dataType) {

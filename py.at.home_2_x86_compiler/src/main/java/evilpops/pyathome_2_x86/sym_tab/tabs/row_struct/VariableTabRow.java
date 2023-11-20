@@ -8,10 +8,12 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 @Setter
 public class VariableTabRow extends ConcreteRowArchetype {
     protected String name;
+    protected int ordinality;
 
-    public VariableTabRow(String name, DataType dataType, int foreignId) {
+    public VariableTabRow(int foreignId, DataType dataType, String name, int ordinality) {
         super(dataType, foreignId);
         this.name = name;
+        this.ordinality = ordinality;
     }
 
 }

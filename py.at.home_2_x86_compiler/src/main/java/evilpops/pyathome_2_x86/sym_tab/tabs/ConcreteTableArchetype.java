@@ -7,4 +7,8 @@ public abstract class ConcreteTableArchetype<RowType extends ConcreteRowArchetyp
     public DataType getDataType(int ind) {
         return this.table.get(ind).getDataType();
     }
+
+    public void setDataType(int ind, DataType dt) {
+        this.table.get(ind).setDataType(dt);
+    }
 }

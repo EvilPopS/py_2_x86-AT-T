@@ -1,5 +1,6 @@
 package main.java.evilpops.pyathome_2_x86.sym_tab;
 
+import main.java.evilpops.pyathome_2_x86.assembly_gen.enums.AssemblyRegister;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.TabType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.exceptions.TabTypeEnumNotInSyncWithTabClassesException;
@@ -29,9 +30,9 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public int addVariable(String name, DataType dataType) {
+    public int addVariable(DataType dataType, String name, int ordinality) {
         int rowRef = this.mainTab.getNextFreeRowInd();
-        this.variableTab.add(name, dataType, rowRef);
+        this.variableTab.add(rowRef, dataType, name, ordinality);
         this.mainTab.addVariable(this.variableTab.getLastRowInd());
         return rowRef;
     }
@@ -65,8 +66,40 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
+    public String getLiteralValueByInd(int ind) {
+        return this.literalTab.getValueByInd(getForeignId(ind));
+    }
+
+    @Override
+    public AssemblyRegister getRegNameByInd(int ind) {
+        return this.registerTab.getRegisterNameByInd(getForeignId(ind));
+    }
+
+    @Override
+    public int getVarOrdinalityByInd(int ind) {
+        return this.variableTab.getOrdinalityByInd(getForeignId(ind));
+    }
+
+    @Override
+    public void setDataTypeByInd(int ind, DataType dataType) {
+        MainTabRow rowData = this.mainTab.getByInd(ind);
+        getConcreteTableByTabType(rowData.getRefTabType())
+                .setDataType(rowData.getForeignId(), dataType);
+    }
+
+    @Override
     public boolean checkIfIsRegByInd(int ind) {
-        return this.mainTab.getByInd(ind).getRefTabType().equals(TabType.REGISTER);
+        return this.checkIfIsOfGivenTabType(ind, TabType.REGISTER);
+    }
+
+    @Override
+    public boolean checkIfIsLiteralByInd(int ind) {
+        return this.checkIfIsOfGivenTabType(ind, TabType.LITERAL);
+    }
+
+    @Override
+    public boolean checkIfIsVarByInd(int ind) {
+        return this.checkIfIsOfGivenTabType(ind, TabType.VARIABLE);
     }
 
     @Override
@@ -81,5 +114,13 @@ public class SymTabController implements ISymTabController {
             case REGISTER -> this.registerTab;
             default -> throw new TabTypeEnumNotInSyncWithTabClassesException();
         };
+    }
+
+    private boolean checkIfIsOfGivenTabType(int ind, TabType tabType) {
+        return this.mainTab.getByInd(ind).getRefTabType().equals(tabType);
+    }
+
+    private int getForeignId(int ind) {
+        return this.mainTab.getByInd(ind).getForeignId();
     }
 }

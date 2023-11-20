@@ -35,7 +35,12 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genMove(int dest, int src) {
-//        this.txtSection.append(String.format(MOVE_INST, ));
+        this.txtSection.append(String.format(
+                MOVE_INST,
+                symTabController.checkIfDataTypeIsFloat(src) ? FLOAT_INST_SUFFIX : INST_SUFFIX,
+                this.genSymbolByTabInd(src),
+                this.genSymbolByTabInd(dest)
+        ));
     }
 
     @Override
@@ -68,7 +73,26 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     private String getRegAccess(AssemblyRegister register) {
         return String.format(REG_ACCESS, register);
     }
+
     private String getLiteral(String val) {
         return String.format(LITERAL_F, val);
+    }
+
+    private String genSymbolByTabInd(int ind) {
+        if (symTabController.checkIfIsLiteralByInd(ind))
+            return String.format(LITERAL_F, symTabController.getLiteralValueByInd(ind));
+        else if (symTabController.checkIfIsVarByInd(ind)) {
+            return String.format(
+                    MEM_ACCESS,
+                    calculateOffset(symTabController.getVarOrdinalityByInd(ind), NEG_QUAD_SIZE),
+                    getRegAccess(AssemblyRegister.RBP));
+        } else if (symTabController.checkIfIsRegByInd(ind)) {
+            return getRegAccess(symTabController.getRegNameByInd(ind));
+        }
+        return null;
+    }
+
+    private String calculateOffset(int varOrdinality, String offsetBlockSize) {
+        return Integer.toString(Integer.parseInt(offsetBlockSize)*varOrdinality);
     }
 }

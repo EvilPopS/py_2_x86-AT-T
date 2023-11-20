@@ -15,21 +15,34 @@ public class ListenerHelpers {
     private static final ISymTabController symTabController = SymTabController.getInstance();
     private static final IAssemblyGenerator assemblyGen = AssemblyGenerator.getInstance();
 
+    private static final VariableCounter varCounter = new VariableCounter();
+
     public static void processAssignStatementCtxExit(PyAtHomeParser.AssignStatementContext ctx) {
         int idRef;
+        int numExpRef = ctx.numExpression().getRefToSymTab();
+        DataType numExpDataType = symTabController.getDataTypeByInd(numExpRef);
         String idName = ctx.ID().getText();
         try {
             idRef = symTabController.getVarRefByName(idName);
+            symTabController.setDataTypeByInd(idRef, numExpDataType);
         } catch (VariableNotFoundException ignored) {
+
             idRef = symTabController.addVariable(
+                    numExpDataType,
                     idName,
-                    symTabController.getDataTypeByInd(ctx.numExpression().getRefToSymTab())
+                    varCounter.incAndGetCurrCounter()
             );
+
+            assemblyGen.genStackPointerDec(symTabController.checkIfDataTypeIsFloat(idRef));
         }
 
-        assemblyGen.genStackPointerDec(symTabController.checkIfDataTypeIsFloat(idRef));
+        if (symTabController.checkIfIsVarByInd(numExpRef)) {
+            int regRef = symTabController.addRegister(numExpDataType);
+            assemblyGen.genMove(regRef, numExpRef);
+            numExpRef = regRef;
+        }
 
-        // here goes assembly generator
+        assemblyGen.genMove(idRef, numExpRef);
     }
 
     public static int processNumExpressionCtxExit(PyAtHomeParser.NumExpressionContext ctx) {
