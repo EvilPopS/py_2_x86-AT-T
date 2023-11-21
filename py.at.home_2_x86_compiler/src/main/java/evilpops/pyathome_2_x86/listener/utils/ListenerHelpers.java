@@ -31,9 +31,7 @@ public class ListenerHelpers {
             idRef = symTabController.addVariable(
                     numExpDataType,
                     idName,
-                    symTabController.checkIfDataTypeIsFloat(numExpRef) ?
-                            varCounter.doubleIncAndGetCurrCounter() :
-                            varCounter.incAndGetCurrCounter()
+                    varCounter.incAndGetCurrCounter()
             );
 
             assemblyGen.genStackPointerDec(symTabController.checkIfDataTypeIsFloat(idRef));

@@ -12,12 +12,12 @@ public class VariableCounter {
     }
 
     public int incAndGetCurrCounter() {
-        return customIncAndGetCurrCounter(1);
-    }
-
-    public int doubleIncAndGetCurrCounter() {
-        /* For float values because they take double the space on stack */
-        return customIncAndGetCurrCounter(2);
+        int incremented = this.varCounters.get(this.varCounters.size() - 1) + 1;
+        this.varCounters.set(
+                this.varCounters.size() - 1,
+                incremented
+        );
+        return incremented;
     }
 
     public void blockStart() {
@@ -28,12 +28,4 @@ public class VariableCounter {
         this.varCounters.remove(this.varCounters.size() - 1);
     }
 
-    private int customIncAndGetCurrCounter(int custom) {
-        int incremented = this.varCounters.get(this.varCounters.size() - 1) + custom;
-        this.varCounters.set(
-                this.varCounters.size() - 1,
-                incremented
-        );
-        return incremented;
-    }
 }

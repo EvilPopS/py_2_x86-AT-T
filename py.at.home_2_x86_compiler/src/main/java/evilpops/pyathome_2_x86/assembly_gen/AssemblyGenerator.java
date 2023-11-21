@@ -63,7 +63,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.txtSection.append(String.format(
                 SUB_INST,
                 INST_SUFFIX,
-                this.getLiteral(isForFloat ? FLOAT_SIZE : QUAD_SIZE),
+                this.getLiteral(FLOAT_SIZE),
                 this.getRegAccess(AssemblyRegister.RSP)
         ));
     }
@@ -90,7 +90,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         else if (symTabController.checkIfIsVarByInd(ind)) {
             return String.format(
                     MEM_ACCESS,
-                    calculateOffset(symTabController.getVarOrdinalityByInd(ind), NEG_QUAD_SIZE),
+                    calculateOffset(symTabController.getVarOrdinalityByInd(ind), NEG_FLOAT_SIZE),
                     getRegAccess(AssemblyRegister.RBP));
         } else if (symTabController.checkIfIsRegByInd(ind)) {
             return getRegAccess(symTabController.getRegNameByInd(ind));
