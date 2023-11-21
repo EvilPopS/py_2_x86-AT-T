@@ -20,6 +20,10 @@ public class MainTab extends TableArchetype<MainTabRow> {
         this.add(TabType.REGISTER, foreignId);
     }
 
+    public void removeRowByInd(int ind) {
+        this.table.remove(ind);
+    }
+
     private void add(TabType tabType, int foreignId) {
         this.table.add(new MainTabRow(tabType, foreignId));
 

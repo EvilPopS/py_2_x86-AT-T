@@ -16,6 +16,7 @@ public class ListenerHelpers {
     private static final IAssemblyGenerator assemblyGen = AssemblyGenerator.getInstance();
 
     private static final VariableCounter varCounter = new VariableCounter();
+    private static final FloatLiteralsCounter floatLitCounter = new FloatLiteralsCounter();
 
     public static void processAssignStatementCtxExit(PyAtHomeParser.AssignStatementContext ctx) {
         int idRef;
@@ -30,19 +31,21 @@ public class ListenerHelpers {
             idRef = symTabController.addVariable(
                     numExpDataType,
                     idName,
-                    varCounter.incAndGetCurrCounter()
+                    symTabController.checkIfDataTypeIsFloat(numExpRef) ?
+                            varCounter.doubleIncAndGetCurrCounter() :
+                            varCounter.incAndGetCurrCounter()
             );
 
             assemblyGen.genStackPointerDec(symTabController.checkIfDataTypeIsFloat(idRef));
         }
 
-        if (symTabController.checkIfIsVarByInd(numExpRef)) {
+        if (symTabController.checkIfIsVarByInd(numExpRef) || (symTabController.checkIfIsLiteralByInd(numExpRef) && symTabController.checkIfDataTypeIsFloat(numExpRef))) {
             int regRef = symTabController.addRegister(numExpDataType);
             assemblyGen.genMove(regRef, numExpRef);
-            numExpRef = regRef;
-        }
-
-        assemblyGen.genMove(idRef, numExpRef);
+            assemblyGen.genMove(idRef, regRef);
+            symTabController.freeRegisterByInd(regRef);
+        } else
+            assemblyGen.genMove(idRef, numExpRef);
     }
 
     public static int processNumExpressionCtxExit(PyAtHomeParser.NumExpressionContext ctx) {
@@ -80,9 +83,11 @@ public class ListenerHelpers {
     public static int processLiteralCtxExit(PyAtHomeParser.LiteralContext ctx) {
         if (ctx.INTEGER() != null)
             return symTabController.addLiteral(ctx.INTEGER().getText(), DataType.INTEGER);
-        else if (ctx.FLOAT() != null)
-            return symTabController.addLiteral(ctx.FLOAT().getText(), DataType.FLOAT);
-        else if (ctx.BOOLEAN() != null)
+        else if (ctx.FLOAT() != null) {
+            int literalRef = symTabController.addLiteralFloat(ctx.FLOAT().getText(), DataType.FLOAT, floatLitCounter.getAndIncCounter());
+            assemblyGen.genFloatLiteral(literalRef);
+            return literalRef;
+        } else if (ctx.BOOLEAN() != null)
             return symTabController.addLiteral(ctx.BOOLEAN().getText(), DataType.BOOLEAN);
         else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "insertLiteralIntoSymTab"));

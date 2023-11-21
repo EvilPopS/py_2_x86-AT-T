@@ -4,6 +4,7 @@ public interface IAssemblyGenerator {
     void genMove(int dest, int src);
     void genAdd(int dest, int src);
     void genSub(int dest, int src);
+    void genFloatLiteral(int src);
     void genStackPointerDec(boolean isForFloat);
 
     void printToConsole();

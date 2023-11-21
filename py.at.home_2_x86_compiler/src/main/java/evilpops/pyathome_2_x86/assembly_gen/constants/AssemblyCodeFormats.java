@@ -4,6 +4,7 @@ public class AssemblyCodeFormats {
     public static final String SECTION = ".section .%s\n";
     public static final String GLOBAL_MAIN = ".globl main\n";
     public static final String MAIN_LBL = "main:\n";
+    public static final String MAIN_START_CODE = "\tpushq %rbp\n\tsubq $8, %rsp\n\tmovq %rsp, %rbp\n";
     public static final String MAIN_END_LBL = "main_end:\n";
     public static final String PROGRAM_END_CODE = "\tmovq $60, %rax\n\tmovq $0, %rbx\n\tsyscall\n";
     public static final String PUSH_INST = "\tpush%s %s\n";
@@ -21,6 +22,8 @@ public class AssemblyCodeFormats {
 
     public static final String REG_ACCESS = "%%%s";
     public static final String MEM_ACCESS = "%s(%s)";
-    public static final String LITERAL_F = "$%s";
+    public static final String LITERAL_W_DOLLAR = "$%s";
+    public static final String DATA_SEC_FLOAT_REF = "FLOAT_VAL%s";
+    public static final String FLOAT_LIT_DATA_SEC = "\tFLOAT_VAL%s: .double %s\n";
 
 }

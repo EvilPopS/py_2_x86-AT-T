@@ -3,6 +3,7 @@ package main.java.evilpops.pyathome_2_x86.assembly_gen;
 import main.java.evilpops.pyathome_2_x86.assembly_gen.enums.AssemblyRegister;
 import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
+import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 
 import static main.java.evilpops.pyathome_2_x86.assembly_gen.constants.AssemblyCodeFormats.*;
 
@@ -19,12 +20,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.dataSection.append(String.format(SECTION, "data"));
         this.txtSection.append(String.format(SECTION, "text"))
                 .append(GLOBAL_MAIN).append(MAIN_LBL)
-                .append(String.format(PUSH_INST, INST_SUFFIX, this.getRegAccess(AssemblyRegister.RBP)))
-                .append(String.format(
-                        MOVE_INST, INST_SUFFIX,
-                        this.getRegAccess(AssemblyRegister.RSP),
-                        this.getRegAccess(AssemblyRegister.RBP)
-                ));
+                .append(MAIN_START_CODE);
     }
 
     public static IAssemblyGenerator getInstance() {
@@ -54,13 +50,20 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public void genFloatLiteral(int src) {
+        this.dataSection.append(String.format(
+                FLOAT_LIT_DATA_SEC,
+                this.symTabController.getDataLabelCounter(src),
+                this.symTabController.getLiteralValueByInd(src)
+        ));
+    }
+
+    @Override
     public void genStackPointerDec(boolean isForFloat) {
-        String instSuffix = isForFloat ? FLOAT_INST_SUFFIX : INST_SUFFIX;
-        String offset = isForFloat ? FLOAT_SIZE : QUAD_SIZE;
         this.txtSection.append(String.format(
                 SUB_INST,
-                instSuffix,
-                this.getLiteral(offset),
+                INST_SUFFIX,
+                this.getLiteral(isForFloat ? FLOAT_SIZE : QUAD_SIZE),
                 this.getRegAccess(AssemblyRegister.RSP)
         ));
     }
@@ -75,12 +78,15 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     private String getLiteral(String val) {
-        return String.format(LITERAL_F, val);
+        return String.format(LITERAL_W_DOLLAR, val);
     }
 
     private String genSymbolByTabInd(int ind) {
-        if (symTabController.checkIfIsLiteralByInd(ind))
-            return String.format(LITERAL_F, symTabController.getLiteralValueByInd(ind));
+        if (symTabController.checkIfIsLiteralByInd(ind)) {
+            if (symTabController.checkIfDataTypeIsFloat(ind))
+                return String.format(DATA_SEC_FLOAT_REF, symTabController.getDataLabelCounter(ind));
+            return String.format(LITERAL_W_DOLLAR, symTabController.getLiteralValueByInd(ind));
+        }
         else if (symTabController.checkIfIsVarByInd(ind)) {
             return String.format(
                     MEM_ACCESS,
@@ -93,6 +99,6 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     private String calculateOffset(int varOrdinality, String offsetBlockSize) {
-        return Integer.toString(Integer.parseInt(offsetBlockSize)*varOrdinality);
+        return Integer.toString(Integer.parseInt(offsetBlockSize) * varOrdinality);
     }
 }

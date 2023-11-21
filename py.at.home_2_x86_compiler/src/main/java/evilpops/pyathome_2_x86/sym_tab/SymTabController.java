@@ -40,7 +40,15 @@ public class SymTabController implements ISymTabController {
     @Override
     public int addLiteral(String value, DataType dataType) {
         int rowRef = this.mainTab.getNextFreeRowInd();
-        this.literalTab.add(value, dataType, rowRef);
+        this.literalTab.add(rowRef, dataType, value);
+        this.mainTab.addLiteral(this.literalTab.getLastRowInd());
+        return rowRef;
+    }
+
+    @Override
+    public int addLiteralFloat(String value, DataType dataType, int dataLabelCounter) {
+        int rowRef = this.mainTab.getNextFreeRowInd();
+        this.literalTab.addFloat(rowRef, dataType, value, dataLabelCounter);
         this.mainTab.addLiteral(this.literalTab.getLastRowInd());
         return rowRef;
     }
@@ -81,6 +89,11 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
+    public int getDataLabelCounter(int ind) {
+        return this.literalTab.getDataLabelCounter(getForeignId(ind));
+    }
+
+    @Override
     public void setDataTypeByInd(int ind, DataType dataType) {
         MainTabRow rowData = this.mainTab.getByInd(ind);
         getConcreteTableByTabType(rowData.getRefTabType())
@@ -105,6 +118,12 @@ public class SymTabController implements ISymTabController {
     @Override
     public boolean checkIfDataTypeIsFloat(int ind) {
         return this.getDataTypeByInd(ind) == DataType.FLOAT;
+    }
+
+    @Override
+    public void freeRegisterByInd(int ind) {
+        this.registerTab.deleteRowByInd(this.mainTab.getByInd(ind).getForeignId());
+        this.mainTab.removeRowByInd(ind);
     }
 
     private ConcreteTableArchetype<? extends ConcreteRowArchetype> getConcreteTableByTabType(TabType tabType) {

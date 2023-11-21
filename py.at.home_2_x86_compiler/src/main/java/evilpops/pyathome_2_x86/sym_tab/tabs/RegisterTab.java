@@ -22,6 +22,10 @@ public class RegisterTab extends ConcreteTableArchetype<RegisterTabRow> {
         return this.table.get(ind).getRegisterName();
     }
 
+    public void deleteRowByInd(int ind) {
+        this.table.remove(ind);
+    }
+
     private AssemblyRegister getNextFreeRegister(DataType dataType) {
         if (dataType != DataType.FLOAT) {
             for (AssemblyRegister ar : AssemblyRegisterGroups.FREE_REGS)
