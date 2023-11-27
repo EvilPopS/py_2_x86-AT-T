@@ -33,7 +33,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     public void genMove(int dest, int src) {
         this.txtSection.append(String.format(
                 MOVE_INST,
-                symTabController.checkIfDataTypeIsFloat(src) ? FLOAT_INST_SUFFIX : INST_SUFFIX,
+                this.calcInstructionSuffix(src),
                 this.genSymbolByTabInd(src),
                 this.genSymbolByTabInd(dest)
         ));
@@ -41,7 +41,12 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genAdd(int dest, int src) {
-
+        this.txtSection.append(String.format(
+                ADD_INST,
+                this.calcInstructionSuffix(src),
+                this.genSymbolByTabInd(src),
+                this.genSymbolByTabInd(dest)
+        ));
     }
 
     @Override
@@ -86,8 +91,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
             if (symTabController.checkIfDataTypeIsFloat(ind))
                 return String.format(DATA_SEC_FLOAT_REF, symTabController.getDataLabelCounter(ind));
             return String.format(LITERAL_W_DOLLAR, symTabController.getLiteralValueByInd(ind));
-        }
-        else if (symTabController.checkIfIsVarByInd(ind)) {
+        } else if (symTabController.checkIfIsVarByInd(ind)) {
             return String.format(
                     MEM_ACCESS,
                     calculateOffset(symTabController.getVarOrdinalityByInd(ind), NEG_FLOAT_SIZE),
@@ -100,5 +104,9 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     private String calculateOffset(int varOrdinality, String offsetBlockSize) {
         return Integer.toString(Integer.parseInt(offsetBlockSize) * varOrdinality);
+    }
+
+    private String calcInstructionSuffix(int ind) {
+        return symTabController.checkIfDataTypeIsFloat(ind) ? FLOAT_INST_SUFFIX : INST_SUFFIX;
     }
 }

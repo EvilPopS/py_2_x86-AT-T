@@ -56,17 +56,21 @@ public class ListenerHelpers {
                     leftExpRef,
                     rightExpRef
             );
-            if (symTabController.checkIfIsRegByInd(leftExpRef)) {
 
-            } else if (symTabController.checkIfIsRegByInd(rightExpRef)) {
-
-            } else {
-
-            }
+//            if (symTabController.checkIfIsRegByInd(leftExpRef)) {
+//                assemblyGen.genAdd();
+//                return -1;
+//            } else if (symTabController.checkIfIsRegByInd(rightExpRef)) {
+//                assemblyGen.genAdd();
+//                return -1;
+//            } else {
+//                assemblyGen.genMove();
+//                assemblyGen.genAdd();
+//                return -1;
+//            }
 
         } else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "processNumExpressionCtxExit"));
-        return -1;
     }
 
     public static int processExpressionCtxExit(PyAtHomeParser.ExpressionContext ctx) {
