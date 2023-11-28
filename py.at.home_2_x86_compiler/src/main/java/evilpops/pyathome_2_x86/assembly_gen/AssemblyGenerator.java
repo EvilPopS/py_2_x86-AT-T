@@ -1,6 +1,8 @@
 package main.java.evilpops.pyathome_2_x86.assembly_gen;
 
+import jdk.jshell.spi.ExecutionControl;
 import main.java.evilpops.pyathome_2_x86.assembly_gen.enums.AssemblyRegister;
+import main.java.evilpops.pyathome_2_x86.assembly_gen.exceptions.CannotConvertGivenDataTypeToFloatException;
 import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
@@ -74,6 +76,15 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public int genToDataTypeConversion(int src, DataType resDataType) {
+        if (resDataType.equals(DataType.FLOAT))
+            return genToFloatConversion(src);
+        else
+            //Dunno should I throw another exception or what...
+            return -1;
+    }
+
+    @Override
     public void printToConsole() {
         System.out.println(this.dataSection.toString() + this.txtSection.toString());
     }
@@ -108,5 +119,20 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     private String calcInstructionSuffix(int ind) {
         return symTabController.checkIfDataTypeIsFloat(ind) ? FLOAT_INST_SUFFIX : INST_SUFFIX;
+    }
+
+    private int genToFloatConversion(int src) {
+        DataType srcDataType = symTabController.getDataTypeByInd(src);
+        switch (srcDataType) {
+            case INTEGER: case BOOLEAN:
+                int destRegRef = symTabController.addRegister(DataType.FLOAT);
+                this.txtSection.append(String.format(
+                        INT_2_FLOAT_INST,
+                        this.genSymbolByTabInd(src),
+                        this.genSymbolByTabInd(destRegRef)
+                ));
+                return destRegRef;
+        }
+        throw new CannotConvertGivenDataTypeToFloatException(srcDataType.toString());
     }
 }

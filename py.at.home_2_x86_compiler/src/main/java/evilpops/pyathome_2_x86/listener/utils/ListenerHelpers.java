@@ -49,27 +49,12 @@ public class ListenerHelpers {
     public static int processNumExpressionCtxExit(PyAtHomeParser.NumExpressionContext ctx) {
         if (ctx.expression() != null)
             return ctx.expression().getRefToSymTab();
-        else if (ctx.addSubOperators() != null) {
-            int leftExpRef = ctx.numExpression().get(0).getRefToSymTab();
-            int rightExpRef = ctx.numExpression().get(1).getRefToSymTab();
-            SemanticAnalyzer.areTypesCompatibleForAddition(
-                    leftExpRef,
-                    rightExpRef
+        else if (ctx.addSubOperators() != null)
+            return performAddition(
+                    ctx.numExpression().get(0).getRefToSymTab(),
+                    ctx.numExpression().get(1).getRefToSymTab()
             );
-
-//            if (symTabController.checkIfIsRegByInd(leftExpRef)) {
-//                assemblyGen.genAdd();
-//                return -1;
-//            } else if (symTabController.checkIfIsRegByInd(rightExpRef)) {
-//                assemblyGen.genAdd();
-//                return -1;
-//            } else {
-//                assemblyGen.genMove();
-//                assemblyGen.genAdd();
-//                return -1;
-//            }
-
-        } else
+        else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "processNumExpressionCtxExit"));
     }
 
@@ -95,4 +80,33 @@ public class ListenerHelpers {
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "insertLiteralIntoSymTab"));
     }
 
+    private static int performAddition(int leftExpRef, int rightExpRef) {
+        SemanticAnalyzer.areTypesCompatibleForAddition(
+                leftExpRef,
+                rightExpRef
+        );
+        DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
+        DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
+
+        DataType resType = DataTypeConvertor.getAdditionResultDataType(lExpType, rExpType);
+
+        if (!lExpType.equals(resType))
+            leftExpRef = assemblyGen.genToDataTypeConversion(leftExpRef, resType);
+        else if (!rExpType.equals(resType))
+            rightExpRef = assemblyGen.genToDataTypeConversion(rightExpRef, resType);
+
+
+        if (symTabController.checkIfIsRegByInd(leftExpRef)) {
+            assemblyGen.genAdd(leftExpRef, rightExpRef);
+            return leftExpRef;
+        } else if (symTabController.checkIfIsRegByInd(rightExpRef)) {
+            assemblyGen.genAdd(rightExpRef, leftExpRef);
+            return rightExpRef;
+        } else {
+            int destRegRef = symTabController.addRegister(resType);
+            assemblyGen.genMove(destRegRef, leftExpRef);
+            assemblyGen.genAdd(destRegRef, rightExpRef);
+            return destRegRef;
+        }
+    }
 }
