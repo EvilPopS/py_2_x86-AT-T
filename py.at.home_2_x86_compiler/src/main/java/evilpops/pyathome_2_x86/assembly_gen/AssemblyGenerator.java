@@ -1,6 +1,5 @@
 package main.java.evilpops.pyathome_2_x86.assembly_gen;
 
-import jdk.jshell.spi.ExecutionControl;
 import main.java.evilpops.pyathome_2_x86.assembly_gen.enums.AssemblyRegister;
 import main.java.evilpops.pyathome_2_x86.assembly_gen.exceptions.CannotConvertGivenDataTypeToFloatException;
 import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
@@ -125,7 +124,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         DataType srcDataType = symTabController.getDataTypeByInd(src);
         switch (srcDataType) {
             case INTEGER: case BOOLEAN:
-                int destRegRef = symTabController.addRegister(DataType.FLOAT);
+                int destRegRef = symTabController.takeRegister(DataType.FLOAT);
                 this.txtSection.append(String.format(
                         INT_2_FLOAT_INST,
                         this.genSymbolByTabInd(src),

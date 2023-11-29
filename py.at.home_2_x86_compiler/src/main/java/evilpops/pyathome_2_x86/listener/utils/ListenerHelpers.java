@@ -38,7 +38,7 @@ public class ListenerHelpers {
         }
 
         if (symTabController.checkIfIsVarByInd(numExpRef) || (symTabController.checkIfIsLiteralByInd(numExpRef) && symTabController.checkIfDataTypeIsFloat(numExpRef))) {
-            int regRef = symTabController.addRegister(numExpDataType);
+            int regRef = symTabController.takeRegister(numExpDataType);
             assemblyGen.genMove(regRef, numExpRef);
             assemblyGen.genMove(idRef, regRef);
             symTabController.freeRegisterByInd(regRef);
@@ -103,7 +103,7 @@ public class ListenerHelpers {
             assemblyGen.genAdd(rightExpRef, leftExpRef);
             return rightExpRef;
         } else {
-            int destRegRef = symTabController.addRegister(resType);
+            int destRegRef = symTabController.takeRegister(resType);
             assemblyGen.genMove(destRegRef, leftExpRef);
             assemblyGen.genAdd(destRegRef, rightExpRef);
             return destRegRef;

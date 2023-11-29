@@ -54,10 +54,9 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public int addRegister(DataType dataType) {
+    public int takeRegister(DataType dataType) {
         int rowRef = this.mainTab.getNextFreeRowInd();
-        this.registerTab.add(dataType, rowRef);
-        this.mainTab.addRegister(this.registerTab.getLastRowInd());
+        this.mainTab.addRegister(this.registerTab.takeGenPurposeReg(dataType, rowRef));
         return rowRef;
     }
 
@@ -122,8 +121,7 @@ public class SymTabController implements ISymTabController {
 
     @Override
     public void freeRegisterByInd(int ind) {
-        this.registerTab.deleteRowByInd(this.mainTab.getByInd(ind).getForeignId());
-        this.mainTab.removeRowByInd(ind);
+        this.registerTab.freeRegister(this.mainTab.getByInd(ind).getForeignId());
     }
 
     private ConcreteTableArchetype<? extends ConcreteRowArchetype> getConcreteTableByTabType(TabType tabType) {

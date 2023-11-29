@@ -8,7 +8,7 @@ public interface ISymTabController {
     int addVariable(DataType dataType, String name, int ordinality);
     int addLiteral(String value, DataType dataType);
     int addLiteralFloat(String value, DataType dataType, int dataLabelCounter);
-    int addRegister(DataType dataType);
+    int takeRegister(DataType dataType);
 
     /* 'Get reference' methods */
     int getVarRefByName(String name);
