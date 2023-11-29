@@ -6,7 +6,7 @@ public class AssemblyCodeFormats {
     public static final String MAIN_LBL = "main:\n";
     public static final String MAIN_START_CODE = "\tpushq %rbp\n\tsubq $8, %rsp\n\tmovq %rsp, %rbp\n";
     public static final String MAIN_END_LBL = "main_end:\n";
-    public static final String PROGRAM_END_CODE = "PROGRAM_END:\n\tmovq $60, %rax\n\tmovq $0, %rbx\n\tsyscall\n";
+    public static final String PROGRAM_END_CODE = "program_end:\n\tmovq $60, %rax\n\tmovq $0, %rbx\n\tsyscall\n";
     public static final String PUSH_INST = "\tpush%s %s\n";
     public static final String MOVE_INST = "\tmov%s %s, %s\n";
     public static final String ADD_INST = "\tadd%s %s, %s\n";
