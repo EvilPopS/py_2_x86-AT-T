@@ -5,6 +5,12 @@ import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.listener.utils.ListenerHelpers;
 
 public class PyAtHomeListener extends PyAtHomeBaseListener {
+
+    @Override
+    public void exitProgram(PyAtHomeParser.ProgramContext ignored) {
+        ListenerHelpers.processProgramCtxExit();
+    }
+
     @Override
     public void exitAssignStatement(PyAtHomeParser.AssignStatementContext ctx) {
         ListenerHelpers.processAssignStatementCtxExit(ctx);

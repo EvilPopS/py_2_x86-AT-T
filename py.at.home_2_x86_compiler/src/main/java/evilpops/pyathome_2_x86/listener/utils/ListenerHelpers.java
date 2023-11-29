@@ -18,6 +18,11 @@ public class ListenerHelpers {
     private static final VariableCounter varCounter = new VariableCounter();
     private static final FloatLiteralsCounter floatLitCounter = new FloatLiteralsCounter();
 
+
+    public static void processProgramCtxExit() {
+        assemblyGen.genCodeEnd();
+    }
+
     public static void processAssignStatementCtxExit(PyAtHomeParser.AssignStatementContext ctx) {
         int idRef;
         int numExpRef = ctx.numExpression().getRefToSymTab();

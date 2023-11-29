@@ -8,6 +8,7 @@ public interface IAssemblyGenerator {
     void genSub(int dest, int src);
     void genFloatLiteral(int src);
     void genStackPointerDec(boolean isForFloat);
+    void genCodeEnd();
     int genToDataTypeConversion(int src, DataType resDataType);
 
     void printToConsole();

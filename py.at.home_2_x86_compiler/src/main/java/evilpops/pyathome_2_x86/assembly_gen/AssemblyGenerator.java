@@ -75,6 +75,11 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public void genCodeEnd() {
+        this.txtSection.append(PROGRAM_END_CODE);
+    }
+
+    @Override
     public int genToDataTypeConversion(int src, DataType resDataType) {
         if (resDataType.equals(DataType.FLOAT))
             return genToFloatConversion(src);
