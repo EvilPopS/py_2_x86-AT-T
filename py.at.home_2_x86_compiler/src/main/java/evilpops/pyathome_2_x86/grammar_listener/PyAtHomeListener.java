@@ -1,8 +1,10 @@
-package main.java.evilpops.pyathome_2_x86.listener;
+package main.java.evilpops.pyathome_2_x86.grammar_listener;
 
+import main.java.evilpops.pyathome_2_x86.error_handlers.SemanticErrorHandler;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeBaseListener;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
-import main.java.evilpops.pyathome_2_x86.listener.utils.ListenerHelpers;
+import main.java.evilpops.pyathome_2_x86.grammar_listener.utils.ListenerHelpers;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 public class PyAtHomeListener extends PyAtHomeBaseListener {
 
@@ -31,4 +33,8 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
         ctx.setRefToSymTab(ListenerHelpers.processLiteralCtxExit(ctx));
     }
 
+    @Override
+    public void enterEveryRule(ParserRuleContext ctx) {
+        SemanticErrorHandler.getInstance().updateLine(ctx.getStart().getLine());
+    }
 }

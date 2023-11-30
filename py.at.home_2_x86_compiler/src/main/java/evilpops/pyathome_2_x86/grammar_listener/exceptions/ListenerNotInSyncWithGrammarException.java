@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.listener.exceptions;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.exceptions;
 
 public class ListenerNotInSyncWithGrammarException extends RuntimeException {
     public ListenerNotInSyncWithGrammarException(String customMess) {
