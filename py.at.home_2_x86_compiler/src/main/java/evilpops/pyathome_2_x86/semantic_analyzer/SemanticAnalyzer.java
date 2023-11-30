@@ -14,5 +14,6 @@ public class SemanticAnalyzer {
         DataType rType = symTabController.getDataTypeByInd(rightRefToVal);
         if (!OperandsTypesCompWArithmeticOps.additionOperandsTypesComp.get(lType).get(rType))
             throw new DataTypesNotCompatibleException("+", lType.toString(), rType.toString());
+
     }
 }

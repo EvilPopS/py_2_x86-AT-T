@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.listener.utils;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.utils;
 
 public class FloatLiteralsCounter {
     protected int floatLiteralsCounter;

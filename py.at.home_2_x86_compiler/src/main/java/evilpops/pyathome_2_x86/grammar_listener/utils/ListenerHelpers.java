@@ -1,9 +1,9 @@
-package main.java.evilpops.pyathome_2_x86.listener.utils;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.utils;
 
 import main.java.evilpops.pyathome_2_x86.assembly_gen.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_gen.IAssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
-import main.java.evilpops.pyathome_2_x86.listener.exceptions.ListenerNotInSyncWithGrammarException;
+import main.java.evilpops.pyathome_2_x86.grammar_listener.exceptions.ListenerNotInSyncWithGrammarException;
 import main.java.evilpops.pyathome_2_x86.semantic_analyzer.SemanticAnalyzer;
 import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;

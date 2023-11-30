@@ -1,6 +1,8 @@
 package main.java.evilpops.pyathome_2_x86.semantic_analyzer.exceptions;
 
-public class DataTypesNotCompatibleException extends RuntimeException {
+import main.java.evilpops.pyathome_2_x86.error_handlers.exceptions.CleanRuntimeException;
+
+public class DataTypesNotCompatibleException extends CleanRuntimeException {
     public DataTypesNotCompatibleException(String operator, String lType, String rType) {
         super(
                 String.format(

@@ -1,6 +1,6 @@
-package main.java.evilpops.pyathome_2_x86.listener.utils;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.utils;
 
-import main.java.evilpops.pyathome_2_x86.listener.exceptions.InvalidOperandsTypesForGivenOperatorException;
+import main.java.evilpops.pyathome_2_x86.grammar_listener.exceptions.InvalidOperandsTypesForGivenOperatorException;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 
 import java.util.HashMap;
