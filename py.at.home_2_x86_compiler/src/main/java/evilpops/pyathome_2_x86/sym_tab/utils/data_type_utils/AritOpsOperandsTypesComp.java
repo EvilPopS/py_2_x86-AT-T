@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.semantic_analyzer.maps.operands_comp_maps;
+package main.java.evilpops.pyathome_2_x86.sym_tab.utils.data_type_utils;
 
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 

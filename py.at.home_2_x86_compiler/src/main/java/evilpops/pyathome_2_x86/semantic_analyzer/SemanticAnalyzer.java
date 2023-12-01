@@ -1,7 +1,7 @@
 package main.java.evilpops.pyathome_2_x86.semantic_analyzer;
 
 import main.java.evilpops.pyathome_2_x86.semantic_analyzer.exceptions.DataTypesNotCompatibleException;
-import main.java.evilpops.pyathome_2_x86.semantic_analyzer.maps.operands_comp_maps.AritOpsOperandsTypesComp;
+import main.java.evilpops.pyathome_2_x86.sym_tab.utils.data_type_utils.AritOpsOperandsTypesComp;
 import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;

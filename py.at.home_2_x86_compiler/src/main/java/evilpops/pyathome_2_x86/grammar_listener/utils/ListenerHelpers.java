@@ -9,6 +9,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.exceptions.VariableNotFoundException;
+import main.java.evilpops.pyathome_2_x86.sym_tab.utils.data_type_utils.DataTypeConvertor;
 
 public class ListenerHelpers {
     private static final String EXC_MESSAGE_F = "ListenerHelpers::%s -> is not in sync with defined grammar!";
@@ -61,7 +62,10 @@ public class ListenerHelpers {
                         ctx.numExpression().get(1).getRefToSymTab()
                 );
             else
-                return -1;
+                return performSubtraction(
+                        ctx.numExpression().get(0).getRefToSymTab(),
+                        ctx.numExpression().get(1).getRefToSymTab()
+                );
         }
         else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "processNumExpressionCtxExit"));
@@ -94,6 +98,7 @@ public class ListenerHelpers {
                 leftExpRef,
                 rightExpRef
         );
+
         DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
         DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
 
@@ -113,8 +118,19 @@ public class ListenerHelpers {
                 leftExpRef,
                 rightExpRef
         );
-        // TODO
-        return -1;
+
+        DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
+        DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
+
+        DataType resType = DataTypeConvertor.getSubtractionResultDataType(lExpType, rExpType);
+
+        if (!lExpType.equals(resType))
+            leftExpRef = assemblyGen.genToDataTypeConversion(leftExpRef, resType);
+
+        if (!rExpType.equals(resType))
+            rightExpRef = assemblyGen.genToDataTypeConversion(rightExpRef, resType);
+
+        return assemblyGen.genSubtractionExpr(leftExpRef, rightExpRef, resType);
     }
 
 }

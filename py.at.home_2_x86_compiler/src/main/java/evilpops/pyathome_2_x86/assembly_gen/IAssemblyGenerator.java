@@ -10,6 +10,7 @@ public interface IAssemblyGenerator {
 
     /* Instructions set */
     int genAdditionExpr(int leftExpRef, int rightExpRef, DataType resultType);
+    int genSubtractionExpr(int leftExpRef, int rightExpRef, DataType resultType);
 
     /* Other */
     void genFloatLiteral(int src);

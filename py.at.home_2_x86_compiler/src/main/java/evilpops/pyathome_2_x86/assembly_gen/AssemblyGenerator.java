@@ -35,7 +35,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     public void genMoveInst(int dest, int src) {
         this.txtSection.append(String.format(
                 MOVE_INST,
-                this.calcInstructionSuffix(src),
+                this.calcInstructionSuffix(dest),
                 this.genSymbolByTabInd(src),
                 this.genSymbolByTabInd(dest)
         ));
@@ -45,7 +45,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     public void genAddInst(int dest, int src) {
         this.txtSection.append(String.format(
                 ADD_INST,
-                this.calcInstructionSuffix(src),
+                this.calcInstructionSuffix(dest),
                 this.genSymbolByTabInd(src),
                 this.genSymbolByTabInd(dest)
         ));
@@ -53,15 +53,28 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genSubInst(int dest, int src) {
-
+        this.txtSection.append(String.format(
+                SUB_INST,
+                this.calcInstructionSuffix(dest),
+                this.genSymbolByTabInd(src),
+                this.genSymbolByTabInd(dest)
+        ));
     }
 
     @Override
     public int genAdditionExpr(int leftExpRef, int rightExpRef, DataType resultType) {
         return switch (resultType) {
-            case INTEGER, BOOLEAN, FLOAT -> genNumberAddition(leftExpRef, rightExpRef, resultType);
+            case INTEGER, FLOAT -> genNumberAddition(leftExpRef, rightExpRef, resultType);
             case STRING -> -1; // TODO
             default -> throw new ImplementationInconsistencyException("genAdditionExpr");
+        };
+    }
+
+    @Override
+    public int genSubtractionExpr(int leftExpRef, int rightExpRef, DataType resultType) {
+        return switch (resultType) {
+            case INTEGER, FLOAT -> genNumberSubtraction(leftExpRef, rightExpRef, resultType);
+            default -> throw new ImplementationInconsistencyException("genSubtractionExpr");
         };
     }
 
@@ -116,11 +129,6 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         if (symTabController.checkIfIsLiteralByInd(ind)) {
             if (symTabController.checkIfDataTypeIsFloat(ind))
                 return String.format(DATA_SEC_FLOAT_REF, symTabController.getDataLabelCounter(ind));
-            else if (symTabController.checkIfDataTypeIsBoolean(ind))
-                return String.format(
-                        LITERAL_W_DOLLAR,
-                        symTabController.getLiteralValueByInd(ind)
-                );
             return String.format(LITERAL_W_DOLLAR, symTabController.getLiteralValueByInd(ind));
         } else if (symTabController.checkIfIsVarByInd(ind)) {
             return String.format(
@@ -161,9 +169,20 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         switch (srcDataType) {
             case INTEGER:
             case BOOLEAN:
+                if (symTabController.checkIfIsLiteralByInd(src)) {
+                    int transferRegRef = symTabController.takeRegister(DataType.INTEGER);
+                    this.txtSection.append(String.format(
+                            MOVE_INST,
+                            INST_SUFFIX,
+                            this.genSymbolByTabInd(src),
+                            this.genSymbolByTabInd(transferRegRef)
+                    ));
+                    src = transferRegRef;
+                }
+
                 int destRegRef = symTabController.takeRegister(DataType.FLOAT);
                 this.txtSection.append(String.format(
-                        INT_2_FLOAT_INST,
+                        BOOLINT_2_FLOAT_INST,
                         this.genSymbolByTabInd(src),
                         this.genSymbolByTabInd(destRegRef)
                 ));
@@ -189,5 +208,23 @@ public class AssemblyGenerator implements IAssemblyGenerator {
             assemblyGen.genAddInst(destRegRef, rightExpRef);
             return destRegRef;
         }
+    }
+
+    private int genNumberSubtraction(int leftExpRef, int rightExpRef, DataType resType) {
+        int destRegRef;
+        if (symTabController.checkIfIsRegByInd(leftExpRef)) {
+            assemblyGen.genSubInst(leftExpRef, rightExpRef);
+            destRegRef = leftExpRef;
+        }
+        else {
+            destRegRef = symTabController.takeRegister(resType);
+            assemblyGen.genMoveInst(destRegRef, leftExpRef);
+            assemblyGen.genSubInst(destRegRef, rightExpRef);
+        }
+
+        if (symTabController.checkIfIsRegByInd(rightExpRef))
+            symTabController.freeRegisterByInd(rightExpRef);
+
+        return destRegRef;
     }
 }
