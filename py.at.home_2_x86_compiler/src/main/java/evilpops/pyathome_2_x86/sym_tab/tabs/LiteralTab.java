@@ -16,7 +16,12 @@ public class LiteralTab extends ConcreteTableArchetype<LiteralTabRow> {
         return this.table.get(ind).getValue();
     }
 
+    public void setValueByInd(int ind, String value) {
+        this.table.get(ind).setValue(value);
+    }
+
     public int getDataLabelCounter(int ind) {
         return this.table.get(ind).getDataLabelNum();
     }
+
 }

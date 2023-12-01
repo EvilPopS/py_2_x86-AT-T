@@ -2,6 +2,7 @@ package main.java.evilpops.pyathome_2_x86.assembly_gen;
 
 import main.java.evilpops.pyathome_2_x86.assembly_gen.enums.AssemblyRegister;
 import main.java.evilpops.pyathome_2_x86.assembly_gen.exceptions.CannotConvertGivenDataTypeToFloatException;
+import main.java.evilpops.pyathome_2_x86.assembly_gen.exceptions.ImplementationInconsistencyException;
 import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
@@ -31,7 +32,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
-    public void genMove(int dest, int src) {
+    public void genMoveInst(int dest, int src) {
         this.txtSection.append(String.format(
                 MOVE_INST,
                 this.calcInstructionSuffix(src),
@@ -41,7 +42,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
-    public void genAdd(int dest, int src) {
+    public void genAddInst(int dest, int src) {
         this.txtSection.append(String.format(
                 ADD_INST,
                 this.calcInstructionSuffix(src),
@@ -51,8 +52,17 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
-    public void genSub(int dest, int src) {
+    public void genSubInst(int dest, int src) {
 
+    }
+
+    @Override
+    public int genAdditionExpr(int leftExpRef, int rightExpRef, DataType resultType) {
+        return switch (resultType) {
+            case INTEGER, BOOLEAN, FLOAT -> genNumberAddition(leftExpRef, rightExpRef, resultType);
+            case STRING -> -1; // TODO
+            default -> throw new ImplementationInconsistencyException("genAdditionExpr");
+        };
     }
 
     @Override
@@ -69,7 +79,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.txtSection.append(String.format(
                 SUB_INST,
                 INST_SUFFIX,
-                this.getLiteral(FLOAT_SIZE),
+                this.makeLiteralSymbol(FLOAT_SIZE),
                 this.getRegAccess(AssemblyRegister.RSP)
         ));
     }
@@ -81,11 +91,12 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public int genToDataTypeConversion(int src, DataType resDataType) {
-        if (resDataType.equals(DataType.FLOAT))
-            return genToFloatConversion(src);
-        else
-            //Dunno should I throw another exception or what...
-            return -1;
+        switch (resDataType) {
+            case INTEGER -> { return genToIntegerConversion(src); }
+            case FLOAT -> { return genToFloatConversion(src); }
+//            case BOOLEAN -> genToFloatConversion(src);
+        }
+        return -1;
     }
 
     @Override
@@ -97,7 +108,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         return String.format(REG_ACCESS, register);
     }
 
-    private String getLiteral(String val) {
+    private String makeLiteralSymbol(String val) {
         return String.format(LITERAL_W_DOLLAR, val);
     }
 
@@ -105,6 +116,11 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         if (symTabController.checkIfIsLiteralByInd(ind)) {
             if (symTabController.checkIfDataTypeIsFloat(ind))
                 return String.format(DATA_SEC_FLOAT_REF, symTabController.getDataLabelCounter(ind));
+            else if (symTabController.checkIfDataTypeIsBoolean(ind))
+                return String.format(
+                        LITERAL_W_DOLLAR,
+                        symTabController.getLiteralValueByInd(ind)
+                );
             return String.format(LITERAL_W_DOLLAR, symTabController.getLiteralValueByInd(ind));
         } else if (symTabController.checkIfIsVarByInd(ind)) {
             return String.format(
@@ -125,10 +141,26 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         return symTabController.checkIfDataTypeIsFloat(ind) ? FLOAT_INST_SUFFIX : INST_SUFFIX;
     }
 
+    private int genToIntegerConversion(int src) {
+        DataType srcDataType = symTabController.getDataTypeByInd(src);
+        if (srcDataType.equals(DataType.BOOLEAN)) {
+            int destRegRef = symTabController.takeRegister(DataType.INTEGER);
+            this.txtSection.append(String.format(
+                    MOVE_INST,
+                    INST_SUFFIX,
+                    this.genSymbolByTabInd(src),
+                    this.genSymbolByTabInd(destRegRef)
+            ));
+            return destRegRef;
+        }
+        throw new CannotConvertGivenDataTypeToFloatException(srcDataType.toString());
+    }
+
     private int genToFloatConversion(int src) {
         DataType srcDataType = symTabController.getDataTypeByInd(src);
         switch (srcDataType) {
-            case INTEGER: case BOOLEAN:
+            case INTEGER:
+            case BOOLEAN:
                 int destRegRef = symTabController.takeRegister(DataType.FLOAT);
                 this.txtSection.append(String.format(
                         INT_2_FLOAT_INST,
@@ -138,5 +170,24 @@ public class AssemblyGenerator implements IAssemblyGenerator {
                 return destRegRef;
         }
         throw new CannotConvertGivenDataTypeToFloatException(srcDataType.toString());
+    }
+
+    private int genNumberAddition(int leftExpRef, int rightExpRef, DataType resType) {
+        if (symTabController.checkIfIsRegByInd(leftExpRef)) {
+            assemblyGen.genAddInst(leftExpRef, rightExpRef);
+            if (symTabController.checkIfIsRegByInd(rightExpRef))
+                symTabController.freeRegisterByInd(rightExpRef);
+            return leftExpRef;
+        } else if (symTabController.checkIfIsRegByInd(rightExpRef)) {
+            assemblyGen.genAddInst(rightExpRef, leftExpRef);
+            if (symTabController.checkIfIsRegByInd(leftExpRef))
+                symTabController.freeRegisterByInd(leftExpRef);
+            return rightExpRef;
+        } else {
+            int destRegRef = symTabController.takeRegister(resType);
+            assemblyGen.genMoveInst(destRegRef, leftExpRef);
+            assemblyGen.genAddInst(destRegRef, rightExpRef);
+            return destRegRef;
+        }
     }
 }

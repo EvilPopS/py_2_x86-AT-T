@@ -120,6 +120,11 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
+    public boolean checkIfDataTypeIsBoolean(int ind) {
+        return this.getDataTypeByInd(ind) == DataType.BOOLEAN;
+    }
+
+    @Override
     public void freeRegisterByInd(int ind) {
         this.registerTab.freeRegister(this.mainTab.getByInd(ind).getForeignId());
     }

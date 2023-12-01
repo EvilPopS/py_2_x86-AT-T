@@ -44,21 +44,25 @@ public class ListenerHelpers {
 
         if (symTabController.checkIfIsVarByInd(numExpRef) || (symTabController.checkIfIsLiteralByInd(numExpRef) && symTabController.checkIfDataTypeIsFloat(numExpRef))) {
             int regRef = symTabController.takeRegister(numExpDataType);
-            assemblyGen.genMove(regRef, numExpRef);
-            assemblyGen.genMove(idRef, regRef);
+            assemblyGen.genMoveInst(regRef, numExpRef);
+            assemblyGen.genMoveInst(idRef, regRef);
             symTabController.freeRegisterByInd(regRef);
         } else
-            assemblyGen.genMove(idRef, numExpRef);
+            assemblyGen.genMoveInst(idRef, numExpRef);
     }
 
     public static int processNumExpressionCtxExit(PyAtHomeParser.NumExpressionContext ctx) {
         if (ctx.expression() != null)
             return ctx.expression().getRefToSymTab();
-        else if (ctx.addSubOperators() != null)
-            return performAddition(
-                    ctx.numExpression().get(0).getRefToSymTab(),
-                    ctx.numExpression().get(1).getRefToSymTab()
-            );
+        else if (ctx.addSubOperators() != null) {
+            if (ctx.addSubOperators().PLUS() != null)
+                return performAddition(
+                        ctx.numExpression().get(0).getRefToSymTab(),
+                        ctx.numExpression().get(1).getRefToSymTab()
+                );
+            else
+                return -1;
+        }
         else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "processNumExpressionCtxExit"));
     }
@@ -80,7 +84,7 @@ public class ListenerHelpers {
             assemblyGen.genFloatLiteral(literalRef);
             return literalRef;
         } else if (ctx.BOOLEAN() != null)
-            return symTabController.addLiteral(ctx.BOOLEAN().getText(), DataType.BOOLEAN);
+            return symTabController.addLiteral(ctx.BOOLEAN().getText().equals("True") ? "1" : "0", DataType.BOOLEAN);
         else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "insertLiteralIntoSymTab"));
     }
@@ -97,21 +101,20 @@ public class ListenerHelpers {
 
         if (!lExpType.equals(resType))
             leftExpRef = assemblyGen.genToDataTypeConversion(leftExpRef, resType);
-        else if (!rExpType.equals(resType))
+
+        if (!rExpType.equals(resType))
             rightExpRef = assemblyGen.genToDataTypeConversion(rightExpRef, resType);
 
-
-        if (symTabController.checkIfIsRegByInd(leftExpRef)) {
-            assemblyGen.genAdd(leftExpRef, rightExpRef);
-            return leftExpRef;
-        } else if (symTabController.checkIfIsRegByInd(rightExpRef)) {
-            assemblyGen.genAdd(rightExpRef, leftExpRef);
-            return rightExpRef;
-        } else {
-            int destRegRef = symTabController.takeRegister(resType);
-            assemblyGen.genMove(destRegRef, leftExpRef);
-            assemblyGen.genAdd(destRegRef, rightExpRef);
-            return destRegRef;
-        }
+        return assemblyGen.genAdditionExpr(leftExpRef, rightExpRef, resType);
     }
+
+    private static int performSubtraction(int leftExpRef, int rightExpRef) {
+        SemanticAnalyzer.areTypesCompatibleForSubtraction(
+                leftExpRef,
+                rightExpRef
+        );
+        // TODO
+        return -1;
+    }
+
 }

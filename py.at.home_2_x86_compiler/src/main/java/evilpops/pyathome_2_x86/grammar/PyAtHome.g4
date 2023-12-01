@@ -50,6 +50,7 @@ numExpression
 
 addSubOperators
     : PLUS
+    | MINUS
     ;
 
 expression
@@ -73,6 +74,7 @@ NEWLINE: '\n' ;
 
 ASSIGN: '=' ;
 PLUS: '+' ;
+MINUS: '-' ;
 
 BOOLEAN
     : 'True'
@@ -82,10 +84,10 @@ BOOLEAN
 ID: [a-zA-Z_][a-zA-Z0-9_]* ;
 
 FLOAT
-    : ([1-9][0-9]*)?'.'[0-9]+
-    | [1-9][0-9]*'.'[0-9]*
+    : '-'?([1-9][0-9]*)?'.'[0-9]+
+    | '-'?[1-9][0-9]*'.'[0-9]*
     ;
 INTEGER
-    : [0-9]+
+    : '-'?[0-9]+
     ;
 /* Lexer rules - END */

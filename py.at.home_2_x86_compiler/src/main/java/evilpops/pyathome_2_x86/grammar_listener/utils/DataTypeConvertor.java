@@ -25,6 +25,14 @@ public class DataTypeConvertor {
                 }}
         );
         put(
+                DataType.BOOLEAN,
+                new HashMap<>() {{
+                    put(DataType.INTEGER, DataType.INTEGER);
+                    put(DataType.FLOAT, DataType.FLOAT);
+                    put(DataType.BOOLEAN, DataType.INTEGER);
+                }}
+        );
+        put(
                 DataType.STRING,
                 new HashMap<>() {{
                     put(DataType.STRING, DataType.STRING);
