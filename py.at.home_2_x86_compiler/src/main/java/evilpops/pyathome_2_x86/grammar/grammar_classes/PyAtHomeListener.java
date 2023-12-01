@@ -78,6 +78,16 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitAddSubOperators(PyAtHomeParser.AddSubOperatorsContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#mulDivOperators}.
+	 * @param ctx the parse tree
+	 */
+	void enterMulDivOperators(PyAtHomeParser.MulDivOperatorsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#mulDivOperators}.
+	 * @param ctx the parse tree
+	 */
+	void exitMulDivOperators(PyAtHomeParser.MulDivOperatorsContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#expression}.
 	 * @param ctx the parse tree
 	 */

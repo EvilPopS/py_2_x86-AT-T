@@ -45,12 +45,18 @@ assignStatement
 
 numExpression
     : expression
+    | numExpression mulDivOperators numExpression
     | numExpression addSubOperators numExpression
     ;
 
 addSubOperators
     : PLUS
     | MINUS
+    ;
+
+mulDivOperators
+    : MUL
+    | DIV
     ;
 
 expression
@@ -75,6 +81,8 @@ NEWLINE: '\n' ;
 ASSIGN: '=' ;
 PLUS: '+' ;
 MINUS: '-' ;
+MUL: '*' ;
+DIV: '/' ;
 
 BOOLEAN
     : 'True'

@@ -17,30 +17,31 @@ public class PyAtHomeParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		WS_SKIP=1, COMMENT_SKIP=2, NEWLINE=3, ASSIGN=4, PLUS=5, MINUS=6, BOOLEAN=7, 
-		ID=8, FLOAT=9, INTEGER=10;
+		WS_SKIP=1, COMMENT_SKIP=2, NEWLINE=3, ASSIGN=4, PLUS=5, MINUS=6, MUL=7, 
+		DIV=8, BOOLEAN=9, ID=10, FLOAT=11, INTEGER=12;
 	public static final int
 		RULE_program = 0, RULE_statementsList = 1, RULE_statement = 2, RULE_simpleStatement = 3, 
 		RULE_assignStatement = 4, RULE_numExpression = 5, RULE_addSubOperators = 6, 
-		RULE_expression = 7, RULE_literal = 8;
+		RULE_mulDivOperators = 7, RULE_expression = 8, RULE_literal = 9;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"program", "statementsList", "statement", "simpleStatement", "assignStatement", 
-			"numExpression", "addSubOperators", "expression", "literal"
+			"numExpression", "addSubOperators", "mulDivOperators", "expression", 
+			"literal"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, null, "'\\n'", "'='", "'+'", "'-'"
+			null, null, null, "'\\n'", "'='", "'+'", "'-'", "'*'", "'/'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, "WS_SKIP", "COMMENT_SKIP", "NEWLINE", "ASSIGN", "PLUS", "MINUS", 
-			"BOOLEAN", "ID", "FLOAT", "INTEGER"
+			"MUL", "DIV", "BOOLEAN", "ID", "FLOAT", "INTEGER"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -134,7 +135,7 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(18);
+			setState(20);
 			statementsList();
 			}
 		}
@@ -178,17 +179,17 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(21); 
+			setState(23); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(20);
+				setState(22);
 				statement();
 				}
 				}
-				setState(23); 
+				setState(25); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==ID );
@@ -230,24 +231,24 @@ public class PyAtHomeParser extends Parser {
 		StatementContext _localctx = new StatementContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_statement);
 		try {
-			setState(31);
+			setState(33);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(25);
+				setState(27);
 				simpleStatement();
-				setState(26);
+				setState(28);
 				match(NEWLINE);
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(28);
+				setState(30);
 				simpleStatement();
-				setState(29);
+				setState(31);
 				match(EOF);
 				}
 				break;
@@ -289,7 +290,7 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(33);
+			setState(35);
 			assignStatement();
 			}
 		}
@@ -331,11 +332,11 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(35);
-			match(ID);
-			setState(36);
-			match(ASSIGN);
 			setState(37);
+			match(ID);
+			setState(38);
+			match(ASSIGN);
+			setState(39);
 			numExpression(0);
 			}
 		}
@@ -360,6 +361,9 @@ public class PyAtHomeParser extends Parser {
 		}
 		public NumExpressionContext numExpression(int i) {
 			return getRuleContext(NumExpressionContext.class,i);
+		}
+		public MulDivOperatorsContext mulDivOperators() {
+			return getRuleContext(MulDivOperatorsContext.class,0);
 		}
 		public AddSubOperatorsContext addSubOperators() {
 			return getRuleContext(AddSubOperatorsContext.class,0);
@@ -394,33 +398,51 @@ public class PyAtHomeParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(40);
+			setState(42);
 			expression();
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(48);
+			setState(54);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					{
-					_localctx = new NumExpressionContext(_parentctx, _parentState);
-					pushNewRecursionContext(_localctx, _startState, RULE_numExpression);
-					setState(42);
-					if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-					setState(43);
-					addSubOperators();
-					setState(44);
-					numExpression(2);
+					setState(52);
+					_errHandler.sync(this);
+					switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
+					case 1:
+						{
+						_localctx = new NumExpressionContext(_parentctx, _parentState);
+						pushNewRecursionContext(_localctx, _startState, RULE_numExpression);
+						setState(44);
+						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+						setState(45);
+						mulDivOperators();
+						setState(46);
+						numExpression(3);
+						}
+						break;
+					case 2:
+						{
+						_localctx = new NumExpressionContext(_parentctx, _parentState);
+						pushNewRecursionContext(_localctx, _startState, RULE_numExpression);
+						setState(48);
+						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
+						setState(49);
+						addSubOperators();
+						setState(50);
+						numExpression(2);
+						}
+						break;
 					}
 					} 
 				}
-				setState(50);
+				setState(56);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 			}
 			}
 		}
@@ -460,9 +482,57 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(51);
+			setState(57);
 			_la = _input.LA(1);
 			if ( !(_la==PLUS || _la==MINUS) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class MulDivOperatorsContext extends ContextExtention {
+		public TerminalNode MUL() { return getToken(PyAtHomeParser.MUL, 0); }
+		public TerminalNode DIV() { return getToken(PyAtHomeParser.DIV, 0); }
+		public MulDivOperatorsContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_mulDivOperators; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof PyAtHomeListener ) ((PyAtHomeListener)listener).enterMulDivOperators(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof PyAtHomeListener ) ((PyAtHomeListener)listener).exitMulDivOperators(this);
+		}
+	}
+
+	public final MulDivOperatorsContext mulDivOperators() throws RecognitionException {
+		MulDivOperatorsContext _localctx = new MulDivOperatorsContext(_ctx, getState());
+		enterRule(_localctx, 14, RULE_mulDivOperators);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(59);
+			_la = _input.LA(1);
+			if ( !(_la==MUL || _la==DIV) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -505,9 +575,9 @@ public class PyAtHomeParser extends Parser {
 
 	public final ExpressionContext expression() throws RecognitionException {
 		ExpressionContext _localctx = new ExpressionContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_expression);
+		enterRule(_localctx, 16, RULE_expression);
 		try {
-			setState(55);
+			setState(63);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case BOOLEAN:
@@ -515,14 +585,14 @@ public class PyAtHomeParser extends Parser {
 			case INTEGER:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(53);
+				setState(61);
 				literal();
 				}
 				break;
 			case ID:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(54);
+				setState(62);
 				match(ID);
 				}
 				break;
@@ -562,14 +632,14 @@ public class PyAtHomeParser extends Parser {
 
 	public final LiteralContext literal() throws RecognitionException {
 		LiteralContext _localctx = new LiteralContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_literal);
+		enterRule(_localctx, 18, RULE_literal);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(57);
+			setState(65);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 1664L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 6656L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -600,47 +670,53 @@ public class PyAtHomeParser extends Parser {
 	private boolean numExpression_sempred(NumExpressionContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
+			return precpred(_ctx, 2);
+		case 1:
 			return precpred(_ctx, 1);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\n<\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\fD\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
-		"\b\u0007\b\u0001\u0000\u0001\u0000\u0001\u0001\u0004\u0001\u0016\b\u0001"+
-		"\u000b\u0001\f\u0001\u0017\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
-		"\u0001\u0002\u0001\u0002\u0003\u0002 \b\u0002\u0001\u0003\u0001\u0003"+
-		"\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0005\u0001\u0005"+
-		"\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0005\u0005"+
-		"/\b\u0005\n\u0005\f\u00052\t\u0005\u0001\u0006\u0001\u0006\u0001\u0007"+
-		"\u0001\u0007\u0003\u00078\b\u0007\u0001\b\u0001\b\u0001\b\u0000\u0001"+
-		"\n\t\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0000\u0002\u0001\u0000"+
-		"\u0005\u0006\u0002\u0000\u0007\u0007\t\n6\u0000\u0012\u0001\u0000\u0000"+
-		"\u0000\u0002\u0015\u0001\u0000\u0000\u0000\u0004\u001f\u0001\u0000\u0000"+
-		"\u0000\u0006!\u0001\u0000\u0000\u0000\b#\u0001\u0000\u0000\u0000\n\'\u0001"+
-		"\u0000\u0000\u0000\f3\u0001\u0000\u0000\u0000\u000e7\u0001\u0000\u0000"+
-		"\u0000\u00109\u0001\u0000\u0000\u0000\u0012\u0013\u0003\u0002\u0001\u0000"+
-		"\u0013\u0001\u0001\u0000\u0000\u0000\u0014\u0016\u0003\u0004\u0002\u0000"+
-		"\u0015\u0014\u0001\u0000\u0000\u0000\u0016\u0017\u0001\u0000\u0000\u0000"+
-		"\u0017\u0015\u0001\u0000\u0000\u0000\u0017\u0018\u0001\u0000\u0000\u0000"+
-		"\u0018\u0003\u0001\u0000\u0000\u0000\u0019\u001a\u0003\u0006\u0003\u0000"+
-		"\u001a\u001b\u0005\u0003\u0000\u0000\u001b \u0001\u0000\u0000\u0000\u001c"+
-		"\u001d\u0003\u0006\u0003\u0000\u001d\u001e\u0005\u0000\u0000\u0001\u001e"+
-		" \u0001\u0000\u0000\u0000\u001f\u0019\u0001\u0000\u0000\u0000\u001f\u001c"+
-		"\u0001\u0000\u0000\u0000 \u0005\u0001\u0000\u0000\u0000!\"\u0003\b\u0004"+
-		"\u0000\"\u0007\u0001\u0000\u0000\u0000#$\u0005\b\u0000\u0000$%\u0005\u0004"+
-		"\u0000\u0000%&\u0003\n\u0005\u0000&\t\u0001\u0000\u0000\u0000\'(\u0006"+
-		"\u0005\uffff\uffff\u0000()\u0003\u000e\u0007\u0000)0\u0001\u0000\u0000"+
-		"\u0000*+\n\u0001\u0000\u0000+,\u0003\f\u0006\u0000,-\u0003\n\u0005\u0002"+
-		"-/\u0001\u0000\u0000\u0000.*\u0001\u0000\u0000\u0000/2\u0001\u0000\u0000"+
-		"\u00000.\u0001\u0000\u0000\u000001\u0001\u0000\u0000\u00001\u000b\u0001"+
-		"\u0000\u0000\u000020\u0001\u0000\u0000\u000034\u0007\u0000\u0000\u0000"+
-		"4\r\u0001\u0000\u0000\u000058\u0003\u0010\b\u000068\u0005\b\u0000\u0000"+
-		"75\u0001\u0000\u0000\u000076\u0001\u0000\u0000\u00008\u000f\u0001\u0000"+
-		"\u0000\u00009:\u0007\u0001\u0000\u0000:\u0011\u0001\u0000\u0000\u0000"+
-		"\u0004\u0017\u001f07";
+		"\b\u0007\b\u0002\t\u0007\t\u0001\u0000\u0001\u0000\u0001\u0001\u0004\u0001"+
+		"\u0018\b\u0001\u000b\u0001\f\u0001\u0019\u0001\u0002\u0001\u0002\u0001"+
+		"\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0003\u0002\"\b\u0002\u0001"+
+		"\u0003\u0001\u0003\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001"+
+		"\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001"+
+		"\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0005\u00055\b"+
+		"\u0005\n\u0005\f\u00058\t\u0005\u0001\u0006\u0001\u0006\u0001\u0007\u0001"+
+		"\u0007\u0001\b\u0001\b\u0003\b@\b\b\u0001\t\u0001\t\u0001\t\u0000\u0001"+
+		"\n\n\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0000\u0003\u0001"+
+		"\u0000\u0005\u0006\u0001\u0000\u0007\b\u0002\u0000\t\t\u000b\f>\u0000"+
+		"\u0014\u0001\u0000\u0000\u0000\u0002\u0017\u0001\u0000\u0000\u0000\u0004"+
+		"!\u0001\u0000\u0000\u0000\u0006#\u0001\u0000\u0000\u0000\b%\u0001\u0000"+
+		"\u0000\u0000\n)\u0001\u0000\u0000\u0000\f9\u0001\u0000\u0000\u0000\u000e"+
+		";\u0001\u0000\u0000\u0000\u0010?\u0001\u0000\u0000\u0000\u0012A\u0001"+
+		"\u0000\u0000\u0000\u0014\u0015\u0003\u0002\u0001\u0000\u0015\u0001\u0001"+
+		"\u0000\u0000\u0000\u0016\u0018\u0003\u0004\u0002\u0000\u0017\u0016\u0001"+
+		"\u0000\u0000\u0000\u0018\u0019\u0001\u0000\u0000\u0000\u0019\u0017\u0001"+
+		"\u0000\u0000\u0000\u0019\u001a\u0001\u0000\u0000\u0000\u001a\u0003\u0001"+
+		"\u0000\u0000\u0000\u001b\u001c\u0003\u0006\u0003\u0000\u001c\u001d\u0005"+
+		"\u0003\u0000\u0000\u001d\"\u0001\u0000\u0000\u0000\u001e\u001f\u0003\u0006"+
+		"\u0003\u0000\u001f \u0005\u0000\u0000\u0001 \"\u0001\u0000\u0000\u0000"+
+		"!\u001b\u0001\u0000\u0000\u0000!\u001e\u0001\u0000\u0000\u0000\"\u0005"+
+		"\u0001\u0000\u0000\u0000#$\u0003\b\u0004\u0000$\u0007\u0001\u0000\u0000"+
+		"\u0000%&\u0005\n\u0000\u0000&\'\u0005\u0004\u0000\u0000\'(\u0003\n\u0005"+
+		"\u0000(\t\u0001\u0000\u0000\u0000)*\u0006\u0005\uffff\uffff\u0000*+\u0003"+
+		"\u0010\b\u0000+6\u0001\u0000\u0000\u0000,-\n\u0002\u0000\u0000-.\u0003"+
+		"\u000e\u0007\u0000./\u0003\n\u0005\u0003/5\u0001\u0000\u0000\u000001\n"+
+		"\u0001\u0000\u000012\u0003\f\u0006\u000023\u0003\n\u0005\u000235\u0001"+
+		"\u0000\u0000\u00004,\u0001\u0000\u0000\u000040\u0001\u0000\u0000\u0000"+
+		"58\u0001\u0000\u0000\u000064\u0001\u0000\u0000\u000067\u0001\u0000\u0000"+
+		"\u00007\u000b\u0001\u0000\u0000\u000086\u0001\u0000\u0000\u00009:\u0007"+
+		"\u0000\u0000\u0000:\r\u0001\u0000\u0000\u0000;<\u0007\u0001\u0000\u0000"+
+		"<\u000f\u0001\u0000\u0000\u0000=@\u0003\u0012\t\u0000>@\u0005\n\u0000"+
+		"\u0000?=\u0001\u0000\u0000\u0000?>\u0001\u0000\u0000\u0000@\u0011\u0001"+
+		"\u0000\u0000\u0000AB\u0007\u0002\u0000\u0000B\u0013\u0001\u0000\u0000"+
+		"\u0000\u0005\u0019!46?";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

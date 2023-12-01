@@ -55,19 +55,25 @@ public class ListenerHelpers {
     public static int processNumExpressionCtxExit(PyAtHomeParser.NumExpressionContext ctx) {
         if (ctx.expression() != null)
             return ctx.expression().getRefToSymTab();
+
         else if (ctx.addSubOperators() != null) {
+            int leftExpRef = ctx.numExpression().get(0).getRefToSymTab();
+            int rightExpRef = ctx.numExpression().get(1).getRefToSymTab();
             if (ctx.addSubOperators().PLUS() != null)
-                return performAddition(
-                        ctx.numExpression().get(0).getRefToSymTab(),
-                        ctx.numExpression().get(1).getRefToSymTab()
-                );
+                return performAddition(leftExpRef, rightExpRef);
             else
-                return performSubtraction(
-                        ctx.numExpression().get(0).getRefToSymTab(),
-                        ctx.numExpression().get(1).getRefToSymTab()
-                );
-        }
-        else
+                return performSubtraction(leftExpRef, rightExpRef);
+
+        } else if (ctx.mulDivOperators() != null) {
+            int leftExpRef = ctx.numExpression().get(0).getRefToSymTab();
+            int rightExpRef = ctx.numExpression().get(1).getRefToSymTab();
+            if (ctx.mulDivOperators().MUL() != null) {
+                return -1; // TODO
+            } else {
+                return -1; // TODO
+            }
+
+        } else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "processNumExpressionCtxExit"));
     }
 
