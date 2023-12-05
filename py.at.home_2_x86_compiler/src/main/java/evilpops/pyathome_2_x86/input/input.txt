@@ -1,4 +1,2 @@
-a = 3
-b = True
-d = False - 3.12
-c = a - b + 12 - d
+b = 3
+a = 1 + b * 4.0

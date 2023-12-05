@@ -67,18 +67,57 @@ public class DataTypeConvertor {
         );
     }};
 
+    private static final Map<DataType, Map<DataType, DataType>> multiplicationDataTypeMap = new HashMap<>() {{
+        put(
+                DataType.INTEGER,
+                new HashMap<>() {{
+                    put(DataType.INTEGER, DataType.INTEGER);
+                    put(DataType.FLOAT, DataType.FLOAT);
+                    put(DataType.BOOLEAN, DataType.INTEGER);
+                    put(DataType.STRING, DataType.STRING);
+                }}
+        );
+        put(
+                DataType.FLOAT,
+                new HashMap<>() {{
+                    put(DataType.INTEGER, DataType.FLOAT);
+                    put(DataType.FLOAT, DataType.FLOAT);
+                    put(DataType.BOOLEAN, DataType.FLOAT);
+                }}
+        );
+        put(
+                DataType.BOOLEAN,
+                new HashMap<>() {{
+                    put(DataType.INTEGER, DataType.INTEGER);
+                    put(DataType.FLOAT, DataType.FLOAT);
+                    put(DataType.BOOLEAN, DataType.INTEGER);
+                    put(DataType.STRING, DataType.STRING);
+                }}
+        );
+        put(
+                DataType.STRING,
+                new HashMap<>() {{
+                    put(DataType.INTEGER, DataType.STRING);
+                    put(DataType.BOOLEAN, DataType.STRING);
+                }}
+        );
+    }};
+
     public static DataType getAdditionResultDataType(DataType lExpType, DataType rExpType) {
-        if (additionDataTypeMap.containsKey(lExpType))
-            if (additionDataTypeMap.get(lExpType).containsKey(rExpType))
-                return additionDataTypeMap.get(lExpType).get(rExpType);
-        throw new InvalidOperandsTypesForGivenOperatorException();
+        return extractResDataTypeFromMap(lExpType, rExpType, additionDataTypeMap);
     }
 
     public static DataType getSubtractionResultDataType(DataType lExpType, DataType rExpType) {
-        if (subtractionDataTypeMap.containsKey(lExpType))
-            if (subtractionDataTypeMap.get(lExpType).containsKey(rExpType))
-                return subtractionDataTypeMap.get(lExpType).get(rExpType);
-        throw new InvalidOperandsTypesForGivenOperatorException();
+        return extractResDataTypeFromMap(lExpType, rExpType, subtractionDataTypeMap);
+    }
+    public static DataType getMultiplicationResultDataType(DataType lExpType, DataType rExpType) {
+        return extractResDataTypeFromMap(lExpType, rExpType, multiplicationDataTypeMap);
     }
 
+    private static DataType extractResDataTypeFromMap(DataType lt, DataType rt, Map<DataType, Map<DataType, DataType>> map) {
+        if (map.containsKey(lt))
+            if (map.get(lt).containsKey(rt))
+                return map.get(lt).get(rt);
+        throw new InvalidOperandsTypesForGivenOperatorException();
+    }
 }

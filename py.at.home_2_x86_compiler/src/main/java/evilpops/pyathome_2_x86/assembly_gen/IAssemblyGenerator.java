@@ -7,10 +7,13 @@ public interface IAssemblyGenerator {
     void genMoveInst(int dest, int src);
     void genAddInst(int dest, int src);
     void genSubInst(int dest, int src);
+    void genMulInst(int dest, int src);
+    void genDivInst(int dest, int src);
 
     /* Instructions set */
     int genAdditionExpr(int leftExpRef, int rightExpRef, DataType resultType);
     int genSubtractionExpr(int leftExpRef, int rightExpRef, DataType resultType);
+    int genMultiplicationExpr(int leftExpRef, int rightExpRef, DataType resultType);
 
     /* Other */
     void genFloatLiteral(int src);

@@ -62,6 +62,25 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public void genMulInst(int dest, int src) {
+        this.txtSection.append(String.format(
+                MUL_INST,
+                this.calcInstructionSuffix(dest),
+                this.genSymbolByTabInd(src),
+                this.genSymbolByTabInd(dest)
+        ));
+    }
+
+    @Override
+    public void genDivInst(int dest, int src) {
+        this.txtSection.append(String.format(
+                DIV_INST,
+                this.genSymbolByTabInd(src),
+                this.genSymbolByTabInd(dest)
+        ));
+    }
+
+    @Override
     public int genAdditionExpr(int leftExpRef, int rightExpRef, DataType resultType) {
         return switch (resultType) {
             case INTEGER, FLOAT -> genNumberAddition(leftExpRef, rightExpRef, resultType);
@@ -75,6 +94,15 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         return switch (resultType) {
             case INTEGER, FLOAT -> genNumberSubtraction(leftExpRef, rightExpRef, resultType);
             default -> throw new ImplementationInconsistencyException("genSubtractionExpr");
+        };
+    }
+
+    @Override
+    public int genMultiplicationExpr(int leftExpRef, int rightExpRef, DataType resultType) {
+        return switch (resultType) {
+            case INTEGER, FLOAT -> genNumberMultiplication(leftExpRef, rightExpRef, resultType);
+            case STRING -> -1; // TODO
+            default -> throw new ImplementationInconsistencyException("genMultiplicationExpr");
         };
     }
 
@@ -226,5 +254,24 @@ public class AssemblyGenerator implements IAssemblyGenerator {
             symTabController.freeRegisterByInd(rightExpRef);
 
         return destRegRef;
+    }
+
+    private int genNumberMultiplication(int leftExpRef, int rightExpRef, DataType resType) {
+        if (symTabController.checkIfIsRegByInd(leftExpRef)) {
+            assemblyGen.genMulInst(leftExpRef, rightExpRef);
+            if (symTabController.checkIfIsRegByInd(rightExpRef))
+                symTabController.freeRegisterByInd(rightExpRef);
+            return leftExpRef;
+        } else if (symTabController.checkIfIsRegByInd(rightExpRef)) {
+            assemblyGen.genMulInst(rightExpRef, leftExpRef);
+            if (symTabController.checkIfIsRegByInd(leftExpRef))
+                symTabController.freeRegisterByInd(leftExpRef);
+            return rightExpRef;
+        } else {
+            int destRegRef = symTabController.takeRegister(resType);
+            assemblyGen.genMoveInst(destRegRef, leftExpRef);
+            assemblyGen.genMulInst(destRegRef, rightExpRef);
+            return destRegRef;
+        }
     }
 }

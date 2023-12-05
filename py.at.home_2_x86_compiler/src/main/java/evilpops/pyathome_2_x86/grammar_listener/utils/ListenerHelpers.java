@@ -67,9 +67,9 @@ public class ListenerHelpers {
         } else if (ctx.mulDivOperators() != null) {
             int leftExpRef = ctx.numExpression().get(0).getRefToSymTab();
             int rightExpRef = ctx.numExpression().get(1).getRefToSymTab();
-            if (ctx.mulDivOperators().MUL() != null) {
-                return -1; // TODO
-            } else {
+            if (ctx.mulDivOperators().MUL() != null)
+                return performMultiplication(leftExpRef, rightExpRef);
+            else {
                 return -1; // TODO
             }
 
@@ -137,6 +137,28 @@ public class ListenerHelpers {
             rightExpRef = assemblyGen.genToDataTypeConversion(rightExpRef, resType);
 
         return assemblyGen.genSubtractionExpr(leftExpRef, rightExpRef, resType);
+    }
+
+    private static int performMultiplication(int leftExpRef, int rightExpRef) {
+        SemanticAnalyzer.areTypesCompatibleForMultiplication(
+                leftExpRef,
+                rightExpRef
+        );
+
+        DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
+        DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
+
+        DataType resType = DataTypeConvertor.getMultiplicationResultDataType(lExpType, rExpType);
+
+        if (!resType.equals(DataType.STRING)) {
+            if (!lExpType.equals(resType))
+                leftExpRef = assemblyGen.genToDataTypeConversion(leftExpRef, resType);
+
+            if (!rExpType.equals(resType))
+                rightExpRef = assemblyGen.genToDataTypeConversion(rightExpRef, resType);
+        }
+
+        return assemblyGen.genMultiplicationExpr(leftExpRef, rightExpRef, resType);
     }
 
 }
