@@ -103,6 +103,7 @@ public class DataTypeConvertor {
         );
     }};
 
+
     public static DataType getAdditionResultDataType(DataType lExpType, DataType rExpType) {
         return extractResDataTypeFromMap(lExpType, rExpType, additionDataTypeMap);
     }
@@ -112,6 +113,10 @@ public class DataTypeConvertor {
     }
     public static DataType getMultiplicationResultDataType(DataType lExpType, DataType rExpType) {
         return extractResDataTypeFromMap(lExpType, rExpType, multiplicationDataTypeMap);
+    }
+
+    public static DataType getDivisionResultDataType() {
+        return DataType.FLOAT;
     }
 
     private static DataType extractResDataTypeFromMap(DataType lt, DataType rt, Map<DataType, Map<DataType, DataType>> map) {

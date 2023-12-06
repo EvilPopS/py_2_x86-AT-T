@@ -30,6 +30,12 @@ public class SemanticAnalyzer {
         );
     }
 
+    public static void areTypesCompatibleForDivision(int leftRefToVal, int rightRefToVal) {
+        checkTypesCompatibility(
+                AritOpsOperandsTypesComp.divisionOperandsTypesComp, leftRefToVal, rightRefToVal, "*"
+        );
+    }
+
     private static void checkTypesCompatibility(Map<DataType, Map<DataType, Boolean>> map, int leftRef, int rightRef, String operator) {
         DataType lType = symTabController.getDataTypeByInd(leftRef);
         DataType rType = symTabController.getDataTypeByInd(rightRef);

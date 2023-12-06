@@ -14,6 +14,7 @@ public interface IAssemblyGenerator {
     int genAdditionExpr(int leftExpRef, int rightExpRef, DataType resultType);
     int genSubtractionExpr(int leftExpRef, int rightExpRef, DataType resultType);
     int genMultiplicationExpr(int leftExpRef, int rightExpRef, DataType resultType);
+    int genDivisionExpr(int leftExpRef, int rightExpRef, DataType resultType);
 
     /* Other */
     void genFloatLiteral(int src);

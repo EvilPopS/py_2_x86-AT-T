@@ -11,10 +11,11 @@ public class AssemblyCodeFormats {
     public static final String MOVE_INST = "\tmov%s %s, %s\n";
     public static final String ADD_INST = "\tadd%s %s, %s\n";
     public static final String SUB_INST = "\tsub%s %s, %s\n";
-    public static final String MUL_INST = "\tmul%s %s, %s\n";
+    public static final String MUL_INST = "\t%smul%s %s, %s\n";
     public static final String DIV_INST = "\tdivsd %s, %s\n";
     public static final String BOOLINT_2_FLOAT_INST = "\tcvtsi2sd %s, %s\n";
 
+    public static final String INST_PREFIX = "i";
     public static final String INST_SUFFIX = "q";
     public static final String FLOAT_INST_SUFFIX = "sd";
 

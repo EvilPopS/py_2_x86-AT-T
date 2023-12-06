@@ -70,7 +70,7 @@ public class ListenerHelpers {
             if (ctx.mulDivOperators().MUL() != null)
                 return performMultiplication(leftExpRef, rightExpRef);
             else {
-                return -1; // TODO
+                return performDivision(leftExpRef, rightExpRef);
             }
 
         } else
@@ -120,10 +120,7 @@ public class ListenerHelpers {
     }
 
     private static int performSubtraction(int leftExpRef, int rightExpRef) {
-        SemanticAnalyzer.areTypesCompatibleForSubtraction(
-                leftExpRef,
-                rightExpRef
-        );
+        SemanticAnalyzer.areTypesCompatibleForSubtraction(leftExpRef, rightExpRef);
 
         DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
         DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
@@ -140,10 +137,7 @@ public class ListenerHelpers {
     }
 
     private static int performMultiplication(int leftExpRef, int rightExpRef) {
-        SemanticAnalyzer.areTypesCompatibleForMultiplication(
-                leftExpRef,
-                rightExpRef
-        );
+        SemanticAnalyzer.areTypesCompatibleForSubtraction(leftExpRef, rightExpRef);
 
         DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
         DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
@@ -159,6 +153,23 @@ public class ListenerHelpers {
         }
 
         return assemblyGen.genMultiplicationExpr(leftExpRef, rightExpRef, resType);
+    }
+
+    private static int performDivision(int leftExpRef, int rightExpRef) {
+        SemanticAnalyzer.areTypesCompatibleForSubtraction(leftExpRef, rightExpRef);
+
+        DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
+        DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
+
+        DataType resType = DataTypeConvertor.getDivisionResultDataType();
+
+        if (!lExpType.equals(resType))
+            leftExpRef = assemblyGen.genToDataTypeConversion(leftExpRef, resType);
+
+        if (!rExpType.equals(resType))
+            rightExpRef = assemblyGen.genToDataTypeConversion(rightExpRef, resType);
+
+        return assemblyGen.genDivisionExpr(leftExpRef, rightExpRef, resType);
     }
 
 }
