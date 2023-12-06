@@ -58,19 +58,32 @@ public class ListenerHelpers {
         else if (ctx.L_PAREN() != null && ctx.R_PAREN() != null) {
             return ctx.numExpression(0).getRefToSymTab();
         } else if (ctx.addSubOperators() != null) {
-            int leftExpRef = ctx.numExpression().get(0).getRefToSymTab();
-            int rightExpRef = ctx.numExpression().get(1).getRefToSymTab();
+            int leftExpRef = ctx.numExpression(0).getRefToSymTab();
+            int rightExpRef = ctx.numExpression(1).getRefToSymTab();
             if (ctx.addSubOperators().PLUS() != null)
                 return performAddition(leftExpRef, rightExpRef);
             else
                 return performSubtraction(leftExpRef, rightExpRef);
         } else if (ctx.mulDivOperators() != null) {
-            int leftExpRef = ctx.numExpression().get(0).getRefToSymTab();
-            int rightExpRef = ctx.numExpression().get(1).getRefToSymTab();
+            int leftExpRef = ctx.numExpression(0).getRefToSymTab();
+            int rightExpRef = ctx.numExpression(1).getRefToSymTab();
             if (ctx.mulDivOperators().MUL() != null)
                 return performMultiplication(leftExpRef, rightExpRef);
-            else {
+            else
                 return performDivision(leftExpRef, rightExpRef);
+        } else if (ctx.relOperators() != null) {
+            int leftExpRef = ctx.numExpression(0).getRefToSymTab();
+            int rightExpRef = ctx.numExpression(1).getRefToSymTab();
+            if (ctx.relOperators().EQ() != null) {
+                return -1; // TODO
+            } else if (ctx.relOperators().GR() != null) {
+                return -1; // TODO
+            } else if (ctx.relOperators().LS() != null) {
+                return -1; // TODO
+            } else if (ctx.relOperators().GREQ() != null) {
+                return -1; // TODO
+            } else {
+                return -1; // TODO
             }
         } else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "processNumExpressionCtxExit"));

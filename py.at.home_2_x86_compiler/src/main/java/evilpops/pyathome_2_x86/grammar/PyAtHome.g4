@@ -48,6 +48,7 @@ numExpression
     | L_PAREN numExpression R_PAREN
     | numExpression mulDivOperators numExpression
     | numExpression addSubOperators numExpression
+    | numExpression relOperators numExpression
     ;
 
 addSubOperators
@@ -58,6 +59,14 @@ addSubOperators
 mulDivOperators
     : MUL
     | DIV
+    ;
+
+relOperators
+    : EQ
+    | GR
+    | LS
+    | GREQ
+    | LSEQ
     ;
 
 expression
@@ -89,6 +98,11 @@ MINUS: '-' ;
 MUL: '*' ;
 DIV: '/' ;
 
+EQ: '==';
+GR: '>';
+LS: '<';
+GREQ: '>=';
+LSEQ: '<=';
 
 BOOLEAN
     : 'True'
