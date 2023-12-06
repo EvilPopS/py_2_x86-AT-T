@@ -45,6 +45,7 @@ assignStatement
 
 numExpression
     : expression
+    | L_PAREN numExpression R_PAREN
     | numExpression mulDivOperators numExpression
     | numExpression addSubOperators numExpression
     ;
@@ -79,10 +80,15 @@ COMMENT_SKIP: '#'~[\n]* -> skip;
 NEWLINE: '\n' ;
 
 ASSIGN: '=' ;
+
+L_PAREN: '(';
+R_PAREN: ')';
+
 PLUS: '+' ;
 MINUS: '-' ;
 MUL: '*' ;
 DIV: '/' ;
+
 
 BOOLEAN
     : 'True'

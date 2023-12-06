@@ -17,8 +17,8 @@ public class PyAtHomeParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		WS_SKIP=1, COMMENT_SKIP=2, NEWLINE=3, ASSIGN=4, PLUS=5, MINUS=6, MUL=7, 
-		DIV=8, BOOLEAN=9, ID=10, FLOAT=11, INTEGER=12;
+		WS_SKIP=1, COMMENT_SKIP=2, NEWLINE=3, ASSIGN=4, L_PAREN=5, R_PAREN=6, 
+		PLUS=7, MINUS=8, MUL=9, DIV=10, BOOLEAN=11, ID=12, FLOAT=13, INTEGER=14;
 	public static final int
 		RULE_program = 0, RULE_statementsList = 1, RULE_statement = 2, RULE_simpleStatement = 3, 
 		RULE_assignStatement = 4, RULE_numExpression = 5, RULE_addSubOperators = 6, 
@@ -34,14 +34,15 @@ public class PyAtHomeParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, null, "'\\n'", "'='", "'+'", "'-'", "'*'", "'/'"
+			null, null, null, "'\\n'", "'='", "'('", "')'", "'+'", "'-'", "'*'", 
+			"'/'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "WS_SKIP", "COMMENT_SKIP", "NEWLINE", "ASSIGN", "PLUS", "MINUS", 
-			"MUL", "DIV", "BOOLEAN", "ID", "FLOAT", "INTEGER"
+			null, "WS_SKIP", "COMMENT_SKIP", "NEWLINE", "ASSIGN", "L_PAREN", "R_PAREN", 
+			"PLUS", "MINUS", "MUL", "DIV", "BOOLEAN", "ID", "FLOAT", "INTEGER"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -356,12 +357,14 @@ public class PyAtHomeParser extends Parser {
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
+		public TerminalNode L_PAREN() { return getToken(PyAtHomeParser.L_PAREN, 0); }
 		public List<NumExpressionContext> numExpression() {
 			return getRuleContexts(NumExpressionContext.class);
 		}
 		public NumExpressionContext numExpression(int i) {
 			return getRuleContext(NumExpressionContext.class,i);
 		}
+		public TerminalNode R_PAREN() { return getToken(PyAtHomeParser.R_PAREN, 0); }
 		public MulDivOperatorsContext mulDivOperators() {
 			return getRuleContext(MulDivOperatorsContext.class,0);
 		}
@@ -397,31 +400,52 @@ public class PyAtHomeParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			{
-			setState(42);
-			expression();
+			setState(47);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case BOOLEAN:
+			case ID:
+			case FLOAT:
+			case INTEGER:
+				{
+				setState(42);
+				expression();
+				}
+				break;
+			case L_PAREN:
+				{
+				setState(43);
+				match(L_PAREN);
+				setState(44);
+				numExpression(0);
+				setState(45);
+				match(R_PAREN);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(54);
+			setState(59);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(52);
+					setState(57);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 					case 1:
 						{
 						_localctx = new NumExpressionContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_numExpression);
-						setState(44);
+						setState(49);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(45);
+						setState(50);
 						mulDivOperators();
-						setState(46);
+						setState(51);
 						numExpression(3);
 						}
 						break;
@@ -429,20 +453,20 @@ public class PyAtHomeParser extends Parser {
 						{
 						_localctx = new NumExpressionContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_numExpression);
-						setState(48);
+						setState(53);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(49);
+						setState(54);
 						addSubOperators();
-						setState(50);
+						setState(55);
 						numExpression(2);
 						}
 						break;
 					}
 					} 
 				}
-				setState(56);
+				setState(61);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			}
 			}
 		}
@@ -482,7 +506,7 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(57);
+			setState(62);
 			_la = _input.LA(1);
 			if ( !(_la==PLUS || _la==MINUS) ) {
 			_errHandler.recoverInline(this);
@@ -530,7 +554,7 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(59);
+			setState(64);
 			_la = _input.LA(1);
 			if ( !(_la==MUL || _la==DIV) ) {
 			_errHandler.recoverInline(this);
@@ -577,7 +601,7 @@ public class PyAtHomeParser extends Parser {
 		ExpressionContext _localctx = new ExpressionContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_expression);
 		try {
-			setState(63);
+			setState(68);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case BOOLEAN:
@@ -585,14 +609,14 @@ public class PyAtHomeParser extends Parser {
 			case INTEGER:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(61);
+				setState(66);
 				literal();
 				}
 				break;
 			case ID:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(62);
+				setState(67);
 				match(ID);
 				}
 				break;
@@ -637,9 +661,9 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(65);
+			setState(70);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 6656L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 26624L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -678,45 +702,48 @@ public class PyAtHomeParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\fD\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u000eI\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0001\u0000\u0001\u0000\u0001\u0001\u0004\u0001"+
 		"\u0018\b\u0001\u000b\u0001\f\u0001\u0019\u0001\u0002\u0001\u0002\u0001"+
 		"\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0003\u0002\"\b\u0002\u0001"+
 		"\u0003\u0001\u0003\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001"+
-		"\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001"+
-		"\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0005\u00055\b"+
-		"\u0005\n\u0005\f\u00058\t\u0005\u0001\u0006\u0001\u0006\u0001\u0007\u0001"+
-		"\u0007\u0001\b\u0001\b\u0003\b@\b\b\u0001\t\u0001\t\u0001\t\u0000\u0001"+
-		"\n\n\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0000\u0003\u0001"+
-		"\u0000\u0005\u0006\u0001\u0000\u0007\b\u0002\u0000\t\t\u000b\f>\u0000"+
-		"\u0014\u0001\u0000\u0000\u0000\u0002\u0017\u0001\u0000\u0000\u0000\u0004"+
-		"!\u0001\u0000\u0000\u0000\u0006#\u0001\u0000\u0000\u0000\b%\u0001\u0000"+
-		"\u0000\u0000\n)\u0001\u0000\u0000\u0000\f9\u0001\u0000\u0000\u0000\u000e"+
-		";\u0001\u0000\u0000\u0000\u0010?\u0001\u0000\u0000\u0000\u0012A\u0001"+
-		"\u0000\u0000\u0000\u0014\u0015\u0003\u0002\u0001\u0000\u0015\u0001\u0001"+
-		"\u0000\u0000\u0000\u0016\u0018\u0003\u0004\u0002\u0000\u0017\u0016\u0001"+
-		"\u0000\u0000\u0000\u0018\u0019\u0001\u0000\u0000\u0000\u0019\u0017\u0001"+
-		"\u0000\u0000\u0000\u0019\u001a\u0001\u0000\u0000\u0000\u001a\u0003\u0001"+
-		"\u0000\u0000\u0000\u001b\u001c\u0003\u0006\u0003\u0000\u001c\u001d\u0005"+
-		"\u0003\u0000\u0000\u001d\"\u0001\u0000\u0000\u0000\u001e\u001f\u0003\u0006"+
-		"\u0003\u0000\u001f \u0005\u0000\u0000\u0001 \"\u0001\u0000\u0000\u0000"+
-		"!\u001b\u0001\u0000\u0000\u0000!\u001e\u0001\u0000\u0000\u0000\"\u0005"+
-		"\u0001\u0000\u0000\u0000#$\u0003\b\u0004\u0000$\u0007\u0001\u0000\u0000"+
-		"\u0000%&\u0005\n\u0000\u0000&\'\u0005\u0004\u0000\u0000\'(\u0003\n\u0005"+
-		"\u0000(\t\u0001\u0000\u0000\u0000)*\u0006\u0005\uffff\uffff\u0000*+\u0003"+
-		"\u0010\b\u0000+6\u0001\u0000\u0000\u0000,-\n\u0002\u0000\u0000-.\u0003"+
-		"\u000e\u0007\u0000./\u0003\n\u0005\u0003/5\u0001\u0000\u0000\u000001\n"+
-		"\u0001\u0000\u000012\u0003\f\u0006\u000023\u0003\n\u0005\u000235\u0001"+
-		"\u0000\u0000\u00004,\u0001\u0000\u0000\u000040\u0001\u0000\u0000\u0000"+
-		"58\u0001\u0000\u0000\u000064\u0001\u0000\u0000\u000067\u0001\u0000\u0000"+
-		"\u00007\u000b\u0001\u0000\u0000\u000086\u0001\u0000\u0000\u00009:\u0007"+
-		"\u0000\u0000\u0000:\r\u0001\u0000\u0000\u0000;<\u0007\u0001\u0000\u0000"+
-		"<\u000f\u0001\u0000\u0000\u0000=@\u0003\u0012\t\u0000>@\u0005\n\u0000"+
-		"\u0000?=\u0001\u0000\u0000\u0000?>\u0001\u0000\u0000\u0000@\u0011\u0001"+
-		"\u0000\u0000\u0000AB\u0007\u0002\u0000\u0000B\u0013\u0001\u0000\u0000"+
-		"\u0000\u0005\u0019!46?";
+		"\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0003"+
+		"\u00050\b\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001"+
+		"\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0005\u0005:\b\u0005\n\u0005"+
+		"\f\u0005=\t\u0005\u0001\u0006\u0001\u0006\u0001\u0007\u0001\u0007\u0001"+
+		"\b\u0001\b\u0003\bE\b\b\u0001\t\u0001\t\u0001\t\u0000\u0001\n\n\u0000"+
+		"\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0000\u0003\u0001\u0000\u0007"+
+		"\b\u0001\u0000\t\n\u0002\u0000\u000b\u000b\r\u000eD\u0000\u0014\u0001"+
+		"\u0000\u0000\u0000\u0002\u0017\u0001\u0000\u0000\u0000\u0004!\u0001\u0000"+
+		"\u0000\u0000\u0006#\u0001\u0000\u0000\u0000\b%\u0001\u0000\u0000\u0000"+
+		"\n/\u0001\u0000\u0000\u0000\f>\u0001\u0000\u0000\u0000\u000e@\u0001\u0000"+
+		"\u0000\u0000\u0010D\u0001\u0000\u0000\u0000\u0012F\u0001\u0000\u0000\u0000"+
+		"\u0014\u0015\u0003\u0002\u0001\u0000\u0015\u0001\u0001\u0000\u0000\u0000"+
+		"\u0016\u0018\u0003\u0004\u0002\u0000\u0017\u0016\u0001\u0000\u0000\u0000"+
+		"\u0018\u0019\u0001\u0000\u0000\u0000\u0019\u0017\u0001\u0000\u0000\u0000"+
+		"\u0019\u001a\u0001\u0000\u0000\u0000\u001a\u0003\u0001\u0000\u0000\u0000"+
+		"\u001b\u001c\u0003\u0006\u0003\u0000\u001c\u001d\u0005\u0003\u0000\u0000"+
+		"\u001d\"\u0001\u0000\u0000\u0000\u001e\u001f\u0003\u0006\u0003\u0000\u001f"+
+		" \u0005\u0000\u0000\u0001 \"\u0001\u0000\u0000\u0000!\u001b\u0001\u0000"+
+		"\u0000\u0000!\u001e\u0001\u0000\u0000\u0000\"\u0005\u0001\u0000\u0000"+
+		"\u0000#$\u0003\b\u0004\u0000$\u0007\u0001\u0000\u0000\u0000%&\u0005\f"+
+		"\u0000\u0000&\'\u0005\u0004\u0000\u0000\'(\u0003\n\u0005\u0000(\t\u0001"+
+		"\u0000\u0000\u0000)*\u0006\u0005\uffff\uffff\u0000*0\u0003\u0010\b\u0000"+
+		"+,\u0005\u0005\u0000\u0000,-\u0003\n\u0005\u0000-.\u0005\u0006\u0000\u0000"+
+		".0\u0001\u0000\u0000\u0000/)\u0001\u0000\u0000\u0000/+\u0001\u0000\u0000"+
+		"\u00000;\u0001\u0000\u0000\u000012\n\u0002\u0000\u000023\u0003\u000e\u0007"+
+		"\u000034\u0003\n\u0005\u00034:\u0001\u0000\u0000\u000056\n\u0001\u0000"+
+		"\u000067\u0003\f\u0006\u000078\u0003\n\u0005\u00028:\u0001\u0000\u0000"+
+		"\u000091\u0001\u0000\u0000\u000095\u0001\u0000\u0000\u0000:=\u0001\u0000"+
+		"\u0000\u0000;9\u0001\u0000\u0000\u0000;<\u0001\u0000\u0000\u0000<\u000b"+
+		"\u0001\u0000\u0000\u0000=;\u0001\u0000\u0000\u0000>?\u0007\u0000\u0000"+
+		"\u0000?\r\u0001\u0000\u0000\u0000@A\u0007\u0001\u0000\u0000A\u000f\u0001"+
+		"\u0000\u0000\u0000BE\u0003\u0012\t\u0000CE\u0005\f\u0000\u0000DB\u0001"+
+		"\u0000\u0000\u0000DC\u0001\u0000\u0000\u0000E\u0011\u0001\u0000\u0000"+
+		"\u0000FG\u0007\u0002\u0000\u0000G\u0013\u0001\u0000\u0000\u0000\u0006"+
+		"\u0019!/9;D";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
