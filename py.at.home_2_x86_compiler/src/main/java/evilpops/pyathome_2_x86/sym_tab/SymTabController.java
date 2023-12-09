@@ -125,8 +125,9 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public void freeRegisterByInd(int ind) {
-        this.registerTab.freeRegister(this.mainTab.getByInd(ind).getForeignId());
+    public void freeIfIsRegisterByInd(int ind) {
+        if (this.checkIfIsRegByInd(ind))
+            this.registerTab.freeRegister(this.mainTab.getByInd(ind).getForeignId());
     }
 
     private ConcreteTableArchetype<? extends ConcreteRowArchetype> getConcreteTableByTabType(TabType tabType) {

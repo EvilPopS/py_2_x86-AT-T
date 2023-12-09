@@ -2,6 +2,7 @@ package main.java.evilpops.pyathome_2_x86.grammar_listener.utils;
 
 import main.java.evilpops.pyathome_2_x86.assembly_gen.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_gen.IAssemblyGenerator;
+import main.java.evilpops.pyathome_2_x86.assembly_gen.enums.ConditionalJump;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.exceptions.ListenerNotInSyncWithGrammarException;
 import main.java.evilpops.pyathome_2_x86.semantic_analyzer.SemanticAnalyzer;
@@ -9,7 +10,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.exceptions.VariableNotFoundException;
-import main.java.evilpops.pyathome_2_x86.sym_tab.utils.data_type_utils.DataTypeConvertor;
+import main.java.evilpops.pyathome_2_x86.sym_tab.utils.data_type_utils.ResultDataTypeCalculator;
 
 public class ListenerHelpers {
     private static final String EXC_MESSAGE_F = "ListenerHelpers::%s -> is not in sync with defined grammar!";
@@ -47,7 +48,7 @@ public class ListenerHelpers {
             int regRef = symTabController.takeRegister(numExpDataType);
             assemblyGen.genMoveInst(regRef, numExpRef);
             assemblyGen.genMoveInst(idRef, regRef);
-            symTabController.freeRegisterByInd(regRef);
+            symTabController.freeIfIsRegisterByInd(regRef);
         } else
             assemblyGen.genMoveInst(idRef, numExpRef);
     }
@@ -74,19 +75,20 @@ public class ListenerHelpers {
         } else if (ctx.relOperators() != null) {
             int leftExpRef = ctx.numExpression(0).getRefToSymTab();
             int rightExpRef = ctx.numExpression(1).getRefToSymTab();
-            if (ctx.relOperators().EQ() != null) {
-                return -1; // TODO
-            } else if (ctx.relOperators().GR() != null) {
-                return -1; // TODO
-            } else if (ctx.relOperators().LS() != null) {
-                return -1; // TODO
-            } else if (ctx.relOperators().GREQ() != null) {
-                return -1; // TODO
-            } else {
-                return -1; // TODO
-            }
-        } else
-            throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "processNumExpressionCtxExit"));
+            if (ctx.relOperators().EQ() != null)
+                return performEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JE);
+            else if (ctx.relOperators().NEQ() != null)
+                return performEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JNE);
+            else if (ctx.relOperators().GR() != null)
+                return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JG);
+            else if (ctx.relOperators().LS() != null)
+                return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JL);
+            else if (ctx.relOperators().GREQ() != null)
+                return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JGE);
+            else if (ctx.relOperators().LSEQ() != null)
+                return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JLE);
+        }
+        throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "processNumExpressionCtxExit"));
     }
 
     public static int processExpressionCtxExit(PyAtHomeParser.ExpressionContext ctx) {
@@ -112,76 +114,51 @@ public class ListenerHelpers {
     }
 
     private static int performAddition(int leftExpRef, int rightExpRef) {
-        SemanticAnalyzer.areTypesCompatibleForAddition(
-                leftExpRef,
-                rightExpRef
+        SemanticAnalyzer.areTypesCompatibleForAddition(leftExpRef, rightExpRef);
+        return assemblyGen.genAdditionExpr(
+                leftExpRef, rightExpRef,
+                ResultDataTypeCalculator.getAdditionResultDataType(
+                        symTabController.getDataTypeByInd(leftExpRef),
+                        symTabController.getDataTypeByInd(rightExpRef)
+                )
         );
-
-        DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
-        DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
-
-        DataType resType = DataTypeConvertor.getAdditionResultDataType(lExpType, rExpType);
-
-        if (!lExpType.equals(resType))
-            leftExpRef = assemblyGen.genToDataTypeConversion(leftExpRef, resType);
-
-        if (!rExpType.equals(resType))
-            rightExpRef = assemblyGen.genToDataTypeConversion(rightExpRef, resType);
-
-        return assemblyGen.genAdditionExpr(leftExpRef, rightExpRef, resType);
     }
 
     private static int performSubtraction(int leftExpRef, int rightExpRef) {
         SemanticAnalyzer.areTypesCompatibleForSubtraction(leftExpRef, rightExpRef);
-
-        DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
-        DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
-
-        DataType resType = DataTypeConvertor.getSubtractionResultDataType(lExpType, rExpType);
-
-        if (!lExpType.equals(resType))
-            leftExpRef = assemblyGen.genToDataTypeConversion(leftExpRef, resType);
-
-        if (!rExpType.equals(resType))
-            rightExpRef = assemblyGen.genToDataTypeConversion(rightExpRef, resType);
-
-        return assemblyGen.genSubtractionExpr(leftExpRef, rightExpRef, resType);
+        return assemblyGen.genSubtractionExpr(
+                leftExpRef, rightExpRef,
+                ResultDataTypeCalculator.getSubtractionResultDataType(
+                        symTabController.getDataTypeByInd(leftExpRef),
+                        symTabController.getDataTypeByInd(rightExpRef)
+                )
+        );
     }
 
     private static int performMultiplication(int leftExpRef, int rightExpRef) {
-        SemanticAnalyzer.areTypesCompatibleForSubtraction(leftExpRef, rightExpRef);
-
-        DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
-        DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
-
-        DataType resType = DataTypeConvertor.getMultiplicationResultDataType(lExpType, rExpType);
-
-        if (!resType.equals(DataType.STRING)) {
-            if (!lExpType.equals(resType))
-                leftExpRef = assemblyGen.genToDataTypeConversion(leftExpRef, resType);
-
-            if (!rExpType.equals(resType))
-                rightExpRef = assemblyGen.genToDataTypeConversion(rightExpRef, resType);
-        }
-
-        return assemblyGen.genMultiplicationExpr(leftExpRef, rightExpRef, resType);
+        SemanticAnalyzer.areTypesCompatibleForMultiplication(leftExpRef, rightExpRef);
+        return assemblyGen.genMultiplicationExpr(
+                leftExpRef, rightExpRef,
+                ResultDataTypeCalculator.getMultiplicationResultDataType(
+                        symTabController.getDataTypeByInd(leftExpRef),
+                        symTabController.getDataTypeByInd(rightExpRef)
+                )
+        );
     }
 
     private static int performDivision(int leftExpRef, int rightExpRef) {
-        SemanticAnalyzer.areTypesCompatibleForSubtraction(leftExpRef, rightExpRef);
+        SemanticAnalyzer.areTypesCompatibleForDivision(leftExpRef, rightExpRef);
+        return assemblyGen.genDivisionExpr(leftExpRef, rightExpRef, ResultDataTypeCalculator.getDivisionResultDataType());
+    }
 
-        DataType lExpType = symTabController.getDataTypeByInd(leftExpRef);
-        DataType rExpType = symTabController.getDataTypeByInd(rightExpRef);
+    private static int performEqualityRelOp(int leftExpRef, int rightExpRef, ConditionalJump jump) {
+        SemanticAnalyzer.areTypesCompatibleForEqualityRelOp(leftExpRef, rightExpRef);
+        return assemblyGen.genComparisonExpr(leftExpRef, rightExpRef, jump);
+    }
 
-        DataType resType = DataTypeConvertor.getDivisionResultDataType();
-
-        if (!lExpType.equals(resType))
-            leftExpRef = assemblyGen.genToDataTypeConversion(leftExpRef, resType);
-
-        if (!rExpType.equals(resType))
-            rightExpRef = assemblyGen.genToDataTypeConversion(rightExpRef, resType);
-
-        return assemblyGen.genDivisionExpr(leftExpRef, rightExpRef, resType);
+    private static int performNonEqualityRelOp(int leftExpRef, int rightExpRef, ConditionalJump jump) {
+        SemanticAnalyzer.areTypesCompatibleForNonEqualityRelOp(leftExpRef, rightExpRef);
+        return assemblyGen.genComparisonExpr(leftExpRef, rightExpRef, jump);
     }
 
 }

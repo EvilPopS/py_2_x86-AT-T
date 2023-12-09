@@ -1,10 +1,11 @@
 package main.java.evilpops.pyathome_2_x86.semantic_analyzer;
 
 import main.java.evilpops.pyathome_2_x86.semantic_analyzer.exceptions.DataTypesNotCompatibleException;
-import main.java.evilpops.pyathome_2_x86.sym_tab.utils.data_type_utils.AritOpsOperandsTypesComp;
+import main.java.evilpops.pyathome_2_x86.sym_tab.utils.data_type_utils.ArithOpsOperandsTypesComp;
 import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
+import main.java.evilpops.pyathome_2_x86.sym_tab.utils.data_type_utils.RelOpsOperandsTypesComp;
 
 import java.util.Map;
 
@@ -13,28 +14,40 @@ public class SemanticAnalyzer {
 
     public static void areTypesCompatibleForAddition(int leftRefToVal, int rightRefToVal) {
         checkTypesCompatibility(
-                AritOpsOperandsTypesComp.additionOperandsTypesComp, leftRefToVal, rightRefToVal, "+"
+                ArithOpsOperandsTypesComp.additionOperandsTypesComp, leftRefToVal, rightRefToVal, "+"
         );
-
     }
 
     public static void areTypesCompatibleForSubtraction(int leftRefToVal, int rightRefToVal) {
         checkTypesCompatibility(
-                AritOpsOperandsTypesComp.subtractionOperandsTypesComp, leftRefToVal, rightRefToVal, "-"
+                ArithOpsOperandsTypesComp.subtractionOperandsTypesComp, leftRefToVal, rightRefToVal, "-"
         );
     }
 
     public static void areTypesCompatibleForMultiplication(int leftRefToVal, int rightRefToVal) {
         checkTypesCompatibility(
-                AritOpsOperandsTypesComp.multiplicationOperandsTypesComp, leftRefToVal, rightRefToVal, "*"
+                ArithOpsOperandsTypesComp.multiplicationOperandsTypesComp, leftRefToVal, rightRefToVal, "*"
         );
     }
 
     public static void areTypesCompatibleForDivision(int leftRefToVal, int rightRefToVal) {
         checkTypesCompatibility(
-                AritOpsOperandsTypesComp.divisionOperandsTypesComp, leftRefToVal, rightRefToVal, "*"
+                ArithOpsOperandsTypesComp.divisionOperandsTypesComp, leftRefToVal, rightRefToVal, "*"
         );
     }
+
+    public static void areTypesCompatibleForEqualityRelOp(int leftRefToVal, int rightRefToVal) {
+        checkTypesCompatibility(
+                RelOpsOperandsTypesComp.equalityRelOpsOperandsTypesComp, leftRefToVal, rightRefToVal, "(== or !=)"
+        );
+    }
+
+    public static void areTypesCompatibleForNonEqualityRelOp(int leftRefToVal, int rightRefToVal) {
+        checkTypesCompatibility(
+                RelOpsOperandsTypesComp.nonEqualityRelOpsOperandsTypesComp, leftRefToVal, rightRefToVal, "(< or <= or > or >=)"
+        );
+    }
+
 
     private static void checkTypesCompatibility(Map<DataType, Map<DataType, Boolean>> map, int leftRef, int rightRef, String operator) {
         DataType lType = symTabController.getDataTypeByInd(leftRef);

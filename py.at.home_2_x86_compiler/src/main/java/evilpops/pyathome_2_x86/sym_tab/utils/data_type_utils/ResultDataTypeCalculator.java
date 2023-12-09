@@ -6,7 +6,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataTypeConvertor {
+public class ResultDataTypeCalculator {
     private static final Map<DataType, Map<DataType, DataType>> additionDataTypeMap = new HashMap<>() {{
         put(
                 DataType.INTEGER,

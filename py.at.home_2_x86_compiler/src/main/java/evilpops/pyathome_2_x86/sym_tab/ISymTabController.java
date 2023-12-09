@@ -31,5 +31,5 @@ public interface ISymTabController {
     boolean checkIfDataTypeIsBoolean(int ind);
 
     /* Delete methods */
-    void freeRegisterByInd(int ind);
+    void freeIfIsRegisterByInd(int ind);
 }

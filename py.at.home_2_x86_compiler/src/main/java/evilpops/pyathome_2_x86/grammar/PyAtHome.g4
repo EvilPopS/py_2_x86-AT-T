@@ -63,6 +63,7 @@ mulDivOperators
 
 relOperators
     : EQ
+    | NEQ
     | GR
     | LS
     | GREQ
@@ -99,6 +100,7 @@ MUL: '*' ;
 DIV: '/' ;
 
 EQ: '==';
+NEQ: '!=';
 GR: '>';
 LS: '<';
 GREQ: '>=';

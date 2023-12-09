@@ -18,8 +18,8 @@ public class PyAtHomeParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		WS_SKIP=1, COMMENT_SKIP=2, NEWLINE=3, ASSIGN=4, L_PAREN=5, R_PAREN=6, 
-		PLUS=7, MINUS=8, MUL=9, DIV=10, EQ=11, GR=12, LS=13, GREQ=14, LSEQ=15, 
-		BOOLEAN=16, ID=17, FLOAT=18, INTEGER=19;
+		PLUS=7, MINUS=8, MUL=9, DIV=10, EQ=11, NEQ=12, GR=13, LS=14, GREQ=15, 
+		LSEQ=16, BOOLEAN=17, ID=18, FLOAT=19, INTEGER=20;
 	public static final int
 		RULE_program = 0, RULE_statementsList = 1, RULE_statement = 2, RULE_simpleStatement = 3, 
 		RULE_assignStatement = 4, RULE_numExpression = 5, RULE_addSubOperators = 6, 
@@ -37,15 +37,15 @@ public class PyAtHomeParser extends Parser {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, null, null, "'\\n'", "'='", "'('", "')'", "'+'", "'-'", "'*'", 
-			"'/'", "'=='", "'>'", "'<'", "'>='", "'<='"
+			"'/'", "'=='", "'!='", "'>'", "'<'", "'>='", "'<='"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, "WS_SKIP", "COMMENT_SKIP", "NEWLINE", "ASSIGN", "L_PAREN", "R_PAREN", 
-			"PLUS", "MINUS", "MUL", "DIV", "EQ", "GR", "LS", "GREQ", "LSEQ", "BOOLEAN", 
-			"ID", "FLOAT", "INTEGER"
+			"PLUS", "MINUS", "MUL", "DIV", "EQ", "NEQ", "GR", "LS", "GREQ", "LSEQ", 
+			"BOOLEAN", "ID", "FLOAT", "INTEGER"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -598,6 +598,7 @@ public class PyAtHomeParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class RelOperatorsContext extends ContextExtention {
 		public TerminalNode EQ() { return getToken(PyAtHomeParser.EQ, 0); }
+		public TerminalNode NEQ() { return getToken(PyAtHomeParser.NEQ, 0); }
 		public TerminalNode GR() { return getToken(PyAtHomeParser.GR, 0); }
 		public TerminalNode LS() { return getToken(PyAtHomeParser.LS, 0); }
 		public TerminalNode GREQ() { return getToken(PyAtHomeParser.GREQ, 0); }
@@ -625,7 +626,7 @@ public class PyAtHomeParser extends Parser {
 			{
 			setState(72);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 63488L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 129024L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -732,7 +733,7 @@ public class PyAtHomeParser extends Parser {
 			{
 			setState(78);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 851968L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 1703936L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -773,7 +774,7 @@ public class PyAtHomeParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0013Q\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u0014Q\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0001\u0000\u0001\u0000\u0001"+
@@ -787,8 +788,8 @@ public class PyAtHomeParser extends Parser {
 		"C\t\u0005\u0001\u0006\u0001\u0006\u0001\u0007\u0001\u0007\u0001\b\u0001"+
 		"\b\u0001\t\u0001\t\u0003\tM\b\t\u0001\n\u0001\n\u0001\n\u0000\u0001\n"+
 		"\u000b\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0000\u0004"+
-		"\u0001\u0000\u0007\b\u0001\u0000\t\n\u0001\u0000\u000b\u000f\u0002\u0000"+
-		"\u0010\u0010\u0012\u0013L\u0000\u0016\u0001\u0000\u0000\u0000\u0002\u0019"+
+		"\u0001\u0000\u0007\b\u0001\u0000\t\n\u0001\u0000\u000b\u0010\u0002\u0000"+
+		"\u0011\u0011\u0013\u0014L\u0000\u0016\u0001\u0000\u0000\u0000\u0002\u0019"+
 		"\u0001\u0000\u0000\u0000\u0004#\u0001\u0000\u0000\u0000\u0006%\u0001\u0000"+
 		"\u0000\u0000\b\'\u0001\u0000\u0000\u0000\n1\u0001\u0000\u0000\u0000\f"+
 		"D\u0001\u0000\u0000\u0000\u000eF\u0001\u0000\u0000\u0000\u0010H\u0001"+
@@ -801,7 +802,7 @@ public class PyAtHomeParser extends Parser {
 		"\u0000\u001f$\u0001\u0000\u0000\u0000 !\u0003\u0006\u0003\u0000!\"\u0005"+
 		"\u0000\u0000\u0001\"$\u0001\u0000\u0000\u0000#\u001d\u0001\u0000\u0000"+
 		"\u0000# \u0001\u0000\u0000\u0000$\u0005\u0001\u0000\u0000\u0000%&\u0003"+
-		"\b\u0004\u0000&\u0007\u0001\u0000\u0000\u0000\'(\u0005\u0011\u0000\u0000"+
+		"\b\u0004\u0000&\u0007\u0001\u0000\u0000\u0000\'(\u0005\u0012\u0000\u0000"+
 		"()\u0005\u0004\u0000\u0000)*\u0003\n\u0005\u0000*\t\u0001\u0000\u0000"+
 		"\u0000+,\u0006\u0005\uffff\uffff\u0000,2\u0003\u0012\t\u0000-.\u0005\u0005"+
 		"\u0000\u0000./\u0003\n\u0005\u0000/0\u0005\u0006\u0000\u000002\u0001\u0000"+
@@ -815,7 +816,7 @@ public class PyAtHomeParser extends Parser {
 		"AB\u0001\u0000\u0000\u0000B\u000b\u0001\u0000\u0000\u0000CA\u0001\u0000"+
 		"\u0000\u0000DE\u0007\u0000\u0000\u0000E\r\u0001\u0000\u0000\u0000FG\u0007"+
 		"\u0001\u0000\u0000G\u000f\u0001\u0000\u0000\u0000HI\u0007\u0002\u0000"+
-		"\u0000I\u0011\u0001\u0000\u0000\u0000JM\u0003\u0014\n\u0000KM\u0005\u0011"+
+		"\u0000I\u0011\u0001\u0000\u0000\u0000JM\u0003\u0014\n\u0000KM\u0005\u0012"+
 		"\u0000\u0000LJ\u0001\u0000\u0000\u0000LK\u0001\u0000\u0000\u0000M\u0013"+
 		"\u0001\u0000\u0000\u0000NO\u0007\u0003\u0000\u0000O\u0015\u0001\u0000"+
 		"\u0000\u0000\u0006\u001b#1?AL";

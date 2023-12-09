@@ -5,7 +5,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AritOpsOperandsTypesComp {
+public class ArithOpsOperandsTypesComp {
     /* Addition */
     public static final Map<DataType, Map<DataType, Boolean>> additionOperandsTypesComp = new HashMap<>() {{
         put(
