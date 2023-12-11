@@ -125,6 +125,30 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterLogicAndOperator(PyAtHomeParser.LogicAndOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLogicAndOperator(PyAtHomeParser.LogicAndOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLogicOrOperator(PyAtHomeParser.LogicOrOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLogicOrOperator(PyAtHomeParser.LogicOrOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpression(PyAtHomeParser.ExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}

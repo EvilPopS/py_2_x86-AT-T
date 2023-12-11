@@ -98,6 +98,26 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitRelOperators(PyAtHomeParser.RelOperatorsContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#logicAndOperator}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogicAndOperator(PyAtHomeParser.LogicAndOperatorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#logicAndOperator}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogicAndOperator(PyAtHomeParser.LogicAndOperatorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#logicOrOperator}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogicOrOperator(PyAtHomeParser.LogicOrOperatorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#logicOrOperator}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogicOrOperator(PyAtHomeParser.LogicOrOperatorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#expression}.
 	 * @param ctx the parse tree
 	 */

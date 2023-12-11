@@ -49,6 +49,8 @@ numExpression
     | numExpression mulDivOperators numExpression
     | numExpression addSubOperators numExpression
     | numExpression relOperators numExpression
+    | numExpression logicAndOperator numExpression
+    | numExpression logicOrOperator numExpression
     ;
 
 addSubOperators
@@ -68,6 +70,14 @@ relOperators
     | LS
     | GREQ
     | LSEQ
+    ;
+
+logicAndOperator
+    : AND
+    ;
+
+logicOrOperator
+    : OR
     ;
 
 expression
@@ -105,6 +115,9 @@ GR: '>';
 LS: '<';
 GREQ: '>=';
 LSEQ: '<=';
+
+AND: 'and';
+OR: 'or';
 
 BOOLEAN
     : 'True'

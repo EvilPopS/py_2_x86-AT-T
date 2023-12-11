@@ -48,7 +48,6 @@ public class SemanticAnalyzer {
         );
     }
 
-
     private static void checkTypesCompatibility(Map<DataType, Map<DataType, Boolean>> map, int leftRef, int rightRef, String operator) {
         DataType lType = symTabController.getDataTypeByInd(leftRef);
         DataType rType = symTabController.getDataTypeByInd(rightRef);
