@@ -28,7 +28,8 @@ public interface ISymTabController {
     boolean checkIfIsLiteralByInd(int ind);
     boolean checkIfIsVarByInd(int ind);
     boolean checkIfDataTypeIsFloat(int ind);
+    boolean checkIfDataTypeIsBoolean(int ind);
 
     /* Delete methods */
-    void freeRegisterByInd(int ind);
+    void freeIfIsRegisterByInd(int ind);
 }

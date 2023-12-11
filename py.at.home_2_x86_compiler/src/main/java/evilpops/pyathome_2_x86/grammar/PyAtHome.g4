@@ -45,11 +45,39 @@ assignStatement
 
 numExpression
     : expression
+    | L_PAREN numExpression R_PAREN
+    | numExpression mulDivOperators numExpression
     | numExpression addSubOperators numExpression
+    | numExpression relOperators numExpression
+    | numExpression logicAndOperator numExpression
+    | numExpression logicOrOperator numExpression
     ;
 
 addSubOperators
     : PLUS
+    | MINUS
+    ;
+
+mulDivOperators
+    : MUL
+    | DIV
+    ;
+
+relOperators
+    : EQ
+    | NEQ
+    | GR
+    | LS
+    | GREQ
+    | LSEQ
+    ;
+
+logicAndOperator
+    : AND
+    ;
+
+logicOrOperator
+    : OR
     ;
 
 expression
@@ -72,7 +100,24 @@ COMMENT_SKIP: '#'~[\n]* -> skip;
 NEWLINE: '\n' ;
 
 ASSIGN: '=' ;
+
+L_PAREN: '(';
+R_PAREN: ')';
+
 PLUS: '+' ;
+MINUS: '-' ;
+MUL: '*' ;
+DIV: '/' ;
+
+EQ: '==';
+NEQ: '!=';
+GR: '>';
+LS: '<';
+GREQ: '>=';
+LSEQ: '<=';
+
+AND: 'and';
+OR: 'or';
 
 BOOLEAN
     : 'True'
@@ -82,10 +127,10 @@ BOOLEAN
 ID: [a-zA-Z_][a-zA-Z0-9_]* ;
 
 FLOAT
-    : ([1-9][0-9]*)?'.'[0-9]+
-    | [1-9][0-9]*'.'[0-9]*
+    : '-'?([1-9][0-9]*)?'.'[0-9]+
+    | '-'?[1-9][0-9]*'.'[0-9]*
     ;
 INTEGER
-    : [0-9]+
+    : '-'?[0-9]+
     ;
 /* Lexer rules - END */

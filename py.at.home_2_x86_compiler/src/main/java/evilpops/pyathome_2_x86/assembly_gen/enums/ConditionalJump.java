@@ -1,0 +1,26 @@
+package main.java.evilpops.pyathome_2_x86.assembly_gen.enums;
+
+import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
+
+public enum ConditionalJump {
+    JE,
+    JNE,
+    JG,
+    JL,
+    JGE,
+    JLE,
+    JA,
+    JB,
+    JAE,
+    JBE;
+
+    public static String getJump(ConditionalJump jump, boolean isFloat) {
+        return (switch (jump) {
+            case JE, JNE -> jump;
+            case JG, JA -> isFloat ? JA : JG;
+            case JGE, JAE -> isFloat ? JAE : JGE;
+            case JL, JB -> isFloat ? JL : JB;
+            case JLE, JBE -> isFloat ? JLE : JBE;
+        }).toString().toLowerCase();
+    }
+}
