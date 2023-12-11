@@ -154,12 +154,10 @@ public class AssemblyGenerator implements IAssemblyGenerator {
             this.lblCounter.incrementComparisonLblCount();
             if (leftExpDT.equals(DataType.STRING)) {
                 //TODO - generate string comparison
-            } else if (leftExpDT.equals(DataType.FLOAT) || rightExpDT.equals(DataType.FLOAT)) {
-                this.genNumComparison(leftExpRef, rightExpRef, true);
-                this.genComparisonBranchCode(resultRef, jumpType, true);
-            } else {
-                this.genNumComparison(leftExpRef, rightExpRef, false);
-                this.genComparisonBranchCode(resultRef, jumpType, false);
+            } else { // it is a bool/number
+                boolean isFloat = leftExpDT.equals(DataType.FLOAT) || rightExpDT.equals(DataType.FLOAT);
+                this.genNumComparison(leftExpRef, rightExpRef, isFloat);
+                this.genComparisonBranchCode(resultRef, jumpType, isFloat);
             }
         }
 
