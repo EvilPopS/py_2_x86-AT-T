@@ -10,15 +10,19 @@ public interface IAssemblyGenerator {
     void genSubInst(int dest, int src);
     void genMulInst(int dest, int src);
     void genDivInst(int dest, int src);
+    void genAndInst(int dest, int src);
+    void genOrInst(int dest, int src);
     void genCmpInst(int dest, int src);
+    void genCmpToZeroInst(int dest);
 
-    /* Instructions set */
+    /* Expressions set */
     int genAdditionExpr(int leftExpRef, int rightExpRef, DataType resultType);
     int genSubtractionExpr(int leftExpRef, int rightExpRef, DataType resultType);
     int genMultiplicationExpr(int leftExpRef, int rightExpRef, DataType resultType);
     int genDivisionExpr(int leftExpRef, int rightExpRef, DataType resultType);
     int genComparisonExpr(int leftExpRef, int rightExpRef, ConditionalJump jumpType);
-    int genIsNotEqualExpr(int leftExpRef, int rightExpRef);
+    int genLogicalAndOpExpr(int leftExpRef, int rightExpRef);
+    int genLogicalOrOpExpr(int leftExpRef, int rightExpRef);
 
     /* Other */
     void genFloatLiteral(int src);

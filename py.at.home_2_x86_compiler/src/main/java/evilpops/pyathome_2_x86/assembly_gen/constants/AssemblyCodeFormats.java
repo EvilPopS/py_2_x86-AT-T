@@ -5,14 +5,17 @@ public class AssemblyCodeFormats {
     public static final String GLOBAL_MAIN = ".globl main\n";
     public static final String MAIN_LBL = "main:\n";
     public static final String MAIN_START_CODE = "\tpushq %rbp\n\tsubq $8, %rsp\n\tmovq %rsp, %rbp\n";
-    public static final String MAIN_END_LBL = "main_end:\n";
-    public static final String PROGRAM_END_CODE = "program_end:\n\tmovq $60, %rax\n\tmovq $0, %rbx\n\tsyscall\n";
+    public static final String DATA_SECTION_INIT = "\tFLOAT_ZERO: .double 0.0\n";
+    public static final String PROGRAM_END_CODE = "main_end:\n\tmovq $60, %rax\n\tmovq $0, %rbx\n\tsyscall\n";
+
     public static final String PUSH_INST = "\tpush%s %s\n";
     public static final String MOVE_INST = "\tmov%s %s, %s\n";
     public static final String ADD_INST = "\tadd%s %s, %s\n";
     public static final String SUB_INST = "\tsub%s %s, %s\n";
     public static final String MUL_INST = "\t%smul%s %s, %s\n";
     public static final String DIV_INST = "\tdivsd %s, %s\n";
+    public static final String AND_INST = "\tandq %s, %s\n";
+    public static final String OR_INST = "\torq %s, %s\n";
     public static final String BOOLINT_2_FLOAT_INST = "\tcvtsi2sd %s, %s\n";
     public static final String CMP_INT = "\tcmpq %s, %s\n";
     public static final String CMP_FLOAT = "\tcomisd %s, %s\n";
@@ -39,4 +42,5 @@ public class AssemblyCodeFormats {
     public static final String LBL_CMP_TRUE = "L_CMP_TRUE_%s";
     public static final String LBL_CMP_END = "L_CMP_END_%s";
 
+    public static final String FLOAT_ZERO = "FLOAT_ZERO";
 }

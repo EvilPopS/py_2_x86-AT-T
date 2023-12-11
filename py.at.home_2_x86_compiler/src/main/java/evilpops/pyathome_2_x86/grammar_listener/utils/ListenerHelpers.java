@@ -56,37 +56,39 @@ public class ListenerHelpers {
     public static int processNumExpressionCtxExit(PyAtHomeParser.NumExpressionContext ctx) {
         if (ctx.expression() != null)
             return ctx.expression().getRefToSymTab();
-        else if (ctx.L_PAREN() != null && ctx.R_PAREN() != null) {
+        else if (ctx.L_PAREN() != null && ctx.R_PAREN() != null)
             return ctx.numExpression(0).getRefToSymTab();
-        } else if (ctx.addSubOperators() != null) {
+        else if (ctx.numExpression() != null || !ctx.numExpression().isEmpty()){
             int leftExpRef = ctx.numExpression(0).getRefToSymTab();
             int rightExpRef = ctx.numExpression(1).getRefToSymTab();
-            if (ctx.addSubOperators().PLUS() != null)
-                return performAddition(leftExpRef, rightExpRef);
-            else
-                return performSubtraction(leftExpRef, rightExpRef);
-        } else if (ctx.mulDivOperators() != null) {
-            int leftExpRef = ctx.numExpression(0).getRefToSymTab();
-            int rightExpRef = ctx.numExpression(1).getRefToSymTab();
-            if (ctx.mulDivOperators().MUL() != null)
-                return performMultiplication(leftExpRef, rightExpRef);
-            else
-                return performDivision(leftExpRef, rightExpRef);
-        } else if (ctx.relOperators() != null) {
-            int leftExpRef = ctx.numExpression(0).getRefToSymTab();
-            int rightExpRef = ctx.numExpression(1).getRefToSymTab();
-            if (ctx.relOperators().EQ() != null)
-                return performEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JE);
-            else if (ctx.relOperators().NEQ() != null)
-                return performEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JNE);
-            else if (ctx.relOperators().GR() != null)
-                return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JG);
-            else if (ctx.relOperators().LS() != null)
-                return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JL);
-            else if (ctx.relOperators().GREQ() != null)
-                return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JGE);
-            else if (ctx.relOperators().LSEQ() != null)
-                return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JLE);
+            if (ctx.addSubOperators() != null) {
+                if (ctx.addSubOperators().PLUS() != null)
+                    return performAddition(leftExpRef, rightExpRef);
+                else
+                    return performSubtraction(leftExpRef, rightExpRef);
+            } else if (ctx.mulDivOperators() != null) {
+                if (ctx.mulDivOperators().MUL() != null)
+                    return performMultiplication(leftExpRef, rightExpRef);
+                else
+                    return performDivision(leftExpRef, rightExpRef);
+            } else if (ctx.relOperators() != null) {
+                if (ctx.relOperators().EQ() != null)
+                    return performEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JE);
+                else if (ctx.relOperators().NEQ() != null)
+                    return performEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JNE);
+                else if (ctx.relOperators().GR() != null)
+                    return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JG);
+                else if (ctx.relOperators().LS() != null)
+                    return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JL);
+                else if (ctx.relOperators().GREQ() != null)
+                    return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JGE);
+                else if (ctx.relOperators().LSEQ() != null)
+                    return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JLE);
+            }
+            else if (ctx.logicAndOperator() != null)
+                return performLogicalOp(leftExpRef, rightExpRef, true);
+            else if (ctx.logicOrOperator() != null)
+                return performLogicalOp(leftExpRef, rightExpRef, false);
         }
         throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "processNumExpressionCtxExit"));
     }
@@ -160,5 +162,11 @@ public class ListenerHelpers {
         SemanticAnalyzer.areTypesCompatibleForNonEqualityRelOp(leftExpRef, rightExpRef);
         return assemblyGen.genComparisonExpr(leftExpRef, rightExpRef, jump);
     }
+
+    private static int performLogicalOp(int leftExpRef, int rightExpRef, boolean isAnd) {
+        return isAnd ? assemblyGen.genLogicalAndOpExpr(leftExpRef, rightExpRef)
+                : assemblyGen.genLogicalOrOpExpr(leftExpRef, rightExpRef);
+    }
+
 
 }

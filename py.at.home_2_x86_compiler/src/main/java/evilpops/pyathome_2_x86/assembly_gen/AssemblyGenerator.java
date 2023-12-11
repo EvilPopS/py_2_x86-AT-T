@@ -24,7 +24,8 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.lblCounter = new LabelCounter();
         this.dataSection = new StringBuilder();
         this.txtSection = new StringBuilder();
-        this.dataSection.append(String.format(SECTION, "data"));
+        this.dataSection.append(String.format(SECTION, "data"))
+                .append(DATA_SECTION_INIT);
         this.txtSection.append(String.format(SECTION, "text"))
                 .append(GLOBAL_MAIN).append(MAIN_LBL)
                 .append(MAIN_START_CODE);
@@ -87,10 +88,38 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public void genAndInst(int dest, int src) {
+        this.txtSection.append(String.format(
+                AND_INST,
+                this.genSymbolByTabInd(src),
+                this.genSymbolByTabInd(dest)
+        ));
+    }
+
+    @Override
+    public void genOrInst(int dest, int src) {
+        this.txtSection.append(String.format(
+                OR_INST,
+                this.genSymbolByTabInd(src),
+                this.genSymbolByTabInd(dest)
+        ));
+    }
+
+    @Override
     public void genCmpInst(int dest, int src) {
         this.txtSection.append(String.format(
                 this.symTabController.checkIfDataTypeIsFloat(dest) ? CMP_FLOAT : CMP_INT,
                 this.genSymbolByTabInd(src),
+                this.genSymbolByTabInd(dest)
+        ));
+    }
+
+    @Override
+    public void genCmpToZeroInst(int dest) {
+        boolean isFLoat = this.symTabController.checkIfDataTypeIsFloat(dest);
+        this.txtSection.append(String.format(
+                isFLoat ? CMP_FLOAT : CMP_INT,
+                this.makeLiteralSymbol(isFLoat ? FLOAT_ZERO : "0", isFLoat),
                 this.genSymbolByTabInd(dest)
         ));
     }
@@ -151,7 +180,6 @@ public class AssemblyGenerator implements IAssemblyGenerator {
                     resultRef, leftExpDT.equals(DataType.NONE) && rightExpDT.equals(DataType.NONE)
             );
         else {
-            this.lblCounter.incrementComparisonLblCount();
             if (leftExpDT.equals(DataType.STRING)) {
                 //TODO - generate string comparison
             } else { // it is a bool/number
@@ -167,15 +195,13 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
-    public int genIsNotEqualExpr(int leftExpRef, int rightExpRef) {
-        DataType leftExpDT = symTabController.getDataTypeByInd(leftExpRef);
-        DataType rightExpDT = symTabController.getDataTypeByInd(rightExpRef);
-        if (leftExpDT.equals(DataType.NONE) || rightExpDT.equals(DataType.NONE)) {
-        } else if (leftExpDT.equals(DataType.STRING)) {
-        } else if (leftExpDT.equals(DataType.FLOAT) || rightExpDT.equals(DataType.FLOAT)) {
-        } else {
-        }
-        return 0;
+    public int genLogicalAndOpExpr(int leftExpRef, int rightExpRef) {
+        return this.genLogicalOpExpr(leftExpRef, rightExpRef, true);
+    }
+
+    @Override
+    public int genLogicalOrOpExpr(int leftExpRef, int rightExpRef) {
+        return this.genLogicalOpExpr(leftExpRef, rightExpRef, false);
     }
 
     @Override
@@ -192,7 +218,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.txtSection.append(String.format(
                 SUB_INST,
                 INST_SUFFIX,
-                this.makeLiteralSymbol(FLOAT_SIZE),
+                this.makeLiteralSymbol(FLOAT_SIZE, false),
                 this.getRegAccess(AssemblyRegister.RSP)
         ));
     }
@@ -210,7 +236,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         return switch (resDataType) {
             case INTEGER -> genToIntegerConversion(src);
             case FLOAT -> genToFloatConversion(src);
-//            case BOOLEAN -> genToFloatConversion(src);
+            case BOOLEAN -> genToBooleanConversion(src);
             default -> -1;
         };
     }
@@ -234,8 +260,9 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         return String.format(REG_ACCESS, register);
     }
 
-    private String makeLiteralSymbol(String val) {
-        return String.format(LITERAL_W_DOLLAR, val);
+    private String makeLiteralSymbol(String val, boolean isFloat) {
+        return isFloat ? val
+                : String.format(LITERAL_W_DOLLAR, val);
     }
 
     private String genSymbolByTabInd(int ind) {
@@ -268,12 +295,13 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     private int genToIntegerConversion(int src) {
         DataType srcDataType = symTabController.getDataTypeByInd(src);
-        if (srcDataType.equals(DataType.BOOLEAN)) {
-            int destRegRef = symTabController.takeRegister(DataType.INTEGER);
-            this.genMoveInst(destRegRef, src);
-            return destRegRef;
-        }
-        throw new CannotConvertGivenDataTypeToFloatException(srcDataType.toString());
+        if (!srcDataType.equals(DataType.BOOLEAN))
+            throw new CannotConvertGivenDataTypeToFloatException(srcDataType.toString());
+
+        int destRegRef = symTabController.takeRegister(DataType.INTEGER);
+        this.genMoveInst(destRegRef, src);
+        this.symTabController.freeIfIsRegisterByInd(src);
+        return destRegRef;
     }
 
     private int genToFloatConversion(int src) {
@@ -293,9 +321,39 @@ public class AssemblyGenerator implements IAssemblyGenerator {
                         this.genSymbolByTabInd(src),
                         this.genSymbolByTabInd(destRegRef)
                 ));
+                this.symTabController.freeIfIsRegisterByInd(src);
                 return destRegRef;
+            default:
+                throw new CannotConvertGivenDataTypeToFloatException(srcDataType.toString());
         }
-        throw new CannotConvertGivenDataTypeToFloatException(srcDataType.toString());
+    }
+
+    private int genToBooleanConversion(int src) {
+        if (!this.symTabController.checkIfIsRegByInd(src)) {
+            int regRef = this.symTabController.takeRegister(this.symTabController.getDataTypeByInd(src));
+            this.genMoveInst(regRef, src);
+            src = regRef;
+        }
+
+        return switch (this.symTabController.getDataTypeByInd(src)) {
+            case INTEGER -> {
+                this.genCmpToZeroInst(src);
+                this.genComparisonBranchCode(src, ConditionalJump.JNE, false);
+                yield src;
+            }
+            case FLOAT -> {
+                this.genCmpToZeroInst(src);
+                int regRef = this.symTabController.takeRegister(DataType.BOOLEAN);
+                this.genComparisonBranchCode(regRef, ConditionalJump.JNE, true);
+                yield regRef;
+            }
+            case STRING -> -1;
+            case NONE -> {
+                this.genImmediateComparisonResult(src, false);
+                yield src;
+            }
+            default -> throw new CannotConvertGivenDataTypeToFloatException("");
+        };
     }
 
     private int genNumberAddition(int leftExpRef, int rightExpRef, DataType resType) {
@@ -364,7 +422,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.txtSection.append(String.format(
                 MOVE_INST,
                 INST_SUFFIX,
-                isTrue ? this.makeLiteralSymbol("1") : this.makeLiteralSymbol("0"),
+                isTrue ? this.makeLiteralSymbol("1", false) : this.makeLiteralSymbol("0", false),
                 this.genSymbolByTabInd(dest)
         ));
     }
@@ -383,6 +441,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
 
     private void genComparisonBranchCode(int dest, ConditionalJump jumpType, boolean isFloat) {
+        this.lblCounter.incrementComparisonLblCount();
         String cmpLblCount = this.lblCounter.getComparisonLblCount();
         String cmpTrueLbl = String.format(LBL_CMP_TRUE, cmpLblCount);
         String cmpEndLbl = String.format(LBL_CMP_END, cmpLblCount);
@@ -394,5 +453,31 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.genLabel(cmpEndLbl);
     }
 
+    private int genLogicalOpExpr(int leftExpRef, int rightExpRef, boolean isAnd) {
+        int resRef;
+        leftExpRef = this.genToDataTypeConversion(leftExpRef, DataType.BOOLEAN);
+        rightExpRef = this.genToDataTypeConversion(rightExpRef, DataType.BOOLEAN);
 
+        if (this.symTabController.checkIfIsRegByInd(leftExpRef)) {
+            this.genLogicalOpInst(leftExpRef, rightExpRef, isAnd);
+            this.symTabController.freeIfIsRegisterByInd(rightExpRef);
+            resRef = leftExpRef;
+        } else if (this.symTabController.checkIfIsRegByInd(rightExpRef)) {
+            this.genLogicalOpInst(rightExpRef, leftExpRef, isAnd);
+            this.symTabController.freeIfIsRegisterByInd(leftExpRef);
+            resRef = rightExpRef;
+        } else {
+            resRef = this.symTabController.takeRegister(DataType.BOOLEAN);
+            this.genMoveInst(resRef, leftExpRef);
+            this.genLogicalOpInst(resRef, rightExpRef, isAnd);
+        }
+        return resRef;
+    }
+
+    private void genLogicalOpInst(int dest, int src, boolean isAnd) {
+        if (isAnd)
+            this.genAndInst(dest, src);
+        else
+            this.genOrInst(dest, src);
+    }
 }
