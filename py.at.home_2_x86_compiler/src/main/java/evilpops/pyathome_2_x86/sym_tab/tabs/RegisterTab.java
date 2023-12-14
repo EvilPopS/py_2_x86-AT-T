@@ -5,7 +5,6 @@ import main.java.evilpops.pyathome_2_x86.assembly_gen.enums.AssemblyRegister;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.RegisterTabRow;
 
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,8 +37,8 @@ public class RegisterTab extends ConcreteTableArchetype<RegisterTabRow> {
 
     private AssemblyRegister getNextFreeGenPurposeReg(DataType dataType) {
         AssemblyRegister[] regGroup = dataType == DataType.FLOAT ?
-                AssemblyRegisterGroups.FLOAT_FREE_REGS :
-                AssemblyRegisterGroups.FREE_REGS;
+                AssemblyRegisterGroups.FLOAT_TEMP_REGS :
+                AssemblyRegisterGroups.CALLEE_SAVED_REGS;
 
         for (AssemblyRegister ar : regGroup)
             if (this.table.get(this.regInds.get(ar)).isAvailable())

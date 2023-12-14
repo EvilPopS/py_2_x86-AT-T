@@ -6,7 +6,7 @@ public class AssemblyCodeFormats {
     public static final String MAIN_LBL = "main:\n";
     public static final String MAIN_START_CODE = "\tpushq %rbp\n\tsubq $8, %rsp\n\tmovq %rsp, %rbp\n";
     public static final String DATA_SECTION_INIT = "\tFLOAT_ZERO: .double 0.0\n";
-    public static final String PROGRAM_END_CODE = "main_end:\n\tmovq $60, %rax\n\tmovq $0, %rbx\n\tsyscall\n";
+    public static final String PROGRAM_END_CODE = "main_end:\n\tmovq $60, %rax\n\txorq %rdi, %rdi\n\tsyscall\n";
 
     public static final String PUSH_INST = "\tpush%s %s\n";
     public static final String MOVE_INST = "\tmov%s %s, %s\n";
@@ -43,4 +43,31 @@ public class AssemblyCodeFormats {
     public static final String LBL_CMP_END = "L_CMP_END_%s";
 
     public static final String FLOAT_ZERO = "FLOAT_ZERO";
+
+    public static final String CONCAT_STRINGS_BUILTIN =
+            "STRING_CONCAT:" +
+            "\t%rbp\n" +
+            "\tmovq %rsp, %rbp\n\n" +
+            "\tsubq $32, %rsp\n" +
+            "\tmovq %rdi, -16(%rbp)\n" +
+            "\tmovq %rsi, -24(%rbp)\n\n" +
+            "\tmovq -16(%rbp), %rdi\t\n" +
+            "\tcall strlen@plt\n" +
+            "\tmovq %rax, %r10\n\n" +
+            "\tmovq -24(%rbp), %rdi\t\n" +
+            "\tcall strlen@plt\n" +
+            "\taddq %rax, %r10\n\n" +
+            "\tmovq %r10, %rdi\n" +
+            "\tcall malloc@plt\n" +
+            "\tmovq %rax, -32(%rbp)\t\n\n" +
+            "\tmovq -32(%rbp), %rdi\n" +
+            "\tmovq -16(%rbp), %rsi\n" +
+            "\tcall strcpy@plt\n\n" +
+            "\tmovq -32(%rbp), %rdi\n" +
+            "\tmovq -24(%rbp), %rsi\n" +
+            "\tcall strcat@plt\n\n" +
+            "\tmovq -32(%rbp), %rax\n\n" +
+            "\taddq $32, %rsp\n" +
+            "\tpopq %rbp\n\n" +
+            "\tret\n\n";
 }
