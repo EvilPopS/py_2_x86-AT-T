@@ -8,28 +8,30 @@ public interface ISymTabController {
     int addVariable(DataType dataType, String name, int ordinality);
     int addLiteral(String value, DataType dataType);
     int addLiteralFloat(String value, DataType dataType, int dataLabelCounter);
+    int addLiteralString(String value, DataType dataType, int dataLabelCounter);
     int takeRegister(DataType dataType);
 
     /* 'Get reference' methods */
     int getVarRefByName(String name);
 
     /* 'Get data' methods */
-    DataType getDataTypeByInd(int ind);
-    String getLiteralValueByInd(int ind);
-    AssemblyRegister getRegNameByInd(int ind);
-    int getVarOrdinalityByInd(int ind);
+    DataType getDataType(int ind);
+    String getLiteralValue(int ind);
+    AssemblyRegister getRegName(int ind);
+    int getVarOrdinality(int ind);
     int getDataLabelCounter(int ind);
 
     /* 'Set field' methods */
-    void setDataTypeByInd(int ind, DataType dataType);
+    void setDataType(int ind, DataType dataType);
 
     /* Check if ... */
-    boolean checkIfIsRegByInd(int ind);
-    boolean checkIfIsLiteralByInd(int ind);
-    boolean checkIfIsVarByInd(int ind);
+    boolean checkIfIsReg(int ind);
+    boolean checkIfIsLiteral(int ind);
+    boolean checkIfIsVar(int ind);
     boolean checkIfDataTypeIsFloat(int ind);
+    boolean checkIfDataTypeIsString(int ind);
     boolean checkIfDataTypeIsBoolean(int ind);
 
     /* Delete methods */
-    void freeIfIsRegisterByInd(int ind);
+    void freeIfIsRegister(int ind);
 }

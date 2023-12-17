@@ -11,7 +11,7 @@ public class VariableTabRow extends ConcreteRowArchetype {
     protected int ordinality;
 
     public VariableTabRow(int foreignId, DataType dataType, String name, int ordinality) {
-        super(dataType, foreignId);
+        super(foreignId, dataType);
         this.name = name;
         this.ordinality = ordinality;
     }

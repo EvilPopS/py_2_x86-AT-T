@@ -89,6 +89,7 @@ literal
     : INTEGER
     | FLOAT
     | BOOLEAN
+    | STRING
     ;
 /* Parser rules - END */
 
@@ -132,5 +133,10 @@ FLOAT
     ;
 INTEGER
     : '-'?[0-9]+
+    ;
+
+STRING
+    : '"'(~["\\\n]|'\\'.)*'"'
+    | '\''(~['\\\n]|'\\'.)*'\''
     ;
 /* Lexer rules - END */

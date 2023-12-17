@@ -11,13 +11,13 @@ public class LiteralTabRow extends ConcreteRowArchetype {
     protected int dataLabelNum;
 
     public LiteralTabRow(int foreignId, DataType dataType, String value) {
-        super(dataType, foreignId);
+        super(foreignId, dataType);
         this.value = value;
         this.dataLabelNum = -1;
     }
 
     public LiteralTabRow(int foreignId, DataType dataType, String value, int dataLabelNum) {
-        super(dataType, foreignId);
+        super(foreignId, dataType);
         this.value = value;
         this.dataLabelNum = dataLabelNum;
     }

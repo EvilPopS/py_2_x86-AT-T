@@ -12,8 +12,9 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 public class RegisterTabRow extends ConcreteRowArchetype {
     protected AssemblyRegister registerName;
     protected boolean available;
-    public RegisterTabRow(AssemblyRegister registerName, DataType dataType, int foreignId) {
-        super(dataType, foreignId);
+
+    public RegisterTabRow(int foreignId, DataType dataType, AssemblyRegister registerName) {
+        super(foreignId, dataType);
         this.registerName = registerName;
         this.available = true;
     }

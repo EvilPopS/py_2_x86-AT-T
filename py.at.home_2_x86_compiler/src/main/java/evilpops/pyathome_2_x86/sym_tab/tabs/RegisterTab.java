@@ -16,18 +16,17 @@ public class RegisterTab extends ConcreteTableArchetype<RegisterTabRow> {
         this.regInds = new HashMap<>();
         for (AssemblyRegister ar : AssemblyRegister.values()) {
             this.regInds.put(ar, this.table.size());
-            this.table.add(new RegisterTabRow(ar, DataType.UNKNOWN, -1));
+            this.table.add(new RegisterTabRow(-1, DataType.UNKNOWN, ar));
         }
     }
 
-    public int takeGenPurposeReg(DataType dataType, int mainTabFK) {
+    public int takeGenPurposeReg(int mainTabFK, DataType dataType) {
         int regInd = this.regInds.get(getNextFreeGenPurposeReg(dataType));
-        this.table.get(regInd).setAvailable(false)
-                .setDataType(dataType).setForeignId(mainTabFK);
+        this.table.get(regInd).setAvailable(false).setDataType(dataType).setForeignId(mainTabFK);
         return regInd;
     }
 
-    public AssemblyRegister getRegisterNameByInd(int ind) {
+    public AssemblyRegister getRegisterName(int ind) {
         return this.table.get(ind).getRegisterName();
     }
 
