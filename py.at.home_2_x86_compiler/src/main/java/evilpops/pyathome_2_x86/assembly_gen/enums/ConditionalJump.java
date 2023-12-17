@@ -19,8 +19,8 @@ public enum ConditionalJump {
             case JE, JNE -> jump;
             case JG, JA -> isFloat ? JA : JG;
             case JGE, JAE -> isFloat ? JAE : JGE;
-            case JL, JB -> isFloat ? JL : JB;
-            case JLE, JBE -> isFloat ? JLE : JBE;
+            case JL, JB -> isFloat ? JB : JL;
+            case JLE, JBE -> isFloat ? JBE : JLE;
         }).toString().toLowerCase();
     }
 }
