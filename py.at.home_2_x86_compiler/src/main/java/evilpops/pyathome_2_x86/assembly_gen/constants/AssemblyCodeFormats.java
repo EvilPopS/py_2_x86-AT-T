@@ -50,6 +50,7 @@ public class AssemblyCodeFormats {
 
     public static final String CONCAT_STRINGS_LBL = "STRING_CONCAT";
     public static final String STRINGS_MUL_LBL = "STRING_MUL";
+    public static final String STRING_CMP_LBL = "STRING_CMP";
 
     public static final String CONCAT_STRINGS_BUILTIN =
             CONCAT_STRINGS_LBL +
@@ -81,39 +82,49 @@ public class AssemblyCodeFormats {
 
     public static final String STRINGS_MUL_BUILTIN =
             STRINGS_MUL_LBL +
-            ":\n" +
-            "\tpushq %rbp\n" +
-            "\tmovq %rsp, %rbp\n\n" +
-            "\tsubq $32, %rsp\n" +
-            "\tmovq %rdi, -16(%rbp)\n" +
-            "\tmovq %rsi, -24(%rbp)\n\n" +
-            "\tmovq -16(%rbp), %rdi\t\n" +
-            "\tcall strlen@plt\n" +
-            "\tmovq %rax, %r10\n\n" +
-            "\tcmpq $0, -24(%rbp) \n" +
-            "\tjle SM_EMPTY_RES\t\n" +
-            "\tcmpq $0, %r10 \n" +
-            "\tje SM_EMPTY_RES\t\n\n" +
-            "\timulq -24(%rbp), %r10\n\n" +
-            "\tmovq %r10, %rdi\n" +
-            "\tcall malloc@plt\n" +
-            "\tmovq %rax, -32(%rbp)\n\n" +
-            "SM_CAT_ITER_START:\n" +
-            "\tcmpq $0, -24(%rbp)\t\n" +
-            "\tje SM_END\n\n" +
-            "\tmovq -32(%rbp), %rdi\n" +
-            "\tmovq -16(%rbp), %rsi\n" +
-            "\tcall strcat@plt\n\n" +
-            "\tsubq $1, -24(%rbp)\n" +
-            "\tjmp SM_CAT_ITER_START\n\n" +
-            "SM_EMPTY_RES:\n" +
-            "\tmovq $0, %rdi\n" +
-            "\tcall malloc@plt\n" +
-            "\tmovq %rax, -32(%rbp)\n" +
-            "\tjmp SM_END\t\n\n" +
-            "SM_END:\n" +
-            "\tmovq -32(%rbp), %rax\n\n" +
-            "\taddq $32, %rsp\n" +
-            "\tpopq %rbp\n" +
-            "\tret";
+                    ":\n" +
+                    "\tpushq %rbp\n" +
+                    "\tmovq %rsp, %rbp\n\n" +
+                    "\tsubq $32, %rsp\n" +
+                    "\tmovq %rdi, -16(%rbp)\n" +
+                    "\tmovq %rsi, -24(%rbp)\n\n" +
+                    "\tmovq -16(%rbp), %rdi\t\n" +
+                    "\tcall strlen@plt\n" +
+                    "\tmovq %rax, %r10\n\n" +
+                    "\tcmpq $0, -24(%rbp) \n" +
+                    "\tjle SM_EMPTY_RES\t\n" +
+                    "\tcmpq $0, %r10 \n" +
+                    "\tje SM_EMPTY_RES\t\n\n" +
+                    "\timulq -24(%rbp), %r10\n\n" +
+                    "\tmovq %r10, %rdi\n" +
+                    "\tcall malloc@plt\n" +
+                    "\tmovq %rax, -32(%rbp)\n\n" +
+                    "SM_CAT_ITER_START:\n" +
+                    "\tcmpq $0, -24(%rbp)\t\n" +
+                    "\tje SM_END\n\n" +
+                    "\tmovq -32(%rbp), %rdi\n" +
+                    "\tmovq -16(%rbp), %rsi\n" +
+                    "\tcall strcat@plt\n\n" +
+                    "\tsubq $1, -24(%rbp)\n" +
+                    "\tjmp SM_CAT_ITER_START\n\n" +
+                    "SM_EMPTY_RES:\n" +
+                    "\tmovq $0, %rdi\n" +
+                    "\tcall malloc@plt\n" +
+                    "\tmovq %rax, -32(%rbp)\n" +
+                    "\tjmp SM_END\t\n\n" +
+                    "SM_END:\n" +
+                    "\tmovq -32(%rbp), %rax\n\n" +
+                    "\taddq $32, %rsp\n" +
+                    "\tpopq %rbp\n" +
+                    "\tret";
+
+    public static final String STRINGS_CMP_BUILTIN =
+            STRING_CMP_LBL +
+                    ":\n" +
+                    "\tpushq %rbp\n" +
+                    "\tmovq %rsp, %rbp\n\n" +
+                    "\tcall strcmp@plt\n" +
+                    "\tcdqe\n\n" +
+                    "\tpopq %rbp\n" +
+                    "\tret";
 }

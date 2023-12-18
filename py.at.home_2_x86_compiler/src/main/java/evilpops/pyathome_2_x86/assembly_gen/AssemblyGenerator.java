@@ -37,7 +37,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.dataSection.append(String.format(SECTION, "data"))
                 .append(DATA_SECTION_INIT);
         this.builtInTxtSection.append(CONCAT_STRINGS_BUILTIN)
-                .append(STRINGS_MUL_BUILTIN);
+                .append(STRINGS_MUL_BUILTIN).append(STRINGS_CMP_BUILTIN);
         this.txtSection.append(String.format(SECTION, "text"))
                 .append(GLOBAL_MAIN).append(MAIN_LBL)
                 .append(MAIN_START_CODE);
@@ -227,21 +227,25 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public int genComparisonExpr(int leftExpRef, int rightExpRef, ConditionalJump jumpType) {
-        int resultRef = symTabController.takeRegister(DataType.BOOLEAN);
+        int resultRef;
         DataType leftExpDT = symTabController.getDataType(leftExpRef);
         DataType rightExpDT = symTabController.getDataType(rightExpRef);
 
-        if (leftExpDT.equals(DataType.NONE) || rightExpDT.equals(DataType.NONE))
+        if (leftExpDT.equals(DataType.NONE) || rightExpDT.equals(DataType.NONE)) {
+            resultRef = this.symTabController.takeRegister(DataType.BOOLEAN);
             genImmediateComparisonResult(
-                    resultRef, leftExpDT.equals(DataType.NONE) && rightExpDT.equals(DataType.NONE)
+                    resultRef,
+                    leftExpDT.equals(DataType.NONE) && rightExpDT.equals(DataType.NONE)
             );
+        }
         else {
             if (leftExpDT.equals(DataType.STRING)) {
-                //TODO - generate string comparison
+                this.genStringComparison(leftExpRef, rightExpRef);
+                resultRef = this.genComparisonBranchCode(jumpType, false);
             } else { // it is a bool/number
                 boolean isFloat = leftExpDT.equals(DataType.FLOAT) || rightExpDT.equals(DataType.FLOAT);
                 this.genNumComparison(leftExpRef, rightExpRef, isFloat);
-                this.genComparisonBranchCode(resultRef, jumpType, isFloat);
+                resultRef = this.genComparisonBranchCode(jumpType, isFloat);
             }
         }
 
@@ -421,14 +425,13 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         return switch (this.symTabController.getDataType(src)) {
             case INTEGER -> {
                 this.genCmpToZeroInst(src);
-                this.genComparisonBranchCode(src, ConditionalJump.JNE, false);
-                yield src;
+                this.symTabController.freeIfIsRegister(src);
+                yield this.genComparisonBranchCode(ConditionalJump.JNE, false);
             }
             case FLOAT -> {
                 this.genCmpToZeroInst(src);
-                int regRef = this.symTabController.takeRegister(DataType.BOOLEAN);
-                this.genComparisonBranchCode(regRef, ConditionalJump.JNE, true);
-                yield regRef;
+                this.symTabController.freeIfIsRegister(src);
+                yield this.genComparisonBranchCode(ConditionalJump.JNE, true);
             }
             case STRING -> -1;
             case NONE -> {
@@ -548,11 +551,28 @@ public class AssemblyGenerator implements IAssemblyGenerator {
             this.genMoveInst(regRef, leftExpRef);
             leftExpRef = regRef;
         }
-        genCmpInst(leftExpRef, rightExpRef);
+        this.genCmpInst(leftExpRef, rightExpRef);
+        this.symTabController.freeIfIsRegister(leftExpRef);
+        this.symTabController.freeIfIsRegister(rightExpRef);
+    }
+
+    private void genStringComparison(int leftExpRef, int rightExpRef) {
+        this.genFuncCall(
+            STRING_CMP_LBL,
+                new ArrayList<>(){{
+                    add(leftExpRef);
+                    add(rightExpRef);
+                }}
+        );
+        int dest = this.symTabController.takeRegister(DataType.BOOLEAN);
+        this.genRetValMoveInst(dest, false);
+        this.genCmpToZeroInst(dest);
+        this.symTabController.freeIfIsRegister(dest);
     }
 
 
-    private void genComparisonBranchCode(int dest, ConditionalJump jumpType, boolean isFloat) {
+    private int genComparisonBranchCode(ConditionalJump jumpType, boolean isFloat) {
+        int dest = this.symTabController.takeRegister(DataType.BOOLEAN);
         this.lblCounter.incrementComparisonLblCount();
         String cmpLblCount = this.lblCounter.getComparisonLblCount();
         String cmpTrueLbl = String.format(LBL_CMP_TRUE, cmpLblCount);
@@ -563,6 +583,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.genLabel(cmpTrueLbl);
         this.genImmediateComparisonResult(dest, true);
         this.genLabel(cmpEndLbl);
+        return dest;
     }
 
     private int genLogicalOpExpr(int leftExpRef, int rightExpRef, boolean isAnd) {
