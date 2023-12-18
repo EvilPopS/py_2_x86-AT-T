@@ -37,7 +37,8 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.dataSection.append(String.format(SECTION, "data"))
                 .append(DATA_SECTION_INIT);
         this.builtInTxtSection.append(CONCAT_STRINGS_BUILTIN)
-                .append(STRINGS_MUL_BUILTIN).append(STRINGS_CMP_BUILTIN);
+                .append(STRINGS_MUL_BUILTIN).append(STRINGS_CMP_BUILTIN)
+                .append(STRING_TO_BOOL_BUILTIN);
         this.txtSection.append(String.format(SECTION, "text"))
                 .append(GLOBAL_MAIN).append(MAIN_LBL)
                 .append(MAIN_START_CODE);
@@ -433,7 +434,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
                 this.symTabController.freeIfIsRegister(src);
                 yield this.genComparisonBranchCode(ConditionalJump.JNE, true);
             }
-            case STRING -> -1;
+            case STRING -> this.genStringToBooleanConversion(src);
             case NONE -> {
                 this.genImmediateComparisonResult(src, false);
                 yield src;
@@ -584,6 +585,13 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.genImmediateComparisonResult(dest, true);
         this.genLabel(cmpEndLbl);
         return dest;
+    }
+
+    private int genStringToBooleanConversion(int src) {
+        this.genFuncCall(STRING_TO_BOOL_LBL, new ArrayList<>(){{ add(src); }});
+        int regRef = this.symTabController.takeRegister(DataType.BOOLEAN);
+        this.genRetValMoveInst(regRef, false);
+        return regRef;
     }
 
     private int genLogicalOpExpr(int leftExpRef, int rightExpRef, boolean isAnd) {

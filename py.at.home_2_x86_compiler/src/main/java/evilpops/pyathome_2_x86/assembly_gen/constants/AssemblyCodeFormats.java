@@ -51,6 +51,7 @@ public class AssemblyCodeFormats {
     public static final String CONCAT_STRINGS_LBL = "STRING_CONCAT";
     public static final String STRINGS_MUL_LBL = "STRING_MUL";
     public static final String STRING_CMP_LBL = "STRING_CMP";
+    public static final String STRING_TO_BOOL_LBL = "STRING_TO_BOOL";
 
     public static final String CONCAT_STRINGS_BUILTIN =
             CONCAT_STRINGS_LBL +
@@ -116,7 +117,7 @@ public class AssemblyCodeFormats {
                     "\tmovq -32(%rbp), %rax\n\n" +
                     "\taddq $32, %rsp\n" +
                     "\tpopq %rbp\n" +
-                    "\tret";
+                    "\tret\n\n";
 
     public static final String STRINGS_CMP_BUILTIN =
             STRING_CMP_LBL +
@@ -126,5 +127,22 @@ public class AssemblyCodeFormats {
                     "\tcall strcmp@plt\n" +
                     "\tcdqe\n\n" +
                     "\tpopq %rbp\n" +
-                    "\tret";
+                    "\tret\n\n";
+
+    public static final String STRING_TO_BOOL_BUILTIN =
+            STRING_TO_BOOL_LBL +
+                    ":\n" +
+                    "\tpushq %rbp\n" +
+                    "\tmovq %rsp, %rbp\n\n" +
+                    "\tcall strlen@plt\n" +
+                    "\tmovq %rax, %r10\n" +
+                    "\tcmp $0, %r10\n" +
+                    "\tje STB_EMPTY_STRING\n" +
+                    "\tmovq $1, %rax\n" +
+                    "\tjmp STB_END\n\n" +
+                    "STB_EMPTY_STRING:\n" +
+                    "\tmovq $0, %rax\n\n" +
+                    "STB_END:\t\n" +
+                    "\tpopq %rbp\t\n" +
+                    "\tret\n\n";
 }
