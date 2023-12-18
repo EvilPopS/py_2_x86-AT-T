@@ -18,7 +18,7 @@ public class ListenerHelpers {
     private static final IAssemblyGenerator assemblyGen = AssemblyGenerator.getInstance();
 
     private static final VariableCounter varCounter = new VariableCounter();
-    private static final FloatLiteralsCounter floatLitCounter = new FloatLiteralsCounter();
+    private static final DataSectionLiteralCounter literalCounter = new DataSectionLiteralCounter();
 
 
     public static void processProgramCtxExit() {
@@ -28,27 +28,21 @@ public class ListenerHelpers {
     public static void processAssignStatementCtxExit(PyAtHomeParser.AssignStatementContext ctx) {
         int idRef;
         int numExpRef = ctx.numExpression().getRefToSymTab();
-        DataType numExpDataType = symTabController.getDataTypeByInd(numExpRef);
+        DataType numExpDataType = symTabController.getDataType(numExpRef);
         String idName = ctx.ID().getText();
         try {
             idRef = symTabController.getVarRefByName(idName);
-            symTabController.setDataTypeByInd(idRef, numExpDataType);
+            symTabController.setDataType(idRef, numExpDataType);
         } catch (VariableNotFoundException ignored) {
-
-            idRef = symTabController.addVariable(
-                    numExpDataType,
-                    idName,
-                    varCounter.incAndGetCurrCounter()
-            );
-
+            idRef = symTabController.addVariable(numExpDataType, idName, varCounter.incAndGetCurrCounter());
             assemblyGen.genStackPointerDec(symTabController.checkIfDataTypeIsFloat(idRef));
         }
 
-        if (symTabController.checkIfIsVarByInd(numExpRef) || (symTabController.checkIfIsLiteralByInd(numExpRef) && symTabController.checkIfDataTypeIsFloat(numExpRef))) {
+        if (symTabController.checkIfIsVar(numExpRef) || (symTabController.checkIfIsLiteral(numExpRef) && symTabController.checkIfDataTypeIsFloat(numExpRef))) {
             int regRef = symTabController.takeRegister(numExpDataType);
             assemblyGen.genMoveInst(regRef, numExpRef);
             assemblyGen.genMoveInst(idRef, regRef);
-            symTabController.freeIfIsRegisterByInd(regRef);
+            symTabController.freeIfIsRegister(regRef);
         } else
             assemblyGen.genMoveInst(idRef, numExpRef);
     }
@@ -58,7 +52,7 @@ public class ListenerHelpers {
             return ctx.expression().getRefToSymTab();
         else if (ctx.L_PAREN() != null && ctx.R_PAREN() != null)
             return ctx.numExpression(0).getRefToSymTab();
-        else if (ctx.numExpression() != null || !ctx.numExpression().isEmpty()){
+        else if (ctx.numExpression() != null || !ctx.numExpression().isEmpty()) {
             int leftExpRef = ctx.numExpression(0).getRefToSymTab();
             int rightExpRef = ctx.numExpression(1).getRefToSymTab();
             if (ctx.addSubOperators() != null) {
@@ -84,8 +78,7 @@ public class ListenerHelpers {
                     return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JGE);
                 else if (ctx.relOperators().LSEQ() != null)
                     return performNonEqualityRelOp(leftExpRef, rightExpRef, ConditionalJump.JLE);
-            }
-            else if (ctx.logicAndOperator() != null)
+            } else if (ctx.logicAndOperator() != null)
                 return performLogicalOp(leftExpRef, rightExpRef, true);
             else if (ctx.logicOrOperator() != null)
                 return performLogicalOp(leftExpRef, rightExpRef, false);
@@ -106,11 +99,22 @@ public class ListenerHelpers {
         if (ctx.INTEGER() != null)
             return symTabController.addLiteral(ctx.INTEGER().getText(), DataType.INTEGER);
         else if (ctx.FLOAT() != null) {
-            int literalRef = symTabController.addLiteralFloat(ctx.FLOAT().getText(), DataType.FLOAT, floatLitCounter.getAndIncCounter());
+            int literalRef = symTabController.addLiteralFloat(
+                    ctx.FLOAT().getText(), DataType.FLOAT, literalCounter.getAndIncCounter()
+            );
             assemblyGen.genFloatLiteral(literalRef);
             return literalRef;
         } else if (ctx.BOOLEAN() != null)
             return symTabController.addLiteral(ctx.BOOLEAN().getText().equals("True") ? "1" : "0", DataType.BOOLEAN);
+        else if (ctx.STRING() != null) {
+            String strVal = ctx.STRING().getText();
+            int literalRef = symTabController.addLiteralString(
+                    strVal.substring(1,strVal.length()-1),
+                    DataType.STRING, literalCounter.getAndIncCounter()
+            );
+            assemblyGen.genStringLiteral(literalRef);
+            return literalRef;
+        }
         else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "insertLiteralIntoSymTab"));
     }
@@ -120,8 +124,8 @@ public class ListenerHelpers {
         return assemblyGen.genAdditionExpr(
                 leftExpRef, rightExpRef,
                 ResultDataTypeCalculator.getAdditionResultDataType(
-                        symTabController.getDataTypeByInd(leftExpRef),
-                        symTabController.getDataTypeByInd(rightExpRef)
+                        symTabController.getDataType(leftExpRef),
+                        symTabController.getDataType(rightExpRef)
                 )
         );
     }
@@ -131,8 +135,8 @@ public class ListenerHelpers {
         return assemblyGen.genSubtractionExpr(
                 leftExpRef, rightExpRef,
                 ResultDataTypeCalculator.getSubtractionResultDataType(
-                        symTabController.getDataTypeByInd(leftExpRef),
-                        symTabController.getDataTypeByInd(rightExpRef)
+                        symTabController.getDataType(leftExpRef),
+                        symTabController.getDataType(rightExpRef)
                 )
         );
     }
@@ -142,8 +146,8 @@ public class ListenerHelpers {
         return assemblyGen.genMultiplicationExpr(
                 leftExpRef, rightExpRef,
                 ResultDataTypeCalculator.getMultiplicationResultDataType(
-                        symTabController.getDataTypeByInd(leftExpRef),
-                        symTabController.getDataTypeByInd(rightExpRef)
+                        symTabController.getDataType(leftExpRef),
+                        symTabController.getDataType(rightExpRef)
                 )
         );
     }

@@ -5,7 +5,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.TabType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.MainTabRow;
 
 public class MainTab extends TableArchetype<MainTabRow> {
-    public MainTabRow getByInd(int ind) {
+    public MainTabRow get(int ind) {
         return this.table.get(ind);
     }
 

@@ -16,6 +16,7 @@ public class SymTabController implements ISymTabController {
     protected final RegisterTab registerTab;
 
 
+
     private SymTabController() {
         this.mainTab = new MainTab();
         this.variableTab = new VariableTab();
@@ -48,7 +49,15 @@ public class SymTabController implements ISymTabController {
     @Override
     public int addLiteralFloat(String value, DataType dataType, int dataLabelCounter) {
         int rowRef = this.mainTab.getNextFreeRowInd();
-        this.literalTab.addFloat(rowRef, dataType, value, dataLabelCounter);
+        this.literalTab.addFloat(rowRef, value, dataLabelCounter);
+        this.mainTab.addLiteral(this.literalTab.getLastRowInd());
+        return rowRef;
+    }
+
+    @Override
+    public int addLiteralString(String value, DataType dataType, int dataLabelCounter) {
+        int rowRef = this.mainTab.getNextFreeRowInd();
+        this.literalTab.addString(rowRef, value, dataLabelCounter);
         this.mainTab.addLiteral(this.literalTab.getLastRowInd());
         return rowRef;
     }
@@ -56,7 +65,7 @@ public class SymTabController implements ISymTabController {
     @Override
     public int takeRegister(DataType dataType) {
         int rowRef = this.mainTab.getNextFreeRowInd();
-        this.mainTab.addRegister(this.registerTab.takeGenPurposeReg(dataType, rowRef));
+        this.mainTab.addRegister(this.registerTab.takeGenPurposeReg(rowRef, dataType));
         return rowRef;
     }
 
@@ -66,25 +75,25 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public DataType getDataTypeByInd(int ind) {
-        MainTabRow rowData = this.mainTab.getByInd(ind);
+    public DataType getDataType(int ind) {
+        MainTabRow rowData = this.mainTab.get(ind);
         return getConcreteTableByTabType(rowData.getRefTabType())
                 .getDataType(rowData.getForeignId());
     }
 
     @Override
-    public String getLiteralValueByInd(int ind) {
-        return this.literalTab.getValueByInd(getForeignId(ind));
+    public String getLiteralValue(int ind) {
+        return this.literalTab.getValue(getForeignId(ind));
     }
 
     @Override
-    public AssemblyRegister getRegNameByInd(int ind) {
-        return this.registerTab.getRegisterNameByInd(getForeignId(ind));
+    public AssemblyRegister getRegName(int ind) {
+        return this.registerTab.getRegisterName(getForeignId(ind));
     }
 
     @Override
-    public int getVarOrdinalityByInd(int ind) {
-        return this.variableTab.getOrdinalityByInd(getForeignId(ind));
+    public int getVarOrdinality(int ind) {
+        return this.variableTab.getOrdinality(getForeignId(ind));
     }
 
     @Override
@@ -93,41 +102,46 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public void setDataTypeByInd(int ind, DataType dataType) {
-        MainTabRow rowData = this.mainTab.getByInd(ind);
+    public void setDataType(int ind, DataType dataType) {
+        MainTabRow rowData = this.mainTab.get(ind);
         getConcreteTableByTabType(rowData.getRefTabType())
                 .setDataType(rowData.getForeignId(), dataType);
     }
 
     @Override
-    public boolean checkIfIsRegByInd(int ind) {
+    public boolean checkIfIsReg(int ind) {
         return this.checkIfIsOfGivenTabType(ind, TabType.REGISTER);
     }
 
     @Override
-    public boolean checkIfIsLiteralByInd(int ind) {
+    public boolean checkIfIsLiteral(int ind) {
         return this.checkIfIsOfGivenTabType(ind, TabType.LITERAL);
     }
 
     @Override
-    public boolean checkIfIsVarByInd(int ind) {
+    public boolean checkIfIsVar(int ind) {
         return this.checkIfIsOfGivenTabType(ind, TabType.VARIABLE);
     }
 
     @Override
     public boolean checkIfDataTypeIsFloat(int ind) {
-        return this.getDataTypeByInd(ind) == DataType.FLOAT;
+        return this.getDataType(ind).equals(DataType.FLOAT);
+    }
+
+    @Override
+    public boolean checkIfDataTypeIsString(int ind) {
+        return this.getDataType(ind).equals(DataType.STRING);
     }
 
     @Override
     public boolean checkIfDataTypeIsBoolean(int ind) {
-        return this.getDataTypeByInd(ind) == DataType.BOOLEAN;
+        return this.getDataType(ind) == DataType.BOOLEAN;
     }
 
     @Override
-    public void freeIfIsRegisterByInd(int ind) {
-        if (this.checkIfIsRegByInd(ind))
-            this.registerTab.freeRegister(this.mainTab.getByInd(ind).getForeignId());
+    public void freeIfIsRegister(int ind) {
+        if (this.checkIfIsReg(ind))
+            this.registerTab.freeRegister(this.mainTab.get(ind).getForeignId());
     }
 
     private ConcreteTableArchetype<? extends ConcreteRowArchetype> getConcreteTableByTabType(TabType tabType) {
@@ -140,10 +154,10 @@ public class SymTabController implements ISymTabController {
     }
 
     private boolean checkIfIsOfGivenTabType(int ind, TabType tabType) {
-        return this.mainTab.getByInd(ind).getRefTabType().equals(tabType);
+        return this.mainTab.get(ind).getRefTabType().equals(tabType);
     }
 
     private int getForeignId(int ind) {
-        return this.mainTab.getByInd(ind).getForeignId();
+        return this.mainTab.get(ind).getForeignId();
     }
 }

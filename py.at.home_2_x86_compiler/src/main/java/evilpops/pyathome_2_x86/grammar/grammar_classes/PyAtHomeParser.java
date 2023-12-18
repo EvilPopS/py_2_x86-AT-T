@@ -19,7 +19,7 @@ public class PyAtHomeParser extends Parser {
 	public static final int
 		WS_SKIP=1, COMMENT_SKIP=2, NEWLINE=3, ASSIGN=4, L_PAREN=5, R_PAREN=6, 
 		PLUS=7, MINUS=8, MUL=9, DIV=10, EQ=11, NEQ=12, GR=13, LS=14, GREQ=15, 
-		LSEQ=16, AND=17, OR=18, BOOLEAN=19, ID=20, FLOAT=21, INTEGER=22;
+		LSEQ=16, AND=17, OR=18, BOOLEAN=19, ID=20, FLOAT=21, INTEGER=22, STRING=23;
 	public static final int
 		RULE_program = 0, RULE_statementsList = 1, RULE_statement = 2, RULE_simpleStatement = 3, 
 		RULE_assignStatement = 4, RULE_numExpression = 5, RULE_addSubOperators = 6, 
@@ -45,7 +45,7 @@ public class PyAtHomeParser extends Parser {
 		return new String[] {
 			null, "WS_SKIP", "COMMENT_SKIP", "NEWLINE", "ASSIGN", "L_PAREN", "R_PAREN", 
 			"PLUS", "MINUS", "MUL", "DIV", "EQ", "NEQ", "GR", "LS", "GREQ", "LSEQ", 
-			"AND", "OR", "BOOLEAN", "ID", "FLOAT", "INTEGER"
+			"AND", "OR", "BOOLEAN", "ID", "FLOAT", "INTEGER", "STRING"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -419,6 +419,7 @@ public class PyAtHomeParser extends Parser {
 			case ID:
 			case FLOAT:
 			case INTEGER:
+			case STRING:
 				{
 				setState(48);
 				expression();
@@ -783,6 +784,7 @@ public class PyAtHomeParser extends Parser {
 			case BOOLEAN:
 			case FLOAT:
 			case INTEGER:
+			case STRING:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(90);
@@ -816,6 +818,7 @@ public class PyAtHomeParser extends Parser {
 		public TerminalNode INTEGER() { return getToken(PyAtHomeParser.INTEGER, 0); }
 		public TerminalNode FLOAT() { return getToken(PyAtHomeParser.FLOAT, 0); }
 		public TerminalNode BOOLEAN() { return getToken(PyAtHomeParser.BOOLEAN, 0); }
+		public TerminalNode STRING() { return getToken(PyAtHomeParser.STRING, 0); }
 		public LiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -839,7 +842,7 @@ public class PyAtHomeParser extends Parser {
 			{
 			setState(94);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 6815744L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 15204352L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -884,7 +887,7 @@ public class PyAtHomeParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0016a\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u0017a\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0002"+
@@ -901,7 +904,7 @@ public class PyAtHomeParser extends Parser {
 		"\t\u0001\t\u0001\n\u0001\n\u0001\u000b\u0001\u000b\u0003\u000b]\b\u000b"+
 		"\u0001\f\u0001\f\u0001\f\u0000\u0001\n\r\u0000\u0002\u0004\u0006\b\n\f"+
 		"\u000e\u0010\u0012\u0014\u0016\u0018\u0000\u0004\u0001\u0000\u0007\b\u0001"+
-		"\u0000\t\n\u0001\u0000\u000b\u0010\u0002\u0000\u0013\u0013\u0015\u0016"+
+		"\u0000\t\n\u0001\u0000\u000b\u0010\u0002\u0000\u0013\u0013\u0015\u0017"+
 		"\\\u0000\u001a\u0001\u0000\u0000\u0000\u0002\u001d\u0001\u0000\u0000\u0000"+
 		"\u0004\'\u0001\u0000\u0000\u0000\u0006)\u0001\u0000\u0000\u0000\b+\u0001"+
 		"\u0000\u0000\u0000\n5\u0001\u0000\u0000\u0000\fP\u0001\u0000\u0000\u0000"+

@@ -16,7 +16,7 @@ public class VariableTab extends ConcreteTableArchetype<VariableTabRow> {
                 .orElseThrow(VariableNotFoundException::new);
     }
 
-    public int getOrdinalityByInd(int ind) {
+    public int getOrdinality(int ind) {
         return this.table.get(ind).getOrdinality();
     }
 }

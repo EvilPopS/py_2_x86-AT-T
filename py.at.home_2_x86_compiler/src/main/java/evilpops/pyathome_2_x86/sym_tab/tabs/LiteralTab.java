@@ -8,20 +8,28 @@ public class LiteralTab extends ConcreteTableArchetype<LiteralTabRow> {
         this.table.add(new LiteralTabRow(mainTabFK, dataType, value));
     }
 
-    public void addFloat(int mainTabFK, DataType dataType, String value, int dataLabelCounter) {
-        this.table.add(new LiteralTabRow(mainTabFK, dataType, value, dataLabelCounter));
+    public void addFloat(int mainTabFK, String value, int dataLabelCounter) {
+        addStrOrFloat(mainTabFK, DataType.FLOAT, value, dataLabelCounter);
     }
 
-    public String getValueByInd(int ind) {
+    public void addString(int mainTabFK, String value, int dataLabelCounter) {
+        addStrOrFloat(mainTabFK, DataType.STRING, value, dataLabelCounter);
+    }
+
+    public String getValue(int ind) {
         return this.table.get(ind).getValue();
     }
 
-    public void setValueByInd(int ind, String value) {
+    public void setValue(int ind, String value) {
         this.table.get(ind).setValue(value);
     }
 
     public int getDataLabelCounter(int ind) {
         return this.table.get(ind).getDataLabelNum();
+    }
+
+    private void addStrOrFloat(int mainTabFK, DataType dataType, String value, int dataLabelCounter) {
+        this.table.add(new LiteralTabRow(mainTabFK, dataType, value, dataLabelCounter));
     }
 
 }

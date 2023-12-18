@@ -11,7 +11,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 public abstract class ConcreteRowArchetype extends RowArchetype {
     protected DataType dataType;
 
-    public ConcreteRowArchetype(DataType dataType, int foreignId) {
+    public ConcreteRowArchetype(int foreignId, DataType dataType) {
         super(foreignId);
         this.dataType = dataType;
     }

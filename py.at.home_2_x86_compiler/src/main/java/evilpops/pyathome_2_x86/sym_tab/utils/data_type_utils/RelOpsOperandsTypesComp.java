@@ -127,7 +127,7 @@ public class RelOpsOperandsTypesComp {
                     put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
                     put(DataType.NONE, false);
-                    put(DataType.STRING, false);
+                    put(DataType.STRING, true);
                     put(DataType.UNKNOWN, false);
                 }}
         );
