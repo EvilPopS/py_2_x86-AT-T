@@ -6,7 +6,7 @@ public class AssemblyCodeFormats {
     public static final String MAIN_LBL = "main:\n";
     public static final String MAIN_START_CODE = "\tpushq %rbp\n\tandq $-16, %rsp\n\tmovq %rsp, %rbp\n";
     public static final String DATA_SECTION_INIT = "\tFLOAT_ZERO: .double 0.0\n";
-    public static final String PROGRAM_END_CODE = "main_end:\n\tmovq $60, %rax\n\txorq %rdi, %rdi\n\tsyscall\n";
+    public static final String PROGRAM_END_CODE = "main_end:\n\tmovq $60, %rax\n\txorq %rdi, %rdi\n\tsyscall\n\n";
 
     public static final String PUSH_INST = "\tpush%s %s\n";
     public static final String MOVE_INST = "\tmov%s %s, %s\n";
@@ -49,7 +49,7 @@ public class AssemblyCodeFormats {
     public static final String FLOAT_ZERO = "FLOAT_ZERO";
 
     public static final String CONCAT_STRINGS_LBL = "STRING_CONCAT";
-    public static final String STRING_MUL_LBL = "STRING_MUL";
+    public static final String STRINGS_MUL_LBL = "STRING_MUL";
 
     public static final String CONCAT_STRINGS_BUILTIN =
             CONCAT_STRINGS_LBL +
@@ -80,7 +80,7 @@ public class AssemblyCodeFormats {
                     "\tret\n\n";
 
     public static final String STRINGS_MUL_BUILTIN =
-            STRING_MUL_LBL +
+            STRINGS_MUL_LBL +
             ":\n" +
             "\tpushq %rbp\n" +
             "\tmovq %rsp, %rbp\n\n" +

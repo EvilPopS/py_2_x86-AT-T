@@ -36,7 +36,8 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.txtSection = new StringBuilder();
         this.dataSection.append(String.format(SECTION, "data"))
                 .append(DATA_SECTION_INIT);
-        this.builtInTxtSection.append(CONCAT_STRINGS_BUILTIN);
+        this.builtInTxtSection.append(CONCAT_STRINGS_BUILTIN)
+                .append(STRINGS_MUL_BUILTIN);
         this.txtSection.append(String.format(SECTION, "text"))
                 .append(GLOBAL_MAIN).append(MAIN_LBL)
                 .append(MAIN_START_CODE);
@@ -209,7 +210,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
         return switch (resultType) {
             case INTEGER, FLOAT -> genNumberMultiplication(leftExpRef, rightExpRef, resultType);
-            case STRING -> -1; // TODO
+            case STRING -> genStringMultiplication(leftExpRef, rightExpRef);
             default -> throw new ImplementationInconsistencyException("genMultiplicationExpr");
         };
     }
@@ -461,7 +462,8 @@ public class AssemblyGenerator implements IAssemblyGenerator {
                 new ArrayList<>() {{
                     add(leftExpRef);
                     add(rightExpRef);
-                }});
+                }}
+        );
         int regRef = this.symTabController.takeRegister(DataType.STRING);
         genRetValMoveInst(regRef, false);
         return regRef;
@@ -496,6 +498,22 @@ public class AssemblyGenerator implements IAssemblyGenerator {
             this.genMulInst(destRegRef, rightExpRef);
             return destRegRef;
         }
+    }
+
+    private int genStringMultiplication(int leftExpRef, int rightExpRef) {
+        boolean isLeftExpStr = this.symTabController.checkIfDataTypeIsString(leftExpRef);
+        int strVal = isLeftExpStr ? leftExpRef : rightExpRef;
+        int mulVal = isLeftExpStr ? rightExpRef : leftExpRef;
+        this.genFuncCall(
+                STRINGS_MUL_LBL,
+                new ArrayList<>() {{
+                    add(strVal);
+                    add(mulVal);
+                }}
+        );
+        int regRef = this.symTabController.takeRegister(DataType.STRING);
+        genRetValMoveInst(regRef, false);
+        return regRef;
     }
 
     private int genNumberDivision(int leftExpRef, int rightExpRef, DataType resType) {
