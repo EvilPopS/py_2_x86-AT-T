@@ -1,20 +1,40 @@
 grammar PyAtHome;
 
 
+tokens { INDENT, DEDENT }
+
+
+@lexer::members {
+private final IndentationTracker indentTracker = new IndentationTracker();
+
+@Override
+public Token nextToken() {
+	Token tk = indentTracker.sendDentTokenIfNeeded();
+    if (tk != null) {
+        System.out.println(tk);
+        return tk;
+    }
+    tk = super.nextToken();
+    System.out.println(tk);
+    indentTracker.processToken(tk);
+    return tk;
+}
+}
+
 @parser::members {
-	 static class ContextExtention extends ParserRuleContext {
-		protected int refToSymTab;
-		public ContextExtention(ParserRuleContext parent, int invokingState) {
-			 super(parent, invokingState);
-			 refToSymTab = -1;
-	 	}
-		public void setRefToSymTab(int ref) {
-			this.refToSymTab = ref;
-		}
-		public int getRefToSymTab() {
-			return this.refToSymTab;
-		}
-	}
+ static class ContextExtention extends ParserRuleContext {
+    protected int refToSymTab;
+    public ContextExtention(ParserRuleContext parent, int invokingState) {
+         super(parent, invokingState);
+         refToSymTab = -1;
+    }
+    public void setRefToSymTab(int ref) {
+        this.refToSymTab = ref;
+    }
+    public int getRefToSymTab() {
+        return this.refToSymTab;
+    }
+}
 }
 
 options {
@@ -32,6 +52,8 @@ statementsList
 
 statement
     : simpleStatement NEWLINE
+    | simpleStatement NEWLINE INDENT
+    | simpleStatement NEWLINE DEDENT
     | simpleStatement EOF
     ;
 
@@ -95,10 +117,16 @@ literal
 
 
 /* Lexer rules - START */
-WS_SKIP: [ \r]+ -> skip;
+
+WS_SKIP: [ \r\t]+ -> skip;
 COMMENT_SKIP: '#'~[\n]* -> skip;
 
-NEWLINE: '\n' ;
+NEWLINE
+    : '\n'[ \n\t\r]*'\n'[ \t]+
+    | '\n'[ \n\t\r]*'\n'
+    | '\n'[ \t]+
+    | '\n'
+    ;
 
 ASSIGN: '=' ;
 

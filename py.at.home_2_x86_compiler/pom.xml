@@ -34,6 +34,12 @@
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.yuvalshavit</groupId>
+      <artifactId>antlr-denter</artifactId>
+      <version>1.1</version>
+    </dependency>
   </dependencies>
 
   <build>
