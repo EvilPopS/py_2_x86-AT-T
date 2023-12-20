@@ -21,7 +21,8 @@ ID=20
 FLOAT=21
 INTEGER=22
 STRING=23
-'\n'=3
+INDENT=24
+DEDENT=25
 '='=4
 '('=5
 ')'=6
