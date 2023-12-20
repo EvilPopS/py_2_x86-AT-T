@@ -29,6 +29,8 @@ public class ListenerHelpers {
         int idRef;
         int numExpRef = ctx.numExpression().getRefToSymTab();
         DataType numExpDataType = symTabController.getDataType(numExpRef);
+        //TODO dislpay warning if typing != numExpType
+
         String idName = ctx.ID().getText();
         try {
             idRef = symTabController.getVarRefByName(idName);

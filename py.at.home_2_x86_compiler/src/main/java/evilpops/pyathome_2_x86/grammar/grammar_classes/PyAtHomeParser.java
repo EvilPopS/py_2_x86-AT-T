@@ -17,37 +17,41 @@ public class PyAtHomeParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		WS_SKIP=1, COMMENT_SKIP=2, NEWLINE=3, ASSIGN=4, L_PAREN=5, R_PAREN=6, 
-		PLUS=7, MINUS=8, MUL=9, DIV=10, EQ=11, NEQ=12, GR=13, LS=14, GREQ=15, 
-		LSEQ=16, AND=17, OR=18, BOOLEAN=19, ID=20, FLOAT=21, INTEGER=22, STRING=23, 
-		INDENT=24, DEDENT=25;
+		WS_SKIP=1, COMMENT_SKIP=2, NEWLINE=3, T_INT=4, T_FLOAT=5, T_BOOLEAN=6, 
+		T_STRING=7, T_NONE=8, COLON=9, ASSIGN=10, L_PAREN=11, R_PAREN=12, PLUS=13, 
+		MINUS=14, MUL=15, DIV=16, EQ=17, NEQ=18, GR=19, LS=20, GREQ=21, LSEQ=22, 
+		AND=23, OR=24, BOOLEAN=25, ID=26, FLOAT=27, INTEGER=28, STRING=29, INDENT=30, 
+		DEDENT=31;
 	public static final int
 		RULE_program = 0, RULE_statementsList = 1, RULE_statement = 2, RULE_simpleStatement = 3, 
-		RULE_assignStatement = 4, RULE_numExpression = 5, RULE_addSubOperators = 6, 
-		RULE_mulDivOperators = 7, RULE_relOperators = 8, RULE_logicAndOperator = 9, 
-		RULE_logicOrOperator = 10, RULE_expression = 11, RULE_literal = 12;
+		RULE_assignStatement = 4, RULE_typing = 5, RULE_types = 6, RULE_numExpression = 7, 
+		RULE_addSubOperators = 8, RULE_mulDivOperators = 9, RULE_relOperators = 10, 
+		RULE_logicAndOperator = 11, RULE_logicOrOperator = 12, RULE_expression = 13, 
+		RULE_literal = 14;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"program", "statementsList", "statement", "simpleStatement", "assignStatement", 
-			"numExpression", "addSubOperators", "mulDivOperators", "relOperators", 
-			"logicAndOperator", "logicOrOperator", "expression", "literal"
+			"typing", "types", "numExpression", "addSubOperators", "mulDivOperators", 
+			"relOperators", "logicAndOperator", "logicOrOperator", "expression", 
+			"literal"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, null, null, "'='", "'('", "')'", "'+'", "'-'", "'*'", "'/'", 
-			"'=='", "'!='", "'>'", "'<'", "'>='", "'<='", "'and'", "'or'"
+			null, null, null, null, "'int'", "'float'", "'bool'", "'str'", "'None'", 
+			"':'", "'='", "'('", "')'", "'+'", "'-'", "'*'", "'/'", "'=='", "'!='", 
+			"'>'", "'<'", "'>='", "'<='", "'and'", "'or'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "WS_SKIP", "COMMENT_SKIP", "NEWLINE", "ASSIGN", "L_PAREN", "R_PAREN", 
-			"PLUS", "MINUS", "MUL", "DIV", "EQ", "NEQ", "GR", "LS", "GREQ", "LSEQ", 
-			"AND", "OR", "BOOLEAN", "ID", "FLOAT", "INTEGER", "STRING", "INDENT", 
-			"DEDENT"
+			null, "WS_SKIP", "COMMENT_SKIP", "NEWLINE", "T_INT", "T_FLOAT", "T_BOOLEAN", 
+			"T_STRING", "T_NONE", "COLON", "ASSIGN", "L_PAREN", "R_PAREN", "PLUS", 
+			"MINUS", "MUL", "DIV", "EQ", "NEQ", "GR", "LS", "GREQ", "LSEQ", "AND", 
+			"OR", "BOOLEAN", "ID", "FLOAT", "INTEGER", "STRING", "INDENT", "DEDENT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -141,7 +145,7 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(26);
+			setState(30);
 			statementsList();
 			}
 		}
@@ -185,17 +189,17 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(29); 
+			setState(33); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(28);
+				setState(32);
 				statement();
 				}
 				}
-				setState(31); 
+				setState(35); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==ID );
@@ -218,8 +222,6 @@ public class PyAtHomeParser extends Parser {
 			return getRuleContext(SimpleStatementContext.class,0);
 		}
 		public TerminalNode NEWLINE() { return getToken(PyAtHomeParser.NEWLINE, 0); }
-		public TerminalNode INDENT() { return getToken(PyAtHomeParser.INDENT, 0); }
-		public TerminalNode DEDENT() { return getToken(PyAtHomeParser.DEDENT, 0); }
 		public TerminalNode EOF() { return getToken(PyAtHomeParser.EOF, 0); }
 		public StatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -239,46 +241,24 @@ public class PyAtHomeParser extends Parser {
 		StatementContext _localctx = new StatementContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_statement);
 		try {
-			setState(47);
+			setState(43);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(33);
+				setState(37);
 				simpleStatement();
-				setState(34);
+				setState(38);
 				match(NEWLINE);
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(36);
-				simpleStatement();
-				setState(37);
-				match(NEWLINE);
-				setState(38);
-				match(INDENT);
-				}
-				break;
-			case 3:
-				enterOuterAlt(_localctx, 3);
-				{
 				setState(40);
 				simpleStatement();
 				setState(41);
-				match(NEWLINE);
-				setState(42);
-				match(DEDENT);
-				}
-				break;
-			case 4:
-				enterOuterAlt(_localctx, 4);
-				{
-				setState(44);
-				simpleStatement();
-				setState(45);
 				match(EOF);
 				}
 				break;
@@ -320,7 +300,7 @@ public class PyAtHomeParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(49);
+			setState(45);
 			assignStatement();
 			}
 		}
@@ -342,6 +322,9 @@ public class PyAtHomeParser extends Parser {
 		public NumExpressionContext numExpression() {
 			return getRuleContext(NumExpressionContext.class,0);
 		}
+		public TypingContext typing() {
+			return getRuleContext(TypingContext.class,0);
+		}
 		public AssignStatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -359,15 +342,120 @@ public class PyAtHomeParser extends Parser {
 	public final AssignStatementContext assignStatement() throws RecognitionException {
 		AssignStatementContext _localctx = new AssignStatementContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_assignStatement);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(51);
+			setState(47);
 			match(ID);
-			setState(52);
+			setState(49);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==COLON) {
+				{
+				setState(48);
+				typing();
+				}
+			}
+
+			setState(51);
 			match(ASSIGN);
-			setState(53);
+			setState(52);
 			numExpression(0);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class TypingContext extends ContextExtention {
+		public TerminalNode COLON() { return getToken(PyAtHomeParser.COLON, 0); }
+		public TypesContext types() {
+			return getRuleContext(TypesContext.class,0);
+		}
+		public TypingContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_typing; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof PyAtHomeListener ) ((PyAtHomeListener)listener).enterTyping(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof PyAtHomeListener ) ((PyAtHomeListener)listener).exitTyping(this);
+		}
+	}
+
+	public final TypingContext typing() throws RecognitionException {
+		TypingContext _localctx = new TypingContext(_ctx, getState());
+		enterRule(_localctx, 10, RULE_typing);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(54);
+			match(COLON);
+			setState(55);
+			types();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class TypesContext extends ContextExtention {
+		public TerminalNode T_INT() { return getToken(PyAtHomeParser.T_INT, 0); }
+		public TerminalNode T_FLOAT() { return getToken(PyAtHomeParser.T_FLOAT, 0); }
+		public TerminalNode T_BOOLEAN() { return getToken(PyAtHomeParser.T_BOOLEAN, 0); }
+		public TerminalNode T_STRING() { return getToken(PyAtHomeParser.T_STRING, 0); }
+		public TerminalNode T_NONE() { return getToken(PyAtHomeParser.T_NONE, 0); }
+		public TypesContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_types; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof PyAtHomeListener ) ((PyAtHomeListener)listener).enterTypes(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof PyAtHomeListener ) ((PyAtHomeListener)listener).exitTypes(this);
+		}
+	}
+
+	public final TypesContext types() throws RecognitionException {
+		TypesContext _localctx = new TypesContext(_ctx, getState());
+		enterRule(_localctx, 12, RULE_types);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(57);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 496L) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -432,13 +520,13 @@ public class PyAtHomeParser extends Parser {
 		int _parentState = getState();
 		NumExpressionContext _localctx = new NumExpressionContext(_ctx, _parentState);
 		NumExpressionContext _prevctx = _localctx;
-		int _startState = 10;
-		enterRecursionRule(_localctx, 10, RULE_numExpression, _p);
+		int _startState = 14;
+		enterRecursionRule(_localctx, 14, RULE_numExpression, _p);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(61);
+			setState(65);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case BOOLEAN:
@@ -447,17 +535,17 @@ public class PyAtHomeParser extends Parser {
 			case INTEGER:
 			case STRING:
 				{
-				setState(56);
+				setState(60);
 				expression();
 				}
 				break;
 			case L_PAREN:
 				{
-				setState(57);
+				setState(61);
 				match(L_PAREN);
-				setState(58);
+				setState(62);
 				numExpression(0);
-				setState(59);
+				setState(63);
 				match(R_PAREN);
 				}
 				break;
@@ -465,26 +553,26 @@ public class PyAtHomeParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(85);
+			setState(89);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(83);
+					setState(87);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
 					case 1:
 						{
 						_localctx = new NumExpressionContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_numExpression);
-						setState(63);
+						setState(67);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(64);
+						setState(68);
 						mulDivOperators();
-						setState(65);
+						setState(69);
 						numExpression(6);
 						}
 						break;
@@ -492,11 +580,11 @@ public class PyAtHomeParser extends Parser {
 						{
 						_localctx = new NumExpressionContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_numExpression);
-						setState(67);
+						setState(71);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(68);
+						setState(72);
 						addSubOperators();
-						setState(69);
+						setState(73);
 						numExpression(5);
 						}
 						break;
@@ -504,11 +592,11 @@ public class PyAtHomeParser extends Parser {
 						{
 						_localctx = new NumExpressionContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_numExpression);
-						setState(71);
+						setState(75);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(72);
+						setState(76);
 						relOperators();
-						setState(73);
+						setState(77);
 						numExpression(4);
 						}
 						break;
@@ -516,11 +604,11 @@ public class PyAtHomeParser extends Parser {
 						{
 						_localctx = new NumExpressionContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_numExpression);
-						setState(75);
+						setState(79);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(76);
+						setState(80);
 						logicAndOperator();
-						setState(77);
+						setState(81);
 						numExpression(3);
 						}
 						break;
@@ -528,20 +616,20 @@ public class PyAtHomeParser extends Parser {
 						{
 						_localctx = new NumExpressionContext(_parentctx, _parentState);
 						pushNewRecursionContext(_localctx, _startState, RULE_numExpression);
-						setState(79);
+						setState(83);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(80);
+						setState(84);
 						logicOrOperator();
-						setState(81);
+						setState(85);
 						numExpression(2);
 						}
 						break;
 					}
 					} 
 				}
-				setState(87);
+				setState(91);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
 			}
 			}
 		}
@@ -576,12 +664,12 @@ public class PyAtHomeParser extends Parser {
 
 	public final AddSubOperatorsContext addSubOperators() throws RecognitionException {
 		AddSubOperatorsContext _localctx = new AddSubOperatorsContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_addSubOperators);
+		enterRule(_localctx, 16, RULE_addSubOperators);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(88);
+			setState(92);
 			_la = _input.LA(1);
 			if ( !(_la==PLUS || _la==MINUS) ) {
 			_errHandler.recoverInline(this);
@@ -624,12 +712,12 @@ public class PyAtHomeParser extends Parser {
 
 	public final MulDivOperatorsContext mulDivOperators() throws RecognitionException {
 		MulDivOperatorsContext _localctx = new MulDivOperatorsContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_mulDivOperators);
+		enterRule(_localctx, 18, RULE_mulDivOperators);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(90);
+			setState(94);
 			_la = _input.LA(1);
 			if ( !(_la==MUL || _la==DIV) ) {
 			_errHandler.recoverInline(this);
@@ -676,14 +764,14 @@ public class PyAtHomeParser extends Parser {
 
 	public final RelOperatorsContext relOperators() throws RecognitionException {
 		RelOperatorsContext _localctx = new RelOperatorsContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_relOperators);
+		enterRule(_localctx, 20, RULE_relOperators);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(92);
+			setState(96);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 129024L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 8257536L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -723,11 +811,11 @@ public class PyAtHomeParser extends Parser {
 
 	public final LogicAndOperatorContext logicAndOperator() throws RecognitionException {
 		LogicAndOperatorContext _localctx = new LogicAndOperatorContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_logicAndOperator);
+		enterRule(_localctx, 22, RULE_logicAndOperator);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(94);
+			setState(98);
 			match(AND);
 			}
 		}
@@ -761,11 +849,11 @@ public class PyAtHomeParser extends Parser {
 
 	public final LogicOrOperatorContext logicOrOperator() throws RecognitionException {
 		LogicOrOperatorContext _localctx = new LogicOrOperatorContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_logicOrOperator);
+		enterRule(_localctx, 24, RULE_logicOrOperator);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(96);
+			setState(100);
 			match(OR);
 			}
 		}
@@ -802,9 +890,9 @@ public class PyAtHomeParser extends Parser {
 
 	public final ExpressionContext expression() throws RecognitionException {
 		ExpressionContext _localctx = new ExpressionContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_expression);
+		enterRule(_localctx, 26, RULE_expression);
 		try {
-			setState(100);
+			setState(104);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case BOOLEAN:
@@ -813,14 +901,14 @@ public class PyAtHomeParser extends Parser {
 			case STRING:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(98);
+				setState(102);
 				literal();
 				}
 				break;
 			case ID:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(99);
+				setState(103);
 				match(ID);
 				}
 				break;
@@ -861,14 +949,14 @@ public class PyAtHomeParser extends Parser {
 
 	public final LiteralContext literal() throws RecognitionException {
 		LiteralContext _localctx = new LiteralContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_literal);
+		enterRule(_localctx, 28, RULE_literal);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(102);
+			setState(106);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 15204352L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 973078528L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -891,7 +979,7 @@ public class PyAtHomeParser extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 5:
+		case 7:
 			return numExpression_sempred((NumExpressionContext)_localctx, predIndex);
 		}
 		return true;
@@ -913,65 +1001,66 @@ public class PyAtHomeParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u0019i\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u001fm\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0002"+
-		"\f\u0007\f\u0001\u0000\u0001\u0000\u0001\u0001\u0004\u0001\u001e\b\u0001"+
-		"\u000b\u0001\f\u0001\u001f\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
-		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
-		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0003\u00020\b\u0002"+
-		"\u0001\u0003\u0001\u0003\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004"+
-		"\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005"+
-		"\u0003\u0005>\b\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005"+
-		"\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005"+
-		"\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005"+
-		"\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0005\u0005T\b\u0005"+
-		"\n\u0005\f\u0005W\t\u0005\u0001\u0006\u0001\u0006\u0001\u0007\u0001\u0007"+
-		"\u0001\b\u0001\b\u0001\t\u0001\t\u0001\n\u0001\n\u0001\u000b\u0001\u000b"+
-		"\u0003\u000be\b\u000b\u0001\f\u0001\f\u0001\f\u0000\u0001\n\r\u0000\u0002"+
-		"\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u0000\u0004\u0001"+
-		"\u0000\u0007\b\u0001\u0000\t\n\u0001\u0000\u000b\u0010\u0002\u0000\u0013"+
-		"\u0013\u0015\u0017f\u0000\u001a\u0001\u0000\u0000\u0000\u0002\u001d\u0001"+
-		"\u0000\u0000\u0000\u0004/\u0001\u0000\u0000\u0000\u00061\u0001\u0000\u0000"+
-		"\u0000\b3\u0001\u0000\u0000\u0000\n=\u0001\u0000\u0000\u0000\fX\u0001"+
-		"\u0000\u0000\u0000\u000eZ\u0001\u0000\u0000\u0000\u0010\\\u0001\u0000"+
-		"\u0000\u0000\u0012^\u0001\u0000\u0000\u0000\u0014`\u0001\u0000\u0000\u0000"+
-		"\u0016d\u0001\u0000\u0000\u0000\u0018f\u0001\u0000\u0000\u0000\u001a\u001b"+
-		"\u0003\u0002\u0001\u0000\u001b\u0001\u0001\u0000\u0000\u0000\u001c\u001e"+
-		"\u0003\u0004\u0002\u0000\u001d\u001c\u0001\u0000\u0000\u0000\u001e\u001f"+
-		"\u0001\u0000\u0000\u0000\u001f\u001d\u0001\u0000\u0000\u0000\u001f \u0001"+
-		"\u0000\u0000\u0000 \u0003\u0001\u0000\u0000\u0000!\"\u0003\u0006\u0003"+
-		"\u0000\"#\u0005\u0003\u0000\u0000#0\u0001\u0000\u0000\u0000$%\u0003\u0006"+
-		"\u0003\u0000%&\u0005\u0003\u0000\u0000&\'\u0005\u0018\u0000\u0000\'0\u0001"+
-		"\u0000\u0000\u0000()\u0003\u0006\u0003\u0000)*\u0005\u0003\u0000\u0000"+
-		"*+\u0005\u0019\u0000\u0000+0\u0001\u0000\u0000\u0000,-\u0003\u0006\u0003"+
-		"\u0000-.\u0005\u0000\u0000\u0001.0\u0001\u0000\u0000\u0000/!\u0001\u0000"+
-		"\u0000\u0000/$\u0001\u0000\u0000\u0000/(\u0001\u0000\u0000\u0000/,\u0001"+
-		"\u0000\u0000\u00000\u0005\u0001\u0000\u0000\u000012\u0003\b\u0004\u0000"+
-		"2\u0007\u0001\u0000\u0000\u000034\u0005\u0014\u0000\u000045\u0005\u0004"+
-		"\u0000\u000056\u0003\n\u0005\u00006\t\u0001\u0000\u0000\u000078\u0006"+
-		"\u0005\uffff\uffff\u00008>\u0003\u0016\u000b\u00009:\u0005\u0005\u0000"+
-		"\u0000:;\u0003\n\u0005\u0000;<\u0005\u0006\u0000\u0000<>\u0001\u0000\u0000"+
-		"\u0000=7\u0001\u0000\u0000\u0000=9\u0001\u0000\u0000\u0000>U\u0001\u0000"+
-		"\u0000\u0000?@\n\u0005\u0000\u0000@A\u0003\u000e\u0007\u0000AB\u0003\n"+
-		"\u0005\u0006BT\u0001\u0000\u0000\u0000CD\n\u0004\u0000\u0000DE\u0003\f"+
-		"\u0006\u0000EF\u0003\n\u0005\u0005FT\u0001\u0000\u0000\u0000GH\n\u0003"+
-		"\u0000\u0000HI\u0003\u0010\b\u0000IJ\u0003\n\u0005\u0004JT\u0001\u0000"+
-		"\u0000\u0000KL\n\u0002\u0000\u0000LM\u0003\u0012\t\u0000MN\u0003\n\u0005"+
-		"\u0003NT\u0001\u0000\u0000\u0000OP\n\u0001\u0000\u0000PQ\u0003\u0014\n"+
-		"\u0000QR\u0003\n\u0005\u0002RT\u0001\u0000\u0000\u0000S?\u0001\u0000\u0000"+
-		"\u0000SC\u0001\u0000\u0000\u0000SG\u0001\u0000\u0000\u0000SK\u0001\u0000"+
-		"\u0000\u0000SO\u0001\u0000\u0000\u0000TW\u0001\u0000\u0000\u0000US\u0001"+
-		"\u0000\u0000\u0000UV\u0001\u0000\u0000\u0000V\u000b\u0001\u0000\u0000"+
-		"\u0000WU\u0001\u0000\u0000\u0000XY\u0007\u0000\u0000\u0000Y\r\u0001\u0000"+
-		"\u0000\u0000Z[\u0007\u0001\u0000\u0000[\u000f\u0001\u0000\u0000\u0000"+
-		"\\]\u0007\u0002\u0000\u0000]\u0011\u0001\u0000\u0000\u0000^_\u0005\u0011"+
-		"\u0000\u0000_\u0013\u0001\u0000\u0000\u0000`a\u0005\u0012\u0000\u0000"+
-		"a\u0015\u0001\u0000\u0000\u0000be\u0003\u0018\f\u0000ce\u0005\u0014\u0000"+
-		"\u0000db\u0001\u0000\u0000\u0000dc\u0001\u0000\u0000\u0000e\u0017\u0001"+
-		"\u0000\u0000\u0000fg\u0007\u0003\u0000\u0000g\u0019\u0001\u0000\u0000"+
-		"\u0000\u0006\u001f/=SUd";
+		"\f\u0007\f\u0002\r\u0007\r\u0002\u000e\u0007\u000e\u0001\u0000\u0001\u0000"+
+		"\u0001\u0001\u0004\u0001\"\b\u0001\u000b\u0001\f\u0001#\u0001\u0002\u0001"+
+		"\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0003\u0002,\b"+
+		"\u0002\u0001\u0003\u0001\u0003\u0001\u0004\u0001\u0004\u0003\u00042\b"+
+		"\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0005\u0001\u0005\u0001"+
+		"\u0005\u0001\u0006\u0001\u0006\u0001\u0007\u0001\u0007\u0001\u0007\u0001"+
+		"\u0007\u0001\u0007\u0001\u0007\u0003\u0007B\b\u0007\u0001\u0007\u0001"+
+		"\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001"+
+		"\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001"+
+		"\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001"+
+		"\u0007\u0005\u0007X\b\u0007\n\u0007\f\u0007[\t\u0007\u0001\b\u0001\b\u0001"+
+		"\t\u0001\t\u0001\n\u0001\n\u0001\u000b\u0001\u000b\u0001\f\u0001\f\u0001"+
+		"\r\u0001\r\u0003\ri\b\r\u0001\u000e\u0001\u000e\u0001\u000e\u0000\u0001"+
+		"\u000e\u000f\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016"+
+		"\u0018\u001a\u001c\u0000\u0005\u0001\u0000\u0004\b\u0001\u0000\r\u000e"+
+		"\u0001\u0000\u000f\u0010\u0001\u0000\u0011\u0016\u0002\u0000\u0019\u0019"+
+		"\u001b\u001dg\u0000\u001e\u0001\u0000\u0000\u0000\u0002!\u0001\u0000\u0000"+
+		"\u0000\u0004+\u0001\u0000\u0000\u0000\u0006-\u0001\u0000\u0000\u0000\b"+
+		"/\u0001\u0000\u0000\u0000\n6\u0001\u0000\u0000\u0000\f9\u0001\u0000\u0000"+
+		"\u0000\u000eA\u0001\u0000\u0000\u0000\u0010\\\u0001\u0000\u0000\u0000"+
+		"\u0012^\u0001\u0000\u0000\u0000\u0014`\u0001\u0000\u0000\u0000\u0016b"+
+		"\u0001\u0000\u0000\u0000\u0018d\u0001\u0000\u0000\u0000\u001ah\u0001\u0000"+
+		"\u0000\u0000\u001cj\u0001\u0000\u0000\u0000\u001e\u001f\u0003\u0002\u0001"+
+		"\u0000\u001f\u0001\u0001\u0000\u0000\u0000 \"\u0003\u0004\u0002\u0000"+
+		"! \u0001\u0000\u0000\u0000\"#\u0001\u0000\u0000\u0000#!\u0001\u0000\u0000"+
+		"\u0000#$\u0001\u0000\u0000\u0000$\u0003\u0001\u0000\u0000\u0000%&\u0003"+
+		"\u0006\u0003\u0000&\'\u0005\u0003\u0000\u0000\',\u0001\u0000\u0000\u0000"+
+		"()\u0003\u0006\u0003\u0000)*\u0005\u0000\u0000\u0001*,\u0001\u0000\u0000"+
+		"\u0000+%\u0001\u0000\u0000\u0000+(\u0001\u0000\u0000\u0000,\u0005\u0001"+
+		"\u0000\u0000\u0000-.\u0003\b\u0004\u0000.\u0007\u0001\u0000\u0000\u0000"+
+		"/1\u0005\u001a\u0000\u000002\u0003\n\u0005\u000010\u0001\u0000\u0000\u0000"+
+		"12\u0001\u0000\u0000\u000023\u0001\u0000\u0000\u000034\u0005\n\u0000\u0000"+
+		"45\u0003\u000e\u0007\u00005\t\u0001\u0000\u0000\u000067\u0005\t\u0000"+
+		"\u000078\u0003\f\u0006\u00008\u000b\u0001\u0000\u0000\u00009:\u0007\u0000"+
+		"\u0000\u0000:\r\u0001\u0000\u0000\u0000;<\u0006\u0007\uffff\uffff\u0000"+
+		"<B\u0003\u001a\r\u0000=>\u0005\u000b\u0000\u0000>?\u0003\u000e\u0007\u0000"+
+		"?@\u0005\f\u0000\u0000@B\u0001\u0000\u0000\u0000A;\u0001\u0000\u0000\u0000"+
+		"A=\u0001\u0000\u0000\u0000BY\u0001\u0000\u0000\u0000CD\n\u0005\u0000\u0000"+
+		"DE\u0003\u0012\t\u0000EF\u0003\u000e\u0007\u0006FX\u0001\u0000\u0000\u0000"+
+		"GH\n\u0004\u0000\u0000HI\u0003\u0010\b\u0000IJ\u0003\u000e\u0007\u0005"+
+		"JX\u0001\u0000\u0000\u0000KL\n\u0003\u0000\u0000LM\u0003\u0014\n\u0000"+
+		"MN\u0003\u000e\u0007\u0004NX\u0001\u0000\u0000\u0000OP\n\u0002\u0000\u0000"+
+		"PQ\u0003\u0016\u000b\u0000QR\u0003\u000e\u0007\u0003RX\u0001\u0000\u0000"+
+		"\u0000ST\n\u0001\u0000\u0000TU\u0003\u0018\f\u0000UV\u0003\u000e\u0007"+
+		"\u0002VX\u0001\u0000\u0000\u0000WC\u0001\u0000\u0000\u0000WG\u0001\u0000"+
+		"\u0000\u0000WK\u0001\u0000\u0000\u0000WO\u0001\u0000\u0000\u0000WS\u0001"+
+		"\u0000\u0000\u0000X[\u0001\u0000\u0000\u0000YW\u0001\u0000\u0000\u0000"+
+		"YZ\u0001\u0000\u0000\u0000Z\u000f\u0001\u0000\u0000\u0000[Y\u0001\u0000"+
+		"\u0000\u0000\\]\u0007\u0001\u0000\u0000]\u0011\u0001\u0000\u0000\u0000"+
+		"^_\u0007\u0002\u0000\u0000_\u0013\u0001\u0000\u0000\u0000`a\u0007\u0003"+
+		"\u0000\u0000a\u0015\u0001\u0000\u0000\u0000bc\u0005\u0017\u0000\u0000"+
+		"c\u0017\u0001\u0000\u0000\u0000de\u0005\u0018\u0000\u0000e\u0019\u0001"+
+		"\u0000\u0000\u0000fi\u0003\u001c\u000e\u0000gi\u0005\u001a\u0000\u0000"+
+		"hf\u0001\u0000\u0000\u0000hg\u0001\u0000\u0000\u0000i\u001b\u0001\u0000"+
+		"\u0000\u0000jk\u0007\u0004\u0000\u0000k\u001d\u0001\u0000\u0000\u0000"+
+		"\u0007#+1AWYh";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

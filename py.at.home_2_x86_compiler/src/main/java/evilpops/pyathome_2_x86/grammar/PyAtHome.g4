@@ -10,12 +10,10 @@ private final IndentationTracker indentTracker = new IndentationTracker();
 @Override
 public Token nextToken() {
 	Token tk = indentTracker.sendDentTokenIfNeeded();
-    if (tk != null) {
-        System.out.println(tk);
+    if (tk != null)
         return tk;
-    }
+
     tk = super.nextToken();
-    System.out.println(tk);
     indentTracker.processToken(tk);
     return tk;
 }
@@ -52,8 +50,6 @@ statementsList
 
 statement
     : simpleStatement NEWLINE
-    | simpleStatement NEWLINE INDENT
-    | simpleStatement NEWLINE DEDENT
     | simpleStatement EOF
     ;
 
@@ -62,7 +58,19 @@ simpleStatement
     ;
 
 assignStatement
-    : ID ASSIGN numExpression
+    : ID typing? ASSIGN numExpression
+    ;
+
+typing
+    : COLON types
+    ;
+
+types
+    : T_INT
+    | T_FLOAT
+    | T_BOOLEAN
+    | T_STRING
+    | T_NONE
     ;
 
 numExpression
@@ -113,6 +121,7 @@ literal
     | BOOLEAN
     | STRING
     ;
+
 /* Parser rules - END */
 
 
@@ -126,6 +135,16 @@ NEWLINE
     | '\n'[ \n\t\r]*'\n'
     | '\n'[ \t]+
     | '\n'
+    ;
+
+T_INT: 'int';
+T_FLOAT: 'float';
+T_BOOLEAN: 'bool';
+T_STRING: 'str';
+T_NONE: 'None';
+
+COLON
+    : ':'
     ;
 
 ASSIGN: '=' ;
