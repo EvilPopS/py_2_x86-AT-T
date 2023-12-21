@@ -9,7 +9,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class RegisterTabRow extends ConcreteRowArchetype {
+public class RegisterTabRow extends DataTypeRowArchetype {
     protected AssemblyRegister registerName;
     protected boolean available;
 

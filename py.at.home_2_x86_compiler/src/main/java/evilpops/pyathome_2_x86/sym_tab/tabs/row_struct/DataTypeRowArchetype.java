@@ -8,10 +8,10 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 @Getter
 @Setter
 @Accessors(chain = true)
-public abstract class ConcreteRowArchetype extends RowArchetype {
+public abstract class DataTypeRowArchetype extends RowArchetype {
     protected DataType dataType;
 
-    public ConcreteRowArchetype(int foreignId, DataType dataType) {
+    public DataTypeRowArchetype(int foreignId, DataType dataType) {
         super(foreignId);
         this.dataType = dataType;
     }

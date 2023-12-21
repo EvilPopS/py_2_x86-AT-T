@@ -6,7 +6,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 
 @Getter
 @Setter
-public class LiteralTabRow extends ConcreteRowArchetype {
+public class LiteralTabRow extends DataTypeRowArchetype {
     protected String value;
     protected int dataLabelNum;
 

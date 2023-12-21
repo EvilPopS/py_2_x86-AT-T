@@ -1,6 +1,7 @@
 package main.java.evilpops.pyathome_2_x86.semantic_analyzer;
 
 import main.java.evilpops.pyathome_2_x86.semantic_analyzer.exceptions.DataTypesNotCompatibleException;
+import main.java.evilpops.pyathome_2_x86.semantic_analyzer.exceptions.ImplAndExplTypesNotCompatibleWarning;
 import main.java.evilpops.pyathome_2_x86.sym_tab.utils.data_type_utils.ArithOpsOperandsTypesComp;
 import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
@@ -46,6 +47,11 @@ public class SemanticAnalyzer {
         checkTypesCompatibility(
                 RelOpsOperandsTypesComp.nonEqualityRelOpsOperandsTypesComp, leftRefToVal, rightRefToVal, "(< or <= or > or >=)"
         );
+    }
+
+    public static void areImplicitAndExplicitDataTypesTheSame(DataType implicit, DataType explicit) {
+        if (!implicit.equals(explicit) && !explicit.equals(DataType.UNKNOWN))
+            throw new ImplAndExplTypesNotCompatibleWarning(implicit.toString(), explicit.toString());
     }
 
     private static void checkTypesCompatibility(Map<DataType, Map<DataType, Boolean>> map, int leftRef, int rightRef, String operator) {

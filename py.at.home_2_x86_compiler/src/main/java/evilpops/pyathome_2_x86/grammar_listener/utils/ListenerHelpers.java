@@ -5,6 +5,8 @@ import main.java.evilpops.pyathome_2_x86.assembly_gen.IAssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_gen.enums.ConditionalJump;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.exceptions.ListenerNotInSyncWithGrammarException;
+import main.java.evilpops.pyathome_2_x86.log_handlers.LogHandler;
+import main.java.evilpops.pyathome_2_x86.log_handlers.exceptions.CompilationWarning;
 import main.java.evilpops.pyathome_2_x86.semantic_analyzer.SemanticAnalyzer;
 import main.java.evilpops.pyathome_2_x86.sym_tab.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.sym_tab.SymTabController;
@@ -29,13 +31,28 @@ public class ListenerHelpers {
         int idRef;
         int numExpRef = ctx.numExpression().getRefToSymTab();
         DataType numExpDataType = symTabController.getDataType(numExpRef);
+
+        DataType explicitType = (ctx.typing() != null)
+                ? Convertors.convertTypingCtxToDataType(ctx.typing().types())
+                : DataType.UNKNOWN;
+
         String idName = ctx.ID().getText();
         try {
             idRef = symTabController.getVarRefByName(idName);
+            if (!explicitType.equals(DataType.UNKNOWN))
+                symTabController.setExplicitType(idRef, explicitType);
+            else
+                explicitType = symTabController.getExplicitType(idRef);
             symTabController.setDataType(idRef, numExpDataType);
         } catch (VariableNotFoundException ignored) {
-            idRef = symTabController.addVariable(numExpDataType, idName, varCounter.incAndGetCurrCounter());
+            idRef = symTabController.addVariable(numExpDataType, explicitType, idName, varCounter.incAndGetCurrCounter());
             assemblyGen.genStackPointerDec(symTabController.checkIfDataTypeIsFloat(idRef));
+        }
+
+        try {
+            SemanticAnalyzer.areImplicitAndExplicitDataTypesTheSame(numExpDataType, explicitType);
+        } catch (CompilationWarning warning) {
+            LogHandler.getInstance().addWarning(warning.getMessage());
         }
 
         if (symTabController.checkIfIsVar(numExpRef) || (symTabController.checkIfIsLiteral(numExpRef) && symTabController.checkIfDataTypeIsFloat(numExpRef))) {
@@ -45,6 +62,7 @@ public class ListenerHelpers {
             symTabController.freeIfIsRegister(regRef);
         } else
             assemblyGen.genMoveInst(idRef, numExpRef);
+
     }
 
     public static int processNumExpressionCtxExit(PyAtHomeParser.NumExpressionContext ctx) {
@@ -109,13 +127,12 @@ public class ListenerHelpers {
         else if (ctx.STRING() != null) {
             String strVal = ctx.STRING().getText();
             int literalRef = symTabController.addLiteralString(
-                    strVal.substring(1,strVal.length()-1),
+                    strVal.substring(1, strVal.length() - 1),
                     DataType.STRING, literalCounter.getAndIncCounter()
             );
             assemblyGen.genStringLiteral(literalRef);
             return literalRef;
-        }
-        else
+        } else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "insertLiteralIntoSymTab"));
     }
 
