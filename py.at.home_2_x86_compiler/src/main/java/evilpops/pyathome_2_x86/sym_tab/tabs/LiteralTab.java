@@ -3,7 +3,7 @@ package main.java.evilpops.pyathome_2_x86.sym_tab.tabs;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.LiteralTabRow;
 
-public class LiteralTab extends ConcreteTableArchetype<LiteralTabRow> {
+public class LiteralTab extends DataTypeTableArchetype<LiteralTabRow> {
     public void add(int mainTabFK, DataType dataType, String value) {
         this.table.add(new LiteralTabRow(mainTabFK, dataType, value));
     }

@@ -8,7 +8,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.RegisterTabRow;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterTab extends ConcreteTableArchetype<RegisterTabRow> {
+public class RegisterTab extends DataTypeTableArchetype<RegisterTabRow> {
     private final Map<AssemblyRegister, Integer> regInds;
 
     public RegisterTab() {

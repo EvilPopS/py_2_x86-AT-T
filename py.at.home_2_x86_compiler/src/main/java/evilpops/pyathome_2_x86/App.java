@@ -1,9 +1,10 @@
 package main.java.evilpops.pyathome_2_x86;
 
 import main.java.evilpops.pyathome_2_x86.assembly_gen.AssemblyGenerator;
-import main.java.evilpops.pyathome_2_x86.error_handlers.SemanticErrorHandler;
-import main.java.evilpops.pyathome_2_x86.error_handlers.SyntaxErrorHandler;
-import main.java.evilpops.pyathome_2_x86.error_handlers.exceptions.CleanRuntimeException;
+import main.java.evilpops.pyathome_2_x86.log_handlers.LogHandler;
+import main.java.evilpops.pyathome_2_x86.log_handlers.SyntaxErrorHandler;
+import main.java.evilpops.pyathome_2_x86.log_handlers.exceptions.CompilationError;
+import main.java.evilpops.pyathome_2_x86.log_handlers.exceptions.CompilationWarning;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeLexer;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.PyAtHomeListener;
@@ -32,10 +33,10 @@ public class App {
             parser.addErrorListener(new SyntaxErrorHandler());
             parser.program();
 
-            ISymTabController a = SymTabController.getInstance();
+            LogHandler.getInstance().printWarningMessagesIfAny();
             AssemblyGenerator.getInstance().printToConsole();
-        } catch (CleanRuntimeException exception) {
-            SemanticErrorHandler.getInstance().printErrorMessage(exception.getMessage());
+        } catch (CompilationError compilationError) {
+            LogHandler.getInstance().printErrorMessage(compilationError.getMessage());
         }
 
     }

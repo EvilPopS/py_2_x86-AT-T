@@ -5,7 +5,8 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.enums.TabType;
 import main.java.evilpops.pyathome_2_x86.sym_tab.exceptions.TabTypeEnumNotInSyncWithTabClassesException;
 import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.*;
-import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.ConcreteRowArchetype;
+import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.DataTypeRowArchetype;
+import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.ExplicitTypeRowArchetype;
 import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.MainTabRow;
 
 public class SymTabController implements ISymTabController {
@@ -31,9 +32,9 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public int addVariable(DataType dataType, String name, int ordinality) {
+    public int addVariable(DataType dataType, DataType explicitType, String name, int ordinality) {
         int rowRef = this.mainTab.getNextFreeRowInd();
-        this.variableTab.add(rowRef, dataType, name, ordinality);
+        this.variableTab.add(rowRef, dataType, explicitType, name, ordinality);
         this.mainTab.addVariable(this.variableTab.getLastRowInd());
         return rowRef;
     }
@@ -77,8 +78,15 @@ public class SymTabController implements ISymTabController {
     @Override
     public DataType getDataType(int ind) {
         MainTabRow rowData = this.mainTab.get(ind);
-        return getConcreteTableByTabType(rowData.getRefTabType())
+        return getDataTypeTableByTabType(rowData.getRefTabType())
                 .getDataType(rowData.getForeignId());
+    }
+
+    @Override
+    public DataType getExplicitType(int ind) {
+        MainTabRow rowData = this.mainTab.get(ind);
+        return getExplicitTypeTableByTabType(rowData.getRefTabType())
+                .getExplicitType(rowData.getForeignId());
     }
 
     @Override
@@ -104,8 +112,15 @@ public class SymTabController implements ISymTabController {
     @Override
     public void setDataType(int ind, DataType dataType) {
         MainTabRow rowData = this.mainTab.get(ind);
-        getConcreteTableByTabType(rowData.getRefTabType())
+        this.getDataTypeTableByTabType(rowData.getRefTabType())
                 .setDataType(rowData.getForeignId(), dataType);
+    }
+
+    @Override
+    public void setExplicitType(int ind, DataType explicitType) {
+        MainTabRow rowData = this.mainTab.get(ind);
+        this.getExplicitTypeTableByTabType(rowData.getRefTabType())
+                .setExplicitType(rowData.getForeignId(), explicitType);
     }
 
     @Override
@@ -144,11 +159,19 @@ public class SymTabController implements ISymTabController {
             this.registerTab.freeRegister(this.mainTab.get(ind).getForeignId());
     }
 
-    private ConcreteTableArchetype<? extends ConcreteRowArchetype> getConcreteTableByTabType(TabType tabType) {
+    private DataTypeTableArchetype<? extends DataTypeRowArchetype> getDataTypeTableByTabType(TabType tabType) {
         return switch (tabType) {
             case VARIABLE -> this.variableTab;
             case LITERAL -> this.literalTab;
             case REGISTER -> this.registerTab;
+            default -> throw new TabTypeEnumNotInSyncWithTabClassesException();
+        };
+    }
+
+    private ExplicitTypeTableArchetype<? extends ExplicitTypeRowArchetype> getExplicitTypeTableByTabType(TabType tabType) {
+        return switch (tabType) {
+            case VARIABLE -> this.variableTab;
+            //TODO case PARAMETER
             default -> throw new TabTypeEnumNotInSyncWithTabClassesException();
         };
     }
