@@ -14,12 +14,15 @@ public class IndentationTracker {
     private int indentCounter;
     private int dedentCounter;
 
+    private boolean isInvalidDent;
+
 
     public IndentationTracker() {
         this.indentationLevels = new ArrayList<>() {{
             add(0);
         }};
         this.spaceCounter = 0;
+        this.isInvalidDent = false;
     }
 
     public void processToken(Token tk) {
@@ -37,7 +40,10 @@ public class IndentationTracker {
             this.dedentCounter--;
             return new CommonToken(PyAtHomeParser.DEDENT, "DEDENT");
         }
-
+        else if (this.isInvalidDent) {
+            this.isInvalidDent = false;
+            return new CommonToken(PyAtHomeParser.INVALID_DENT, "INVALID_DENT");
+        }
         return null;
     }
 
@@ -57,8 +63,11 @@ public class IndentationTracker {
             for (int indentLvl : this.indentationLevels.stream().sorted(Collections.reverseOrder()).toList()) {
                 if (this.spaceCounter == indentLvl)
                     break;
-                if (this.spaceCounter > indentLvl)
-                    throw new RuntimeException("Invalid indentation");
+                if (this.spaceCounter > indentLvl) {
+                    this.dedentCounter = 0;
+                    this.isInvalidDent = true;
+                    break;
+                }
                 this.dedentCounter++;
                 this.removeLastIndentLevel();
             }

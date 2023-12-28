@@ -1,7 +1,7 @@
 grammar PyAtHome;
 
 
-tokens { INDENT, DEDENT }
+tokens { INDENT, DEDENT, INVALID_DENT }
 
 
 @lexer::members {
@@ -10,10 +10,13 @@ private final IndentationTracker indentTracker = new IndentationTracker();
 @Override
 public Token nextToken() {
 	Token tk = indentTracker.sendDentTokenIfNeeded();
-    if (tk != null)
+    if (tk != null) {
+        System.out.println(tk);
         return tk;
+    }
 
     tk = super.nextToken();
+    System.out.println(tk);
     indentTracker.processToken(tk);
     return tk;
 }
@@ -49,16 +52,44 @@ statementsList
     ;
 
 statement
-    : simpleStatement NEWLINE
-    | simpleStatement EOF
+    : simpleStatement (NEWLINE EOF | NEWLINE | EOF)
+    | compundStatement
     ;
 
 simpleStatement
     : assignStatement
     ;
 
+compundStatement
+    : functionDef
+    ;
+
 assignStatement
     : ID typing? ASSIGN numExpression
+    ;
+
+functionDef
+    : DEF ID L_PAREN parameters? R_PAREN COLON NEWLINE block
+    ;
+
+parameters
+    : paramNonDefVal COMMA paramDefVal
+    | paramNonDefVal
+    | paramDefVal
+    ;
+
+paramDefVal
+    : ID ASSIGN numExpression
+    | paramDefVal COMMA paramDefVal
+    ;
+
+paramNonDefVal
+    : ID
+    | paramDefVal COMMA paramNonDefVal
+    ;
+
+block
+    : INDENT statementsList (DEDENT (INVALID_DENT)? EOF | DEDENT | (INVALID_DENT)? EOF )
     ;
 
 typing
@@ -137,15 +168,16 @@ NEWLINE
     | '\n'
     ;
 
+DEF: 'def';
+
 T_INT: 'int';
 T_FLOAT: 'float';
 T_BOOLEAN: 'bool';
 T_STRING: 'str';
 T_NONE: 'None';
 
-COLON
-    : ':'
-    ;
+COMMA: ',';
+COLON: ':';
 
 ASSIGN: '=' ;
 

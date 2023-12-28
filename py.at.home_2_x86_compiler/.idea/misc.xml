@@ -24,7 +24,7 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4" />
           <option name="autoGen" value="true" />
-          <option name="outputDir" value="D:\Projects\py.at.home_2_x86_compiler\py.at.home_2_x86_compiler\src" />
+          <option name="outputDir" value="H:\Projects\diplomski\py.at.home_2_x86_compiler\py.at.home_2_x86_compiler\src" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="main.java.evilpops.pyathome_2_x86.grammar.grammar_classes" />

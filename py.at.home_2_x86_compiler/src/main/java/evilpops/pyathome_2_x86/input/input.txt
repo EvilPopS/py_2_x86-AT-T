@@ -1,6 +1,5 @@
-a : int = 1
-a = "str"
-b = 2
-b : float = 1
-b = 2.3
-b : str = "afas"
+def a():
+    def b():
+        f = 3
+
+     v = 1

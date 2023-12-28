@@ -1,4 +1,4 @@
-// Generated from D:/Projects/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4 by ANTLR 4.13.1
+// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4 by ANTLR 4.13.1
 package main.java.evilpops.pyathome_2_x86.grammar.grammar_classes;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -48,6 +48,16 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitSimpleStatement(PyAtHomeParser.SimpleStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#compundStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterCompundStatement(PyAtHomeParser.CompundStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#compundStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitCompundStatement(PyAtHomeParser.CompundStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#assignStatement}.
 	 * @param ctx the parse tree
 	 */
@@ -57,6 +67,56 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssignStatement(PyAtHomeParser.AssignStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#functionDef}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionDef(PyAtHomeParser.FunctionDefContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#functionDef}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionDef(PyAtHomeParser.FunctionDefContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#parameters}.
+	 * @param ctx the parse tree
+	 */
+	void enterParameters(PyAtHomeParser.ParametersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#parameters}.
+	 * @param ctx the parse tree
+	 */
+	void exitParameters(PyAtHomeParser.ParametersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#paramDefVal}.
+	 * @param ctx the parse tree
+	 */
+	void enterParamDefVal(PyAtHomeParser.ParamDefValContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#paramDefVal}.
+	 * @param ctx the parse tree
+	 */
+	void exitParamDefVal(PyAtHomeParser.ParamDefValContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#paramNonDefVal}.
+	 * @param ctx the parse tree
+	 */
+	void enterParamNonDefVal(PyAtHomeParser.ParamNonDefValContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#paramNonDefVal}.
+	 * @param ctx the parse tree
+	 */
+	void exitParamNonDefVal(PyAtHomeParser.ParamNonDefValContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlock(PyAtHomeParser.BlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlock(PyAtHomeParser.BlockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#typing}.
 	 * @param ctx the parse tree
