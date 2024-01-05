@@ -9,7 +9,7 @@ private final IndentationTracker indentTracker = new IndentationTracker();
 
 @Override
 public Token nextToken() {
-	Token tk = indentTracker.sendDentTokenIfNeeded();
+	Token tk = indentTracker.sendDentTokenIfNeeded(this.getLine());
     if (tk != null) {
         System.out.println(tk);
         return tk;
@@ -23,7 +23,7 @@ public Token nextToken() {
 }
 
 @parser::members {
- static class ContextExtention extends ParserRuleContext {
+static class ContextExtention extends ParserRuleContext {
     protected int refToSymTab;
     public ContextExtention(ParserRuleContext parent, int invokingState) {
          super(parent, invokingState);
@@ -44,7 +44,7 @@ options {
 
 /* Parser rules - START */
 program
-    : statementsList
+    : statementsList INVALID_DENT? EOF
     ;
 
 statementsList
@@ -52,7 +52,7 @@ statementsList
     ;
 
 statement
-    : simpleStatement (NEWLINE EOF | NEWLINE | EOF)
+    : simpleStatement NEWLINE
     | compundStatement
     ;
 
@@ -85,11 +85,11 @@ paramDefVal
 
 paramNonDefVal
     : ID
-    | paramDefVal COMMA paramNonDefVal
+    | paramNonDefVal COMMA paramNonDefVal
     ;
 
 block
-    : INDENT statementsList (DEDENT (INVALID_DENT)? EOF | DEDENT | (INVALID_DENT)? EOF )
+    : INDENT statementsList DEDENT
     ;
 
 typing

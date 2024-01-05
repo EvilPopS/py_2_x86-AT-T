@@ -1,5 +1,6 @@
 package main.java.evilpops.pyathome_2_x86.grammar.grammar_classes;
 
+import main.java.evilpops.pyathome_2_x86.log_handlers.LogHandler;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 
@@ -32,19 +33,26 @@ public class IndentationTracker {
         }
     }
 
-    public Token sendDentTokenIfNeeded() {
+    public Token sendDentTokenIfNeeded(int currentLine) {
+        LogHandler.getInstance().updateLine(currentLine);
+
+        CommonToken tk = null;
         if (this.indentCounter > 0) {
             this.indentCounter--;
-            return new CommonToken(PyAtHomeParser.INDENT, "INDENT");
+            tk = new CommonToken(PyAtHomeParser.INDENT, "INDENT");
         } else if (this.dedentCounter > 0) {
             this.dedentCounter--;
-            return new CommonToken(PyAtHomeParser.DEDENT, "DEDENT");
+            tk =  new CommonToken(PyAtHomeParser.DEDENT, "DEDENT");
         }
         else if (this.isInvalidDent) {
             this.isInvalidDent = false;
-            return new CommonToken(PyAtHomeParser.INVALID_DENT, "INVALID_DENT");
+            tk =  new CommonToken(PyAtHomeParser.INVALID_DENT, "INVALID_DENT");
         }
-        return null;
+
+        if (tk != null)
+            tk.setLine(currentLine);
+
+        return tk;
     }
 
     private int countSpacesFromTxt(String txt) {

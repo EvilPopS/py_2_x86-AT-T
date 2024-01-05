@@ -94,7 +94,7 @@ public class PyAtHomeLexer extends Lexer {
 
 	@Override
 	public Token nextToken() {
-		Token tk = indentTracker.sendDentTokenIfNeeded();
+		Token tk = indentTracker.sendDentTokenIfNeeded(this.getLine());
 	    if (tk != null) {
 	        System.out.println(tk);
 	        return tk;

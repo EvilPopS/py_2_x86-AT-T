@@ -1,10 +1,16 @@
 package main.java.evilpops.pyathome_2_x86.log_handlers;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class LogHandler {
     private static final LogHandler LOG_HANDLER = new LogHandler();
+
+    @Getter @Setter
+    protected boolean syntaxErrDetected;
 
     protected final List<String> warningMessages;
     protected int line;
@@ -16,6 +22,7 @@ public class LogHandler {
     private LogHandler() {
         this.warningMessages = new ArrayList<>();
         this.line = 0;
+        this.syntaxErrDetected = false;
     }
 
     public static LogHandler getInstance() {

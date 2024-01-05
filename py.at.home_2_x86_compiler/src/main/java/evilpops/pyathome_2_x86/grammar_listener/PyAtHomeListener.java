@@ -10,31 +10,32 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
 
     @Override
     public void exitProgram(PyAtHomeParser.ProgramContext ignored) {
-        ListenerHelpers.processProgramCtxExit();
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ListenerHelpers.processProgramCtxExit();
     }
 
     @Override
     public void exitAssignStatement(PyAtHomeParser.AssignStatementContext ctx) {
-        ListenerHelpers.processAssignStatementCtxExit(ctx);
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ListenerHelpers.processAssignStatementCtxExit(ctx);
     }
 
     @Override
     public void exitNumExpression(PyAtHomeParser.NumExpressionContext ctx) {
-        ctx.setRefToSymTab(ListenerHelpers.processNumExpressionCtxExit(ctx));
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ctx.setRefToSymTab(ListenerHelpers.processNumExpressionCtxExit(ctx));
     }
 
     @Override
     public void exitExpression(PyAtHomeParser.ExpressionContext ctx) {
-        ctx.setRefToSymTab(ListenerHelpers.processExpressionCtxExit(ctx));
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ctx.setRefToSymTab(ListenerHelpers.processExpressionCtxExit(ctx));
     }
 
     @Override
     public void exitLiteral(PyAtHomeParser.LiteralContext ctx) {
-        ctx.setRefToSymTab(ListenerHelpers.processLiteralCtxExit(ctx));
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ctx.setRefToSymTab(ListenerHelpers.processLiteralCtxExit(ctx));
     }
 
-    @Override
-    public void enterEveryRule(ParserRuleContext ctx) {
-        LogHandler.getInstance().updateLine(ctx.getStart().getLine());
-    }
 }
