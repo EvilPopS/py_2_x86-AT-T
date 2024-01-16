@@ -1,7 +1,6 @@
 package main.java.evilpops.pyathome_2_x86;
 
 import main.java.evilpops.pyathome_2_x86.assembly_gen.AssemblyGenerator;
-import main.java.evilpops.pyathome_2_x86.log_handlers.CustomErrorStrategy;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeLexer;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.PyAtHomeListener;
@@ -31,7 +30,6 @@ public class App {
             parser.removeErrorListeners();
             parser.addParseListener(new PyAtHomeListener());
             parser.addErrorListener(new SyntaxErrorListener());
-            parser.setErrorHandler(new CustomErrorStrategy());
             parser.program();
 
             LogHandler.getInstance().printWarningMessagesIfAny();

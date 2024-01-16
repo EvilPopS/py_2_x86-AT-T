@@ -1,13 +1,27 @@
 package main.java.evilpops.pyathome_2_x86.log_handlers;
 
-import org.antlr.v4.runtime.BaseErrorListener;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
+import main.java.evilpops.pyathome_2_x86.log_handlers.exceptions.RecognitionErrorExtension;
+import main.java.evilpops.pyathome_2_x86.log_handlers.exceptions.SyntaxErrorException;
+import org.antlr.v4.runtime.*;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class SyntaxErrorListener extends BaseErrorListener {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
         LogHandler.getInstance().setSyntaxErrDetected(true);
-        throw e;
+        String offendingToken = ((Parser) recognizer).getCurrentToken().getText();
+        if (offendingToken.equals("INVALID_DENT"))
+            throw new SyntaxErrorException("Invalid indentation!");
+        else
+            throw new SyntaxErrorException(
+                    String.format(
+                            "Unexpected symbol '%s'. Expecting: {%s}",
+                            offendingToken.replace("\n", "\\n"),
+                            Arrays.stream(((Parser)recognizer).getExpectedTokens().toArray()).mapToObj(recognizer.getVocabulary()::getDisplayName)
+                                    .collect(Collectors.joining(", "))
+                    )
+            );
     }
 }
