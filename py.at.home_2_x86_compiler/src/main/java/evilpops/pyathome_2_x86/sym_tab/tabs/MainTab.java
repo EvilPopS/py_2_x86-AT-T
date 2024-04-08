@@ -13,11 +13,17 @@ public class MainTab extends TableArchetype<MainTabRow> {
         this.add(TabType.VARIABLE, foreignId);
     }
 
+    public void addParameter(int foreignId) {
+        this.add(TabType.PARAMETER, foreignId);
+    }
     public void addLiteral(int foreignId) {
         this.add(TabType.LITERAL, foreignId);
     }
     public void addRegister(int foreignId) {
         this.add(TabType.REGISTER, foreignId);
+    }
+    public void addFunction(int foreignId) {
+        this.add(TabType.FUNCTION, foreignId);
     }
 
     public void removeRowByInd(int ind) {

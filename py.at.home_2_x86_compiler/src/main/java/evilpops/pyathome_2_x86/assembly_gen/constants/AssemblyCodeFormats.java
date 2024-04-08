@@ -5,7 +5,6 @@ public class AssemblyCodeFormats {
     public static final String GLOBAL_MAIN = ".globl main\n";
     public static final String MAIN_LBL = "main:\n";
     public static final String MAIN_START_CODE = "\tpushq %rbp\n\tandq $-16, %rsp\n\tmovq %rsp, %rbp\n";
-    public static final String DATA_SECTION_INIT = "\tFLOAT_ZERO: .double 0.0\n";
     public static final String PROGRAM_END_CODE = "main_end:\n\tmovq $60, %rax\n\txorq %rdi, %rdi\n\tsyscall\n\n";
 
     public static final String PUSH_INST = "\tpush%s %s\n";
@@ -41,23 +40,31 @@ public class AssemblyCodeFormats {
     public static final String DATA_SEC_STRING_REF = "STRING_VAL%s";
     public static final String FLOAT_LIT_DATA_SEC = "\tFLOAT_VAL%s: .double %s\n";
     public static final String STRING_LIT_DATA_SEC = "\tSTRING_VAL%s: .string \"%s\"\n";
+    public static final String NONE_LIT_DATA_SEC = "\tNONE: .asciz \"None\"\n";
+    public static final String FLOAT_ZERO_DATA_SEC = "\tFLOAT_ZERO: .double 0.0\n";
+    public static final String DATA_SECTION_INIT = NONE_LIT_DATA_SEC + FLOAT_ZERO_DATA_SEC;
 
     public static final String LBL_FORMAT = "%s:\n";
     public static final String LBL_CMP_TRUE = "L_CMP_TRUE_%s";
     public static final String LBL_CMP_END = "L_CMP_END_%s";
 
     public static final String FLOAT_ZERO = "FLOAT_ZERO";
+    public static final String NONE_LIT = "NONE";
 
     public static final String CONCAT_STRINGS_LBL = "STRING_CONCAT";
     public static final String STRINGS_MUL_LBL = "STRING_MUL";
     public static final String STRING_CMP_LBL = "STRING_CMP";
     public static final String STRING_TO_BOOL_LBL = "STRING_TO_BOOL";
 
+    public static final String FUNC_LBL_NAME_FORMAT = "FUNC_%s";
+    public static final String FUNC_END_LBL_NAME_FORMAT = "FUNC_%s_END";
+    public static final String FUNC_START = "\tpushq %rbp\n\tmovq %rsp, %rbp\n\n";
+    public static final String FUNC_END = "\tpopq %rbp\n\tret\n\n";
+
     public static final String CONCAT_STRINGS_BUILTIN =
             CONCAT_STRINGS_LBL +
                     ":\n" +
-                    "\tpushq %rbp\n" +
-                    "\tmovq %rsp, %rbp\n\n" +
+                    FUNC_START +
                     "\tsubq $32, %rsp\n" +
                     "\tmovq %rdi, -16(%rbp)\n" +
                     "\tmovq %rsi, -24(%rbp)\n\n" +
@@ -78,14 +85,12 @@ public class AssemblyCodeFormats {
                     "\tcall strcat@plt\n\n" +
                     "\tmovq -32(%rbp), %rax\n\n" +
                     "\taddq $32, %rsp\n" +
-                    "\tpopq %rbp\n\n" +
-                    "\tret\n\n";
+                    FUNC_END;
 
     public static final String STRINGS_MUL_BUILTIN =
             STRINGS_MUL_LBL +
                     ":\n" +
-                    "\tpushq %rbp\n" +
-                    "\tmovq %rsp, %rbp\n\n" +
+                    FUNC_START +
                     "\tsubq $32, %rsp\n" +
                     "\tmovq %rdi, -16(%rbp)\n" +
                     "\tmovq %rsi, -24(%rbp)\n\n" +
@@ -116,24 +121,20 @@ public class AssemblyCodeFormats {
                     "SM_END:\n" +
                     "\tmovq -32(%rbp), %rax\n\n" +
                     "\taddq $32, %rsp\n" +
-                    "\tpopq %rbp\n" +
-                    "\tret\n\n";
+                    FUNC_END;
 
     public static final String STRINGS_CMP_BUILTIN =
             STRING_CMP_LBL +
                     ":\n" +
-                    "\tpushq %rbp\n" +
-                    "\tmovq %rsp, %rbp\n\n" +
+                    FUNC_START +
                     "\tcall strcmp@plt\n" +
                     "\tcdqe\n\n" +
-                    "\tpopq %rbp\n" +
-                    "\tret\n\n";
+                    FUNC_END;
 
     public static final String STRING_TO_BOOL_BUILTIN =
             STRING_TO_BOOL_LBL +
                     ":\n" +
-                    "\tpushq %rbp\n" +
-                    "\tmovq %rsp, %rbp\n\n" +
+                    FUNC_START +
                     "\tcall strlen@plt\n" +
                     "\tmovq %rax, %r10\n" +
                     "\tcmp $0, %r10\n" +
@@ -143,6 +144,5 @@ public class AssemblyCodeFormats {
                     "STB_EMPTY_STRING:\n" +
                     "\tmovq $0, %rax\n\n" +
                     "STB_END:\t\n" +
-                    "\tpopq %rbp\t\n" +
-                    "\tret\n\n";
+                    FUNC_END;
 }

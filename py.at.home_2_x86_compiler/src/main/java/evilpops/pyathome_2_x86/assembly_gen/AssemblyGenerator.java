@@ -12,6 +12,7 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import static main.java.evilpops.pyathome_2_x86.assembly_gen.constants.AssemblyCodeFormats.*;
 import static main.java.evilpops.pyathome_2_x86.assembly_gen.constants.AssemblyRegisterGroups.*;
@@ -24,24 +25,32 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     private final StackAlignmentTracker stackAlignTracker;
 
     private final StringBuilder dataSection;
-    private final StringBuilder builtInTxtSection;
-    private final StringBuilder txtSection;
+    private final StringBuilder builtInFuncs;
+    private StringBuilder currentFunc;
+
+    private final List<StringBuilder> funcDefs;
+    private final Stack<Integer> funcIndStack;
 
     private AssemblyGenerator() {
         this.symTabController = SymTabController.getInstance();
+        this.funcDefs = new ArrayList<>();
+        this.funcDefs.add(new StringBuilder());
+        this.funcIndStack = new Stack<>();
+        this.funcIndStack.push(0);
         this.lblCounter = new LabelCounter();
         this.stackAlignTracker = new StackAlignmentTracker();
-        this.dataSection = new StringBuilder();
-        this.builtInTxtSection = new StringBuilder();
-        this.txtSection = new StringBuilder();
-        this.dataSection.append(String.format(SECTION, "data"))
-                .append(DATA_SECTION_INIT);
-        this.builtInTxtSection.append(CONCAT_STRINGS_BUILTIN)
-                .append(STRINGS_MUL_BUILTIN).append(STRINGS_CMP_BUILTIN)
-                .append(STRING_TO_BOOL_BUILTIN);
-        this.txtSection.append(String.format(SECTION, "text"))
+        this.currentFunc = this.funcDefs.get(0)
+                .append(String.format(SECTION, "text"))
                 .append(GLOBAL_MAIN).append(MAIN_LBL)
                 .append(MAIN_START_CODE);
+        this.dataSection = new StringBuilder()
+                .append(String.format(SECTION, "data"))
+                .append(DATA_SECTION_INIT);
+        this.builtInFuncs = new StringBuilder()
+                .append(CONCAT_STRINGS_BUILTIN)
+                .append(STRINGS_MUL_BUILTIN)
+                .append(STRINGS_CMP_BUILTIN)
+                .append(STRING_TO_BOOL_BUILTIN);
     }
 
     public static IAssemblyGenerator getInstance() {
@@ -52,7 +61,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genMoveInst(int dest, int src) {
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 MOVE_INST,
                 this.calcInstructionSuffix(dest),
                 this.genSymbolByTabInd(src),
@@ -62,19 +71,20 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genArgMoveInst(int dest, int src) {
-        AssemblyRegister destReg = symTabController.checkIfDataTypeIsFloat(src) ? FLOAT_ARGS_REGS[dest] : ARGS_REGS[dest];
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 MOVE_INST,
                 this.calcInstructionSuffix(src),
                 this.genSymbolByTabInd(src),
-                this.getRegAccess(destReg)
+                this.getRegAccess(
+                        symTabController.checkIfDataTypeIsFloat(src) ? FLOAT_PARAM_REGS[dest] : PARAM_REGS[dest]
+                )
         ));
         this.symTabController.freeIfIsRegister(src);
     }
 
     @Override
     public void genRetValMoveInst(int dest, boolean isFloat) {
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 MOVE_INST,
                 isFloat ? FLOAT_INST_SUFFIX : INST_SUFFIX,
                 this.getRegAccess(isFloat ? FLOAT_RET_REGS[0] : RET_REGS[0]),
@@ -84,7 +94,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genAddInst(int dest, int src) {
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 ADD_INST,
                 this.calcInstructionSuffix(dest),
                 this.genSymbolByTabInd(src),
@@ -94,7 +104,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genSubInst(int dest, int src) {
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 SUB_INST,
                 this.calcInstructionSuffix(dest),
                 this.genSymbolByTabInd(src),
@@ -104,7 +114,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genMulInst(int dest, int src) {
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 MUL_INST,
                 this.calcInstructionPrefix(dest),
                 this.calcInstructionSuffix(dest),
@@ -115,7 +125,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genDivInst(int dest, int src) {
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 DIV_INST,
                 this.genSymbolByTabInd(src),
                 this.genSymbolByTabInd(dest)
@@ -124,7 +134,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genAndInst(int dest, int src) {
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 AND_INST,
                 this.genSymbolByTabInd(src),
                 this.genSymbolByTabInd(dest)
@@ -133,7 +143,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genOrInst(int dest, int src) {
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 OR_INST,
                 this.genSymbolByTabInd(src),
                 this.genSymbolByTabInd(dest)
@@ -142,7 +152,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genCmpInst(int dest, int src) {
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 this.symTabController.checkIfDataTypeIsFloat(dest) ? CMP_FLOAT : CMP_INT,
                 this.genSymbolByTabInd(src),
                 this.genSymbolByTabInd(dest)
@@ -152,7 +162,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public void genCmpToZeroInst(int dest) {
         boolean isFloat = this.symTabController.checkIfDataTypeIsFloat(dest);
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 isFloat ? CMP_FLOAT : CMP_INT,
                 this.makeLiteralSymbol(isFloat ? FLOAT_ZERO : "0", isFloat),
                 this.genSymbolByTabInd(dest)
@@ -160,8 +170,43 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public int genVarOutOfScopeGetter(int src) {
+        int varScope = symTabController.getScope(src);
+        int currentScope = symTabController.getCurrentScope();
+        if (varScope == currentScope)
+            return src;
+        else {
+            int tempReg = symTabController.takeRegister(DataType.INTEGER);
+            this.currentFunc.append(String.format(
+                    MOVE_INST,
+                    INST_SUFFIX,
+                    String.format(MEM_ACCESS, "", getRegAccess(AssemblyRegister.RBP)),
+                    this.genSymbolByTabInd(tempReg)
+            ));
+            while (varScope < --currentScope)
+                this.currentFunc.append(String.format(
+                        MOVE_INST,
+                        INST_SUFFIX,
+                        String.format(MEM_ACCESS, "", getRegAccess(symTabController.getRegName(tempReg))),
+                        this.genSymbolByTabInd(tempReg)
+                ));
+            this.currentFunc.append(String.format(
+                    MOVE_INST,
+                    INST_SUFFIX,
+                    String.format(
+                            MEM_ACCESS,
+                            calculateOffset(symTabController.getVarOrdinality(src), NEG_16_BYTES),
+                            this.genSymbolByTabInd(tempReg)
+                    ),
+                    this.genSymbolByTabInd(tempReg)
+            ));
+            return tempReg;
+        }
+    }
+
+    @Override
     public void genFuncCall(String funcName, List<Integer> args) {
-        //TODO push temp regs that are taken and pop them after return
+        //TODO push all regs that are taken and pop them after return
         boolean isStackAligned = this.stackAlignTracker.isCurrentBlockStackAligned();
         if (!isStackAligned)
             this.genStackPointerAlignment(false);
@@ -170,15 +215,36 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         int floatArgNum = 0;
         for (int src : args)
             this.genArgMoveInst(
-                    this.symTabController.checkIfDataTypeIsFloat(src) ?
-                            floatArgNum++ : nonFloatArgNum++,
+                    this.symTabController.checkIfDataTypeIsFloat(src) ? floatArgNum++ : nonFloatArgNum++,
                     src
             );
 
-        this.txtSection.append(String.format(CALL_INST, funcName));
+        this.currentFunc.append(String.format(CALL_INST, funcName));
 
         if (!isStackAligned)
             this.genStackPointerAlignment(true);
+    }
+
+    @Override
+    public void genNonDefParam(int paramOrdinality, int paramRef) {
+        assemblyGen.genStackPointerDec(1);
+        assemblyGen.genMoveInst(
+                symTabController.transferParamToVar(paramRef, paramOrdinality),
+                symTabController.takeParamReg(paramOrdinality, symTabController.getDataType(paramRef))
+        );
+    }
+
+    @Override
+    public void genReturnStatement(int funcRef, int numExpRef, int currVarCount) {
+        this.genMoveInst(
+                symTabController.getRegRefByName(AssemblyRegister.RAX),
+                numExpRef
+        );
+        this.genStackPointerInc(currVarCount);
+        this.genJump(
+                JMP_NON_COND,
+                String.format(FUNC_END_LBL_NAME_FORMAT, symTabController.getFuncName(funcRef))
+        );
     }
 
     @Override
@@ -236,10 +302,9 @@ public class AssemblyGenerator implements IAssemblyGenerator {
             resultRef = this.symTabController.takeRegister(DataType.BOOLEAN);
             genImmediateComparisonResult(
                     resultRef,
-                    leftExpDT.equals(DataType.NONE) && rightExpDT.equals(DataType.NONE)
+                    jumpType.equals(ConditionalJump.JE) == (leftExpDT.equals(DataType.NONE) && rightExpDT.equals(DataType.NONE))
             );
-        }
-        else {
+        } else {
             if (leftExpDT.equals(DataType.STRING)) {
                 this.genStringComparison(leftExpRef, rightExpRef);
                 resultRef = this.genComparisonBranchCode(jumpType, false);
@@ -284,19 +349,39 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
-    public void genStackPointerDec(boolean isForFloat) {
-        this.txtSection.append(String.format(
+    public void genStackPointerDec(int times) {
+        this.currentFunc.append(String.format(
                 SUB_INST,
                 INST_SUFFIX,
-                this.makeLiteralSymbol(POS_16_BYTES, false),
+                this.makeLiteralSymbol(
+                        times == 1
+                                ? POS_16_BYTES
+                                : Integer.toString(Integer.parseInt(POS_16_BYTES) * times),
+                        false
+                ),
                 this.getRegAccess(AssemblyRegister.RSP)
         ));
     }
 
     @Override
-        public void genStackPointerAlignment(boolean isInc) {
-        this.txtSection.append(String.format(
-                isInc ? ADD_INST : SUB_INST,
+    public void genStackPointerInc(int times) {
+        this.currentFunc.append(String.format(
+                ADD_INST,
+                INST_SUFFIX,
+                this.makeLiteralSymbol(
+                        times == 1
+                                ? POS_16_BYTES
+                                : Integer.toString(Integer.parseInt(POS_16_BYTES) * times),
+                        false
+                ),
+                this.getRegAccess(AssemblyRegister.RSP)
+        ));
+    }
+
+    @Override
+    public void genStackPointerAlignment(boolean isStackIncreasing) {
+        this.currentFunc.append(String.format(
+                isStackIncreasing ? ADD_INST : SUB_INST,
                 INST_SUFFIX,
                 this.makeLiteralSymbol(POS_8_BYTES, false),
                 this.getRegAccess(AssemblyRegister.RSP)
@@ -306,7 +391,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genCodeEnd() {
-        this.txtSection.append(PROGRAM_END_CODE);
+        this.currentFunc.append(PROGRAM_END_CODE);
     }
 
     @Override
@@ -324,17 +409,41 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genJump(String jumpInst, String lblName) {
-        this.txtSection.append(String.format(JMP_INST, jumpInst, lblName));
+        this.currentFunc.append(String.format(JMP_INST, jumpInst, lblName));
     }
 
     @Override
     public void genLabel(String lblName) {
-        this.txtSection.append(String.format(LBL_FORMAT, lblName));
+        this.currentFunc.append(String.format(LBL_FORMAT, lblName));
     }
 
     @Override
     public void printToConsole() {
-        System.out.println(this.dataSection.toString() + this.txtSection.toString() + this.builtInTxtSection.toString());
+        System.out.println(this.dataSection.toString() + this.buildFuncDefs() + this.builtInFuncs.toString());
+    }
+
+    @Override
+    public void onFuncStart(int funcRef) {
+        this.funcDefs.add(new StringBuilder());
+        this.funcIndStack.push(this.funcDefs.size() - 1);
+        this.currentFunc = this.funcDefs.get(this.funcIndStack.peek());
+        this.stackAlignTracker.increaseBlock();
+        this.genLabel(
+                String.format(FUNC_LBL_NAME_FORMAT, symTabController.getFuncName(funcRef))
+        );
+        this.currentFunc.append(FUNC_START);
+    }
+
+    @Override
+    public void onFuncEnd(String funcName, int currVarCount) {
+        this.genStackPointerInc(currVarCount);
+        this.genLabel(
+                String.format(FUNC_END_LBL_NAME_FORMAT, funcName)
+        );
+        this.currentFunc.append(FUNC_END);
+        this.funcIndStack.pop();
+        this.currentFunc = this.funcDefs.get(this.funcIndStack.peek());
+        this.stackAlignTracker.decreaseBlock();
     }
 
     private String getRegAccess(AssemblyRegister register) {
@@ -349,21 +458,23 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         if (symTabController.checkIfIsLiteral(ind)) {
             if (symTabController.checkIfDataTypeIsFloat(ind))
                 return makeLiteralSymbol(
-                        String.format(DATA_SEC_FLOAT_REF, symTabController.getDataLabelCounter(ind)),true
+                        String.format(DATA_SEC_FLOAT_REF, symTabController.getDataLabelCounter(ind)), true
                 );
             else if (symTabController.checkIfDataTypeIsString(ind))
                 return makeLiteralSymbol(
-                        String.format(DATA_SEC_STRING_REF, symTabController.getDataLabelCounter(ind)),false
+                        String.format(DATA_SEC_STRING_REF, symTabController.getDataLabelCounter(ind)), false
                 );
+            else if (symTabController.checkIfDataTypeIsNone(ind))
+                return makeLiteralSymbol(NONE_LIT, false);
             else
                 return makeLiteralSymbol(symTabController.getLiteralValue(ind), false);
-        } else if (symTabController.checkIfIsVar(ind))
+        } else if (symTabController.checkIfIsVar(ind)) {
             return String.format(
                     MEM_ACCESS,
                     calculateOffset(symTabController.getVarOrdinality(ind), NEG_16_BYTES),
                     getRegAccess(AssemblyRegister.RBP)
             );
-        else if (symTabController.checkIfIsReg(ind))
+        } else if (symTabController.checkIfIsReg(ind))
             return getRegAccess(symTabController.getRegName(ind));
 
         return null;
@@ -394,26 +505,24 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     private int genToFloatConversion(int src) {
         DataType srcDataType = symTabController.getDataType(src);
-        switch (srcDataType) {
-            case INTEGER:
-            case BOOLEAN:
+        return switch (srcDataType) {
+            case INTEGER, BOOLEAN -> {
                 if (symTabController.checkIfIsLiteral(src)) {
                     int transferRegRef = symTabController.takeRegister(DataType.INTEGER);
                     this.genMoveInst(transferRegRef, src);
                     src = transferRegRef;
                 }
-
                 int destRegRef = symTabController.takeRegister(DataType.FLOAT);
-                this.txtSection.append(String.format(
+                this.currentFunc.append(String.format(
                         BOOLINT_2_FLOAT_INST,
                         this.genSymbolByTabInd(src),
                         this.genSymbolByTabInd(destRegRef)
                 ));
                 this.symTabController.freeIfIsRegister(src);
-                return destRegRef;
-            default:
-                throw new CannotConvertGivenDataTypeToFloatException(srcDataType.toString());
-        }
+                yield destRegRef;
+            }
+            default -> throw new CannotConvertGivenDataTypeToFloatException(srcDataType.toString());
+        };
     }
 
     private int genToBooleanConversion(int src) {
@@ -535,7 +644,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     private void genImmediateComparisonResult(int dest, boolean isTrue) {
-        this.txtSection.append(String.format(
+        this.currentFunc.append(String.format(
                 MOVE_INST,
                 INST_SUFFIX,
                 isTrue ? this.makeLiteralSymbol("1", false) : this.makeLiteralSymbol("0", false),
@@ -559,8 +668,8 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     private void genStringComparison(int leftExpRef, int rightExpRef) {
         this.genFuncCall(
-            STRING_CMP_LBL,
-                new ArrayList<>(){{
+                STRING_CMP_LBL,
+                new ArrayList<>() {{
                     add(leftExpRef);
                     add(rightExpRef);
                 }}
@@ -588,7 +697,9 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     private int genStringToBooleanConversion(int src) {
-        this.genFuncCall(STRING_TO_BOOL_LBL, new ArrayList<>(){{ add(src); }});
+        this.genFuncCall(STRING_TO_BOOL_LBL, new ArrayList<>() {{
+            add(src);
+        }});
         int regRef = this.symTabController.takeRegister(DataType.BOOLEAN);
         this.genRetValMoveInst(regRef, false);
         return regRef;
@@ -620,5 +731,9 @@ public class AssemblyGenerator implements IAssemblyGenerator {
             this.genAndInst(dest, src);
         else
             this.genOrInst(dest, src);
+    }
+
+    private String buildFuncDefs() {
+        return String.join("", this.funcDefs.stream().map(StringBuilder::toString).toList());
     }
 }

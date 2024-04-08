@@ -89,6 +89,18 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterReturnStatement(PyAtHomeParser.ReturnStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReturnStatement(PyAtHomeParser.ReturnStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFunctionDef(PyAtHomeParser.FunctionDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -96,6 +108,30 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFunctionDef(PyAtHomeParser.FunctionDefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunctionDeclaration(PyAtHomeParser.FunctionDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctionDeclaration(PyAtHomeParser.FunctionDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunctionIdentifier(PyAtHomeParser.FunctionIdentifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctionIdentifier(PyAtHomeParser.FunctionIdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -113,18 +149,6 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParamDefVal(PyAtHomeParser.ParamDefValContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitParamDefVal(PyAtHomeParser.ParamDefValContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterParamNonDefVal(PyAtHomeParser.ParamNonDefValContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -132,6 +156,18 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitParamNonDefVal(PyAtHomeParser.ParamNonDefValContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterParamDefVal(PyAtHomeParser.ParamDefValContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParamDefVal(PyAtHomeParser.ParamDefValContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -149,13 +185,25 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTyping(PyAtHomeParser.TypingContext ctx) { }
+	@Override public void enterRetType(PyAtHomeParser.RetTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTyping(PyAtHomeParser.TypingContext ctx) { }
+	@Override public void exitRetType(PyAtHomeParser.RetTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterVarType(PyAtHomeParser.VarTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVarType(PyAtHomeParser.VarTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

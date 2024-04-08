@@ -1,6 +1,5 @@
 package main.java.evilpops.pyathome_2_x86.log_handlers;
 
-import main.java.evilpops.pyathome_2_x86.log_handlers.exceptions.RecognitionErrorExtension;
 import main.java.evilpops.pyathome_2_x86.log_handlers.exceptions.SyntaxErrorException;
 import org.antlr.v4.runtime.*;
 

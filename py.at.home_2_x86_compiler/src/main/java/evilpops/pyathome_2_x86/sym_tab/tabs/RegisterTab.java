@@ -26,6 +26,12 @@ public class RegisterTab extends DataTypeTableArchetype<RegisterTabRow> {
         return regInd;
     }
 
+    public int takeParamReg(int mainTabFK, int ordinality, DataType dataType) {
+        int regInd = this.regInds.get(getParamReg(ordinality, dataType));
+        this.table.get(regInd).setDataType(dataType).setForeignId(mainTabFK);
+        return regInd;
+    }
+
     public AssemblyRegister getRegisterName(int ind) {
         return this.table.get(ind).getRegisterName();
     }
@@ -36,8 +42,8 @@ public class RegisterTab extends DataTypeTableArchetype<RegisterTabRow> {
 
     private AssemblyRegister getNextFreeGenPurposeReg(DataType dataType) {
         AssemblyRegister[] regGroup = dataType == DataType.FLOAT ?
-                AssemblyRegisterGroups.FLOAT_TEMP_REGS :
-                AssemblyRegisterGroups.CALLEE_SAVED_REGS;
+                AssemblyRegisterGroups.FLOAT_GEN_PURPOSE_REGS :
+                AssemblyRegisterGroups.GEN_PURPOSE_REGS;
 
         for (AssemblyRegister ar : regGroup)
             if (this.table.get(this.regInds.get(ar)).isAvailable())
@@ -45,6 +51,19 @@ public class RegisterTab extends DataTypeTableArchetype<RegisterTabRow> {
 
         //What if there are no free registers left???????
         return null;
+    }
+
+    private AssemblyRegister getParamReg(int ordinality, DataType dataType) {
+        AssemblyRegister[] regGroup = dataType == DataType.FLOAT ?
+                AssemblyRegisterGroups.FLOAT_PARAM_REGS :
+                AssemblyRegisterGroups.PARAM_REGS;
+        if (ordinality < 5)
+            return regGroup[ordinality];
+        return null;
+    }
+
+    public int getRefByName(AssemblyRegister regName) {
+        return this.table.stream().filter((reg)-> reg.getRegisterName().equals(regName)).toList().get(0).getForeignId();
     }
 
 }

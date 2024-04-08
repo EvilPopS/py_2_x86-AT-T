@@ -1,0 +1,24 @@
+package main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@Accessors(chain = true)
+public class FunctionTabRow extends ScopeRowArchetype {
+    protected String name;
+    protected int funcNum;
+    protected List<Integer> parameters;
+
+    public FunctionTabRow(int foreignId, DataType dataType, int scope, String name, int funcName) {
+        super(foreignId, dataType, scope);
+        this.name = name;
+        this.funcNum = funcName;
+        this.parameters = new ArrayList<>();
+    }
+}

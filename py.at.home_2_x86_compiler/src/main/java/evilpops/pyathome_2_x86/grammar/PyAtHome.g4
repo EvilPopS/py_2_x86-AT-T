@@ -44,7 +44,7 @@ options {
 
 /* Parser rules - START */
 program
-    : statementsList INVALID_DENT? EOF
+    : NEWLINE? statementsList INVALID_DENT? EOF
     ;
 
 statementsList
@@ -58,6 +58,7 @@ statement
 
 simpleStatement
     : assignStatement
+    | returnStatement
     ;
 
 compundStatement
@@ -65,11 +66,24 @@ compundStatement
     ;
 
 assignStatement
-    : ID typing? ASSIGN numExpression
+    : ID varType? ASSIGN numExpression
+    ;
+
+returnStatement
+    : RETURN numExpression
+    | RETURN
     ;
 
 functionDef
-    : DEF ID L_PAREN parameters? R_PAREN COLON NEWLINE block
+    : functionDeclaration block
+    ;
+
+functionDeclaration
+    : functionIdentifier L_PAREN parameters? R_PAREN retType? COLON NEWLINE
+    ;
+
+functionIdentifier
+    :  DEF ID
     ;
 
 parameters
@@ -78,21 +92,25 @@ parameters
     | paramDefVal
     ;
 
-paramDefVal
-    : ID ASSIGN numExpression
-    | paramDefVal COMMA paramDefVal
+paramNonDefVal
+    : ID varType?
+    | paramNonDefVal COMMA paramNonDefVal
     ;
 
-paramNonDefVal
-    : ID
-    | paramNonDefVal COMMA paramNonDefVal
+paramDefVal
+    : ID varType? ASSIGN numExpression
+    | paramDefVal COMMA paramDefVal
     ;
 
 block
     : INDENT statementsList DEDENT
     ;
 
-typing
+retType
+    : ARROW types
+    ;
+
+varType
     : COLON types
     ;
 
@@ -151,6 +169,7 @@ literal
     | FLOAT
     | BOOLEAN
     | STRING
+    | NONE
     ;
 
 /* Parser rules - END */
@@ -169,12 +188,15 @@ NEWLINE
     ;
 
 DEF: 'def';
+RETURN: 'return';
 
 T_INT: 'int';
 T_FLOAT: 'float';
 T_BOOLEAN: 'bool';
 T_STRING: 'str';
-T_NONE: 'None';
+T_NONE: 'none';
+
+ARROW: '->';
 
 COMMA: ',';
 COLON: ':';
@@ -198,6 +220,10 @@ LSEQ: '<=';
 
 AND: 'and';
 OR: 'or';
+
+NONE
+    : 'None'
+    ;
 
 BOOLEAN
     : 'True'

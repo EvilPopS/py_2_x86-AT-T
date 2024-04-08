@@ -68,6 +68,16 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitAssignStatement(PyAtHomeParser.AssignStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#returnStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturnStatement(PyAtHomeParser.ReturnStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#returnStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturnStatement(PyAtHomeParser.ReturnStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#functionDef}.
 	 * @param ctx the parse tree
 	 */
@@ -77,6 +87,26 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFunctionDef(PyAtHomeParser.FunctionDefContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#functionDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionDeclaration(PyAtHomeParser.FunctionDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#functionDeclaration}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionDeclaration(PyAtHomeParser.FunctionDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#functionIdentifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionIdentifier(PyAtHomeParser.FunctionIdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#functionIdentifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionIdentifier(PyAtHomeParser.FunctionIdentifierContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#parameters}.
 	 * @param ctx the parse tree
@@ -88,16 +118,6 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitParameters(PyAtHomeParser.ParametersContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PyAtHomeParser#paramDefVal}.
-	 * @param ctx the parse tree
-	 */
-	void enterParamDefVal(PyAtHomeParser.ParamDefValContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link PyAtHomeParser#paramDefVal}.
-	 * @param ctx the parse tree
-	 */
-	void exitParamDefVal(PyAtHomeParser.ParamDefValContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#paramNonDefVal}.
 	 * @param ctx the parse tree
 	 */
@@ -107,6 +127,16 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParamNonDefVal(PyAtHomeParser.ParamNonDefValContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#paramDefVal}.
+	 * @param ctx the parse tree
+	 */
+	void enterParamDefVal(PyAtHomeParser.ParamDefValContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#paramDefVal}.
+	 * @param ctx the parse tree
+	 */
+	void exitParamDefVal(PyAtHomeParser.ParamDefValContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#block}.
 	 * @param ctx the parse tree
@@ -118,15 +148,25 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitBlock(PyAtHomeParser.BlockContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PyAtHomeParser#typing}.
+	 * Enter a parse tree produced by {@link PyAtHomeParser#retType}.
 	 * @param ctx the parse tree
 	 */
-	void enterTyping(PyAtHomeParser.TypingContext ctx);
+	void enterRetType(PyAtHomeParser.RetTypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PyAtHomeParser#typing}.
+	 * Exit a parse tree produced by {@link PyAtHomeParser#retType}.
 	 * @param ctx the parse tree
 	 */
-	void exitTyping(PyAtHomeParser.TypingContext ctx);
+	void exitRetType(PyAtHomeParser.RetTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#varType}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarType(PyAtHomeParser.VarTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#varType}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarType(PyAtHomeParser.VarTypeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#types}.
 	 * @param ctx the parse tree

@@ -13,7 +13,7 @@ public class RelOpsOperandsTypesComp {
                     put(DataType.INTEGER, true);
                     put(DataType.FLOAT, true);
                     put(DataType.BOOLEAN, true);
-                    put(DataType.NONE, false);
+                    put(DataType.NONE, true);
                     put(DataType.STRING, false);
                     put(DataType.UNKNOWN, false);
                 }}
@@ -24,7 +24,7 @@ public class RelOpsOperandsTypesComp {
                     put(DataType.INTEGER, true);
                     put(DataType.FLOAT, true);
                     put(DataType.BOOLEAN, true);
-                    put(DataType.NONE, false);
+                    put(DataType.NONE, true);
                     put(DataType.STRING, false);
                     put(DataType.UNKNOWN, false);
                 }}
@@ -68,7 +68,7 @@ public class RelOpsOperandsTypesComp {
                     put(DataType.INTEGER, false);
                     put(DataType.FLOAT, false);
                     put(DataType.BOOLEAN, false);
-                    put(DataType.NONE, false);
+                    put(DataType.NONE, true);
                     put(DataType.STRING, false);
                     put(DataType.UNKNOWN, false);
                 }}

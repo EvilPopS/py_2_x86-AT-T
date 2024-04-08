@@ -4,7 +4,6 @@ import main.java.evilpops.pyathome_2_x86.log_handlers.LogHandler;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeBaseListener;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.utils.ListenerHelpers;
-import org.antlr.v4.runtime.ParserRuleContext;
 
 public class PyAtHomeListener extends PyAtHomeBaseListener {
 
@@ -15,9 +14,57 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
     }
 
     @Override
+    public void exitFunctionDef(PyAtHomeParser.FunctionDefContext ignored) {
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ListenerHelpers.processFuncDefCtxExit();
+    }
+
+    @Override
+    public void exitFunctionDeclaration(PyAtHomeParser.FunctionDeclarationContext ctx) {
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ListenerHelpers.processFuncDeclCtxExit(ctx);
+    }
+
+    @Override
+    public void exitFunctionIdentifier(PyAtHomeParser.FunctionIdentifierContext ctx) {
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ListenerHelpers.processFuncIdentifierCtxExit(ctx);
+    }
+
+    @Override
+    public void exitParamNonDefVal(PyAtHomeParser.ParamNonDefValContext ctx) {
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ListenerHelpers.processParamNonDefValCtxExit(ctx);
+    }
+
+    @Override
+    public void exitParamDefVal(PyAtHomeParser.ParamDefValContext ctx) {
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ListenerHelpers.processParamDefValCtxExit(ctx);
+    }
+
+    @Override
     public void exitAssignStatement(PyAtHomeParser.AssignStatementContext ctx) {
         if (!LogHandler.getInstance().isSyntaxErrDetected())
             ListenerHelpers.processAssignStatementCtxExit(ctx);
+    }
+
+    @Override
+    public void exitReturnStatement(PyAtHomeParser.ReturnStatementContext ctx) {
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ListenerHelpers.processReturnStatementCtxExit(ctx);
+    }
+
+    @Override
+    public void enterBlock(PyAtHomeParser.BlockContext ctx) {
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ListenerHelpers.processBlockCtxEnter();
+    }
+
+    @Override
+    public void exitBlock(PyAtHomeParser.BlockContext ctx) {
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ListenerHelpers.processBlockCtxExit();
     }
 
     @Override

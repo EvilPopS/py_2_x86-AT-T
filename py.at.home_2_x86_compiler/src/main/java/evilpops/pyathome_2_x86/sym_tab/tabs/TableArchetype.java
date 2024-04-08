@@ -15,6 +15,7 @@ public abstract class TableArchetype<RowType extends RowArchetype> {
     public int getLastRowInd() {
         return this.table.size()-1;
     }
+
     public int getNextFreeRowInd() {
         return this.table.size();
     }

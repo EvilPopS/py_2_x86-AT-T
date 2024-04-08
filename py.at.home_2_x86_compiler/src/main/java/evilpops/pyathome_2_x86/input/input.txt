@@ -1,6 +1,6 @@
-def a(b, g=2):
-    def b():
-        f = 3
 
+def a():
+    f = 123
 
-    v = = 1
+def a():
+    f = 123
