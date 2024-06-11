@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class ContextInfoTracker {
     private static class FuncCtxInfo {
@@ -13,6 +14,8 @@ public class ContextInfoTracker {
         protected int varCounter;
         protected int nonFloatParamCnt;
         protected int floatParamCnt;
+
+
 
         public FuncCtxInfo(int funcRef) {
             this.funcRef = funcRef;
@@ -34,6 +37,10 @@ public class ContextInfoTracker {
         }
     }
 
+    protected Stack<Integer> argsCounters;
+    @Getter
+    protected int currArgsCounter;
+
     protected int literalLblCounter;
 
     @Getter
@@ -45,6 +52,8 @@ public class ContextInfoTracker {
     private final List<FuncCtxInfo> funcContexts;
 
     public ContextInfoTracker() {
+        this.argsCounters = new Stack<>();
+        this.currArgsCounter = 0;
         this.literalLblCounter = 0;
         this.scope = 0;
         this.funcContexts = new ArrayList<>();
@@ -59,6 +68,23 @@ public class ContextInfoTracker {
     public void decFuncCtx() {
         this.funcContexts.remove(this.funcContexts.size() - 1);
         this.currFuncRef = this.getCurrFuncCtx().getFuncRef();
+    }
+
+    public void onFuncCallStart() {
+        this.argsCounters.push(this.currArgsCounter);
+        this.currArgsCounter = 0;
+    }
+
+    public void onFuncCallEnd() {
+        this.currArgsCounter = this.argsCounters.pop();
+    }
+
+    public void incArgsCounter() {
+        this.currArgsCounter++;
+    }
+
+    public void decArgsCounter() {
+        this.currArgsCounter--;
     }
 
     public int getAndIncLitLblCounter() {

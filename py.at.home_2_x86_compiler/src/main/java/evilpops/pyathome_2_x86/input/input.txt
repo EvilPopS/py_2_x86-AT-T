@@ -1,6 +1,7 @@
 
-def a():
-    f = 123
 
-def a():
-    f = 123
+def a(f: int) -> int:
+    f = f + 1
+    return f
+
+a(123)

@@ -9,8 +9,8 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
 
     @Override
     public void exitProgram(PyAtHomeParser.ProgramContext ignored) {
-        if (!LogHandler.getInstance().isSyntaxErrDetected())
-            ListenerHelpers.processProgramCtxExit();
+//        if (!LogHandler.getInstance().isSyntaxErrDetected())
+//            ListenerHelpers.processProgramCtxExit();
     }
 
     @Override
@@ -77,6 +77,12 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
     public void exitExpression(PyAtHomeParser.ExpressionContext ctx) {
         if (!LogHandler.getInstance().isSyntaxErrDetected())
             ctx.setRefToSymTab(ListenerHelpers.processExpressionCtxExit(ctx));
+    }
+
+    @Override
+    public void exitFunctionCall(PyAtHomeParser.FunctionCallContext ctx) {
+        if (!LogHandler.getInstance().isSyntaxErrDetected())
+            ctx.setRefToSymTab(ListenerHelpers.processFunctionCallCtxExit(ctx));
     }
 
     @Override

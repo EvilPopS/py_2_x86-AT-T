@@ -51,7 +51,7 @@ public class SymTabController implements ISymTabController {
         this.mainTab.addParameter(this.parameterTab.getLastRowInd());
         this.functionTab.addParam(
                 this.mainTab.get(functionRef).getForeignId(),
-                this.parameterTab.getLastRowInd()
+                rowRef
         );
         return rowRef;
     }
@@ -125,13 +125,25 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public int getRegRefByName(AssemblyRegister regName) {
-        return this.registerTab.getRefByName(regName);
+    public int takeReturnReg(DataType dataType) {
+        int rowRef = this.mainTab.getNextFreeRowInd();
+        this.mainTab.addRegister(this.registerTab.takeReturnReg(rowRef, dataType));
+        return rowRef;
     }
 
     @Override
     public int getNoneLiteralRef() {
         return this.literalTab.getNoneRowRef();
+    }
+
+    @Override
+    public int getFuncRefByName(String funcName) {
+        return this.functionTab.getMainRefByName(funcName);
+    }
+
+    @Override
+    public int getFuncParamRefByArgOrdinality(int funcRef, int paramOrdinality) {
+        return this.functionTab.getParamRefByOrdinality(this.mainTab.get(funcRef).getForeignId(), paramOrdinality);
     }
 
     @Override
@@ -246,6 +258,7 @@ public class SymTabController implements ISymTabController {
             case PARAMETER -> this.parameterTab;
             case LITERAL -> this.literalTab;
             case REGISTER -> this.registerTab;
+            case FUNCTION -> this.functionTab;
             default -> throw new TabTypeEnumNotInSyncWithTabClassesException();
         };
     }

@@ -8,6 +8,9 @@ import main.java.evilpops.pyathome_2_x86.sym_tab.tabs.row_struct.RegisterTabRow;
 import java.util.HashMap;
 import java.util.Map;
 
+import static main.java.evilpops.pyathome_2_x86.assembly_gen.constants.AssemblyRegisterGroups.FLOAT_RET_REGS;
+import static main.java.evilpops.pyathome_2_x86.assembly_gen.constants.AssemblyRegisterGroups.RET_REGS;
+
 public class RegisterTab extends DataTypeTableArchetype<RegisterTabRow> {
     private final Map<AssemblyRegister, Integer> regInds;
 
@@ -28,6 +31,12 @@ public class RegisterTab extends DataTypeTableArchetype<RegisterTabRow> {
 
     public int takeParamReg(int mainTabFK, int ordinality, DataType dataType) {
         int regInd = this.regInds.get(getParamReg(ordinality, dataType));
+        this.table.get(regInd).setDataType(dataType).setForeignId(mainTabFK);
+        return regInd;
+    }
+
+    public int takeReturnReg(int mainTabFK, DataType dataType) {
+        int regInd = this.regInds.get(dataType.equals(DataType.FLOAT) ? FLOAT_RET_REGS[0] : RET_REGS[0]);
         this.table.get(regInd).setDataType(dataType).setForeignId(mainTabFK);
         return regInd;
     }
@@ -62,8 +71,5 @@ public class RegisterTab extends DataTypeTableArchetype<RegisterTabRow> {
         return null;
     }
 
-    public int getRefByName(AssemblyRegister regName) {
-        return this.table.stream().filter((reg)-> reg.getRegisterName().equals(regName)).toList().get(0).getForeignId();
-    }
 
 }

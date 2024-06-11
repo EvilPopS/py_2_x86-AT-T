@@ -1,6 +1,5 @@
 package main.java.evilpops.pyathome_2_x86.assembly_gen.enums;
 
-import main.java.evilpops.pyathome_2_x86.sym_tab.enums.DataType;
 
 public enum ConditionalJump {
     JE,

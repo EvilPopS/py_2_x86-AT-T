@@ -206,7 +206,6 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genFuncCall(String funcName, List<Integer> args) {
-        //TODO push all regs that are taken and pop them after return
         boolean isStackAligned = this.stackAlignTracker.isCurrentBlockStackAligned();
         if (!isStackAligned)
             this.genStackPointerAlignment(false);
@@ -237,7 +236,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public void genReturnStatement(int funcRef, int numExpRef, int currVarCount) {
         this.genMoveInst(
-                symTabController.getRegRefByName(AssemblyRegister.RAX),
+                symTabController.takeReturnReg(symTabController.getDataType(funcRef)),
                 numExpRef
         );
         this.genStackPointerInc(currVarCount);

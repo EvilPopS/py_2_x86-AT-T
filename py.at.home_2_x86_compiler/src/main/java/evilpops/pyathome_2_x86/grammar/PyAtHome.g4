@@ -44,7 +44,7 @@ options {
 
 /* Parser rules - START */
 program
-    : NEWLINE? statementsList INVALID_DENT? EOF
+    : NEWLINE? statementsList simpleStatement? INVALID_DENT? EOF
     ;
 
 statementsList
@@ -59,6 +59,7 @@ statement
 simpleStatement
     : assignStatement
     | returnStatement
+    | functionCall
     ;
 
 compundStatement
@@ -161,7 +162,28 @@ logicOrOperator
 
 expression
     : literal
+    | functionCall
     | ID
+    ;
+
+functionCall
+    : ID L_PAREN arguments? R_PAREN
+    ;
+
+arguments
+    : nonIdArgs COMMA idArgs
+    | nonIdArgs
+    | idArgs
+    ;
+
+nonIdArgs
+    : numExpression
+    | nonIdArgs COMMA nonIdArgs
+    ;
+
+idArgs
+    : ID ASSIGN numExpression
+    | idArgs COMMA idArgs
     ;
 
 literal

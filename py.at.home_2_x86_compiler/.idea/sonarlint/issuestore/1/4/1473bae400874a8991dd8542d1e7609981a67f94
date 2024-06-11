@@ -1,0 +1,22 @@
+
+k
+java:S1149 "PReplace the synchronized class "Stack" by an unsynchronized one such as "Deque".(…Íúÿÿÿÿÿ
+I
+java:S1135®"2Complete the task associated to this TODO comment.(ÚöĞà
+A	java:S106Û"+Replace this use of System.out by a logger.(ÄÂÒØ
+C
+java:S3599ç",Use another way to initialize this instance.(›„˜ç
+p
+java:S1171ç"YMove the contents of this initializer to a standard constructor or to field initializers.(›„˜ç
+C
+java:S3599–",Use another way to initialize this instance.(›„˜ç
+p
+java:S1171–"YMove the contents of this initializer to a standard constructor or to field initializers.(›„˜ç
+C
+java:S3599È",Use another way to initialize this instance.(›„˜ç
+p
+java:S1171È"YMove the contents of this initializer to a standard constructor or to field initializers.(›„˜ç
+H
+java:S3599ä",Use another way to initialize this instance.(ÎŠ¦Õûÿÿÿÿ
+u
+java:S1171ä"YMove the contents of this initializer to a standard constructor or to field initializers.(ÎŠ¦Õûÿÿÿÿ

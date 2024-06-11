@@ -248,6 +248,46 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitExpression(PyAtHomeParser.ExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#functionCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionCall(PyAtHomeParser.FunctionCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#functionCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionCall(PyAtHomeParser.FunctionCallContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#arguments}.
+	 * @param ctx the parse tree
+	 */
+	void enterArguments(PyAtHomeParser.ArgumentsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#arguments}.
+	 * @param ctx the parse tree
+	 */
+	void exitArguments(PyAtHomeParser.ArgumentsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#nonIdArgs}.
+	 * @param ctx the parse tree
+	 */
+	void enterNonIdArgs(PyAtHomeParser.NonIdArgsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#nonIdArgs}.
+	 * @param ctx the parse tree
+	 */
+	void exitNonIdArgs(PyAtHomeParser.NonIdArgsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#idArgs}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdArgs(PyAtHomeParser.IdArgsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#idArgs}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdArgs(PyAtHomeParser.IdArgsContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#literal}.
 	 * @param ctx the parse tree
 	 */

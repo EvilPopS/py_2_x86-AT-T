@@ -1,12 +1,12 @@
 package main.java.evilpops.pyathome_2_x86;
 
-import main.java.evilpops.pyathome_2_x86.assembly_gen.AssemblyGenerator;
-import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeLexer;
-import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
-import main.java.evilpops.pyathome_2_x86.grammar_listener.PyAtHomeListener;
-import main.java.evilpops.pyathome_2_x86.log_handlers.LogHandler;
-import main.java.evilpops.pyathome_2_x86.log_handlers.SyntaxErrorListener;
-import main.java.evilpops.pyathome_2_x86.log_handlers.exceptions.CompilationError;
+import main.java.evilpops.pyathome_2_x86._migration.assembly_generator.AssemblyGenerator;
+import main.java.evilpops.pyathome_2_x86._migration.grammar.grammar_classes.PyAtHomeLexer;
+import main.java.evilpops.pyathome_2_x86._migration.grammar.grammar_classes.PyAtHomeParser;
+import main.java.evilpops.pyathome_2_x86._migration.grammar_listener.PyAtHomeListener;
+import main.java.evilpops.pyathome_2_x86._migration.log_handler.LogHandler;
+import main.java.evilpops.pyathome_2_x86._migration.log_handler.SyntaxErrorListener;
+import main.java.evilpops.pyathome_2_x86._migration.log_handler.exceptions.CompilationError;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 

@@ -21,9 +21,6 @@ public class ListenerHelpers {
 
     private static final ContextInfoTracker ctxInfoTracker = new ContextInfoTracker();
 
-    public static void processProgramCtxExit() {
-        assemblyGen.genCodeEnd();
-    }
 
     public static void processFuncDefCtxExit() {
         assemblyGen.onFuncEnd(
@@ -34,7 +31,18 @@ public class ListenerHelpers {
     }
 
     public static void processFuncDeclCtxExit(PyAtHomeParser.FunctionDeclarationContext ctx) {
-        // TODO put explicit function type
+        DataType funcRetType = DataType.NONE;
+        if (ctx.retType() != null) {
+            if (ctx.retType().types().T_BOOLEAN() != null)
+                funcRetType = DataType.BOOLEAN;
+            else if (ctx.retType().types().T_INT() != null)
+                funcRetType = DataType.INTEGER;
+            else if (ctx.retType().types().T_FLOAT() != null)
+                funcRetType = DataType.FLOAT;
+            else if (ctx.retType().types().T_STRING() != null)
+                funcRetType = DataType.STRING;
+        }
+        symTabController.setDataType(ctxInfoTracker.currFuncRef, funcRetType);
     }
 
     public static void processFuncIdentifierCtxExit(PyAtHomeParser.FunctionIdentifierContext ctx) {
@@ -107,6 +115,7 @@ public class ListenerHelpers {
     }
 
     public static void processReturnStatementCtxExit(PyAtHomeParser.ReturnStatementContext ctx) {
+        //TODO - Semantic check for func type vs numexp type String == None
         assemblyGen.genReturnStatement(
                 ctxInfoTracker.currFuncRef,
                 ctx.numExpression() != null
@@ -114,7 +123,6 @@ public class ListenerHelpers {
                         : symTabController.getNoneLiteralRef(),
                 ctxInfoTracker.getCurrVarCounter()
         );
-
     }
 
     public static void processBlockCtxEnter() {
@@ -162,6 +170,20 @@ public class ListenerHelpers {
             return assemblyGen.genVarOutOfScopeGetter(symTabController.getVarRefByName(ctx.ID().getText()));
         } else
             throw new ListenerNotInSyncWithGrammarException(String.format(EXC_MESSAGE_F, "transferReferenceToExpressionContext"));
+    }
+
+    public static int processFunctionCallCtxExit(PyAtHomeParser.FunctionCallContext ctx) {
+        int calledFuncRef = symTabController.getFuncRefByName(ctx.ID().getText());
+        if (ctx.arguments() != null) {
+            ListenerHelpers.processNonIdArgs(ctx.arguments().nonIdArgs(), calledFuncRef);
+            ListenerHelpers.processIdArgs(ctx.arguments().idArgs());
+        }
+
+        // TODO - PUSH ALL REGS
+        // TODO - call func
+        // TODO - POP ALL REGS
+        // TODO - move eax to free reg and ret reg ref
+        return symTabController.takeRegister(symTabController.getDataType(calledFuncRef));
     }
 
     public static int processLiteralCtxExit(PyAtHomeParser.LiteralContext ctx) {
@@ -216,5 +238,36 @@ public class ListenerHelpers {
         return isAnd ? assemblyGen.genLogicalAndOpExpr(leftExpRef, rightExpRef) : assemblyGen.genLogicalOrOpExpr(leftExpRef, rightExpRef);
     }
 
+    private static void processNonIdArgs(PyAtHomeParser.NonIdArgsContext ctx, int calledFuncRef) {
+        if (ctx == null) return;
 
+        if (ctx.COMMA() != null) {
+            ListenerHelpers.processNonIdArgs(ctx.nonIdArgs(0), calledFuncRef);
+            ListenerHelpers.processNonIdArgs(ctx.nonIdArgs(1), calledFuncRef);
+        }
+
+        int numExpRef = ctx.numExpression().getRefToSymTab();
+        int paramRef = symTabController.getFuncParamRefByArgOrdinality(
+                calledFuncRef,
+                ctxInfoTracker.getCurrArgsCounter()
+        );
+        if (symTabController.getDataType(numExpRef) != symTabController.getDataType(paramRef))
+            LogHandler.getInstance().addWarning("Parameter and its corresponding value are not of the same data type!");
+
+
+        //TODO
+    }
+
+    private static void processIdArgs(PyAtHomeParser.IdArgsContext ctx) {
+        if (ctx == null) return;
+
+        if (ctx.COMMA() != null) {
+            ListenerHelpers.processIdArgs(ctx.idArgs(0));
+            ListenerHelpers.processIdArgs(ctx.idArgs(0));
+        }
+
+        int numExpRef = ctx.numExpression().getRefToSymTab();
+
+        //TODO
+    }
 }

@@ -18,8 +18,10 @@ public interface ISymTabController {
     /* 'Get reference' methods */
     int getVarRefByName(String name);
     Integer getVarRefByNameInCurrentScope(String name, int currScope);
-    int getRegRefByName(AssemblyRegister regName);
+    int takeReturnReg(DataType dataType);
     int getNoneLiteralRef();
+    int getFuncRefByName(String funcName);
+    int getFuncParamRefByArgOrdinality(int funcRef, int paramOrdinality);
 
     /* 'Get data' methods */
     DataType getDataType(int ind);
