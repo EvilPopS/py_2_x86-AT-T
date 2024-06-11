@@ -76,7 +76,7 @@ returnStatement
     ;
 
 functionDef
-    : functionDeclaration block
+    : functionDeclaration INDENT statementsList DEDENT
     ;
 
 functionDeclaration

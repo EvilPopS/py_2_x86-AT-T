@@ -1,6 +1,6 @@
 package main.java.evilpops.pyathome_2_x86.grammar.grammar_classes;
 
-import main.java.evilpops.pyathome_2_x86.log_handlers.LogHandler;
+import main.java.evilpops.pyathome_2_x86.log_handler.LogHandler;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 
