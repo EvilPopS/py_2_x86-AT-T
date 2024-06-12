@@ -15,15 +15,17 @@ public class FunctionCallCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static int processOnExit(PyAtHomeParser.FunctionCallContext ctx) {
-        String funcName = ctx.ID().getText();
-        int calledFuncRef = symTabController.getFuncRefByName(funcName);
+        int calledFuncRef = symTabController.getFuncRefByName(ctx.ID().getText());
 
         if (ctx.arguments() != null) {
             processNonIdArgs(ctx.arguments().nonIdArgs(), calledFuncRef);
             processIdArgs(ctx.arguments().idArgs());
         }
 
-        assemblyGenerator.genFuncCall(funcName, symTabController.getAllGenPurposeRegsInUse());
+        assemblyGenerator.genFuncCall(
+                symTabController.getFuncName(calledFuncRef),
+                symTabController.getAllGenPurposeRegsInUse()
+        );
 
         int resRegRef = symTabController.takeRegister(symTabController.getDataType(calledFuncRef));
         assemblyGenerator.genMoveFuncRetRegToSymbol(

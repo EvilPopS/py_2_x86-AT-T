@@ -97,7 +97,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public void genMoveMemOfRegToReg64bit(AssemblyRegister srcReg, AssemblyRegister destReg) {
         this.genMoveSymbolToSymbol(
-                String.format(MEM_ACCESS, "", srcReg),
+                String.format(MEM_ACCESS, "", this.makeRegisterAccessSymbol(srcReg)),
                 this.makeRegisterAccessSymbol(destReg),
                 true
         );
@@ -114,7 +114,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
                 String.format(
                         MEM_ACCESS,
                         this.getMemAccessOffset(varOrdinality, NEG_16_BYTES),
-                        customBasePointer
+                        this.makeRegisterAccessSymbol(customBasePointer)
                 ),
                 this.makeRegisterAccessSymbol(destReg),
                 is64bit

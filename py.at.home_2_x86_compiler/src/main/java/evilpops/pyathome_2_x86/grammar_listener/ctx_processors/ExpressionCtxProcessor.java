@@ -38,7 +38,6 @@ public class ExpressionCtxProcessor {
     }
 
     private static int processIdIfVarOutOfCurrScope(int varRef, int varScope, int currentScope) {
-        boolean isVarFloat = symTabController.getDataType(varRef).equals(DataType.FLOAT);
         int tempRegRef = symTabController.takeRegister(DataType.INTEGER);
         AssemblyRegister tempRegName = symTabController.getRegName(tempRegRef);
 
@@ -46,13 +45,13 @@ public class ExpressionCtxProcessor {
         while (varScope < --currentScope)
             assemblyGenerator.genMoveMemOfRegToReg64bit(tempRegName, tempRegName);
 
-        if (isVarFloat) {
+        if (symTabController.getDataType(varRef).equals(DataType.FLOAT)) {
             int floatTempRegRef = symTabController.takeRegister(DataType.FLOAT);
             assemblyGenerator.genMoveVarFromCustomBasePointerToReg(
                     tempRegName,
                     symTabController.getRegName(floatTempRegRef),
                     symTabController.getVarOrdinality(varRef),
-                    true
+                    false
             );
             return floatTempRegRef;
         } else {
@@ -60,7 +59,7 @@ public class ExpressionCtxProcessor {
                     tempRegName,
                     tempRegName,
                     symTabController.getVarOrdinality(varRef),
-                    false
+                    true
             );
             return tempRegRef;
         }

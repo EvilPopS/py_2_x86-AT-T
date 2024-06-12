@@ -1,7 +1,7 @@
 
-
+b = 123
 def a(f: int) -> int:
-    f = f + 1
+    f = b + f
     return f
 
 a(123)

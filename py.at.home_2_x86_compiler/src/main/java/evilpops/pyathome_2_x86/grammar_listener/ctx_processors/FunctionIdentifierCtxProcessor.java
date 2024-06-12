@@ -17,6 +17,6 @@ public class FunctionIdentifierCtxProcessor {
         String funcName = ctx.ID().getText();
         int funcRef = symTabController.addFunction(compilationInfoTracker.getScope()-1, funcName);
         compilationInfoTracker.incFuncCtx(funcRef);
-        assemblyGenerator.genFuncStart(funcName);
+        assemblyGenerator.genFuncStart(symTabController.getFuncName(funcRef));
     }
 }
