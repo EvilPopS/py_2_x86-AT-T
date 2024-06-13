@@ -187,11 +187,21 @@ idArgs
     ;
 
 literal
-    : INTEGER
-    | FLOAT
+    : integerLiteral
+    | floatLiteral
     | BOOLEAN
     | STRING
     | NONE
+    ;
+
+integerLiteral
+    : INTEGER
+    | MINUS+ INTEGER
+    ;
+
+floatLiteral
+    : FLOAT
+    | MINUS+ FLOAT
     ;
 
 /* Parser rules - END */
@@ -255,11 +265,14 @@ BOOLEAN
 ID: [a-zA-Z_][a-zA-Z0-9_]* ;
 
 FLOAT
-    : '-'?([1-9][0-9]*)?'.'[0-9]+
-    | '-'?[1-9][0-9]*'.'[0-9]*
+    : ([1-9][0-9]*)?'.'[0-9]+
+    | [1-9][0-9]*'.'[0-9]*
+    | [0-9]'.'[0-9]*
     ;
+
 INTEGER
-    : '-'?[0-9]+
+    : [1-9][0-9]+
+    | [0-9]
     ;
 
 STRING

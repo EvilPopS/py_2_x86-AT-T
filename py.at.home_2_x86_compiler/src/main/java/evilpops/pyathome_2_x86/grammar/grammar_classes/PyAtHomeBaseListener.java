@@ -1,4 +1,4 @@
-// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/_migration/grammar/PyAtHome.g4 by ANTLR 4.13.1
+// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4 by ANTLR 4.13.1
 package main.java.evilpops.pyathome_2_x86.grammar.grammar_classes;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -360,6 +360,30 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLiteral(PyAtHomeParser.LiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIntegerLiteral(PyAtHomeParser.IntegerLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIntegerLiteral(PyAtHomeParser.IntegerLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFloatLiteral(PyAtHomeParser.FloatLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFloatLiteral(PyAtHomeParser.FloatLiteralContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

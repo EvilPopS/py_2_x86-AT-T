@@ -1,4 +1,4 @@
-// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/_migration/grammar/PyAtHome.g4 by ANTLR 4.13.1
+// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4 by ANTLR 4.13.1
 package main.java.evilpops.pyathome_2_x86.grammar.grammar_classes;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -297,4 +297,24 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLiteral(PyAtHomeParser.LiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#integerLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void enterIntegerLiteral(PyAtHomeParser.IntegerLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#integerLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void exitIntegerLiteral(PyAtHomeParser.IntegerLiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#floatLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void enterFloatLiteral(PyAtHomeParser.FloatLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#floatLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void exitFloatLiteral(PyAtHomeParser.FloatLiteralContext ctx);
 }

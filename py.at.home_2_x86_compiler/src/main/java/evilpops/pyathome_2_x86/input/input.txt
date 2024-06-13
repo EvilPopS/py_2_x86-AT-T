@@ -1,7 +1,5 @@
 
-b = 123
-def a(f: int) -> int:
-    f = b + f
+def a(f: int, g: int) -> int:
     return f
-
-a(123)
+v = 1-2
+a(12+21, 31-13)

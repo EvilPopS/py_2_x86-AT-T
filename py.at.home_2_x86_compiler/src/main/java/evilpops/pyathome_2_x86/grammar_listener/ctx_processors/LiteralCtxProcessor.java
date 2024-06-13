@@ -15,10 +15,10 @@ public class LiteralCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static int processOnExit(PyAtHomeParser.LiteralContext ctx) {
-        if (ctx.INTEGER() != null)
-            return processIfInteger(ctx);
-        else if (ctx.FLOAT() != null)
-            return processIfFloat(ctx);
+        if (ctx.integerLiteral() != null)
+            return processIfInteger(ctx.integerLiteral());
+        else if (ctx.floatLiteral() != null)
+            return processIfFloat(ctx.floatLiteral());
         else if (ctx.BOOLEAN() != null)
             return processIfBoolean(ctx);
         else if (ctx.STRING() != null)
@@ -29,13 +29,25 @@ public class LiteralCtxProcessor {
 
     }
 
-    private static int processIfInteger(PyAtHomeParser.LiteralContext ctx) {
-        return symTabController.addLiteral(ctx.INTEGER().getText(), DataType.INTEGER);
+    private static int processIfInteger(PyAtHomeParser.IntegerLiteralContext ctx) {
+        String value;
+        if (ctx.MINUS().size() % 2 == 1)
+            value = "-" + ctx.INTEGER().getText();
+        else
+            value = ctx.INTEGER().getText();
+        return symTabController.addLiteral(value, DataType.INTEGER);
+
     }
 
-    private static int processIfFloat(PyAtHomeParser.LiteralContext ctx) {
+    private static int processIfFloat(PyAtHomeParser.FloatLiteralContext ctx) {
+        String value;
+        if (ctx.MINUS().size() % 2 == 1)
+            value = "-" + ctx.FLOAT().getText();
+        else
+            value = ctx.FLOAT().getText();
+
         int literalRef = symTabController.addLiteralFloat(
-                ctx.FLOAT().getText(),
+                value,
                 DataType.FLOAT,
                 compilationInfoTracker.getAndIncLitLblCounter()
         );

@@ -53,7 +53,8 @@ public class AssemblyCodeFormats {
     public static final String STRING_LIT_DATA_SEC = "\tSTRING_VAL%s: .string \"%s\"\n";
     public static final String NONE_LIT_DATA_SEC = "\tNONE: .asciz \"None\"\n";
     public static final String FLOAT_ZERO_DATA_SEC = "\tFLOAT_ZERO: .double 0.0\n";
-    public static final String DATA_SECTION_INIT = NONE_LIT_DATA_SEC + FLOAT_ZERO_DATA_SEC;
+    public static final String UNDEFINED_LIT_DATA_SEC = "\tUNDEFINED: .asciz \"Undefined\"\n";
+    public static final String DATA_SECTION_INIT = NONE_LIT_DATA_SEC + FLOAT_ZERO_DATA_SEC + UNDEFINED_LIT_DATA_SEC;
 
     public static final String LBL_FORMAT = "%s:\n";
     public static final String LBL_CMP_TRUE = "L_CMP_TRUE_%s";
@@ -63,6 +64,7 @@ public class AssemblyCodeFormats {
 
     public static final String FLOAT_ZERO = "FLOAT_ZERO";
     public static final String NONE_LIT = "NONE";
+    public static final String UNDEFINED_LIT = "UNDEFINED";
 
     public static final String BUILT_IN_CONCAT_STRINGS_LBL = "BUILT_IN_STRING_CONCAT";
     public static final String BUILT_IN_STRINGS_MUL_LBL = "BUILT_IN_STRING_MUL";
