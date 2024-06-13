@@ -30,6 +30,10 @@ public class FunctionTab extends ScopeTableArchetype<FunctionTabRow> {
         return funcRow.getName() + "_" + funcRow.getFuncNumId();
     }
 
+    public int countFuncParams(int funcInd) {
+        return this.table.get(funcInd).getParameters().size();
+    }
+
     public int getMainRefByName(String funcName) {
         return this.table.stream()
                 .filter(row -> row.getName().equals(funcName))

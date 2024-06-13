@@ -177,13 +177,17 @@ arguments
     ;
 
 nonIdArgs
-    : numExpression
+    : argNumExpression
     | nonIdArgs COMMA nonIdArgs
     ;
 
 idArgs
-    : ID ASSIGN numExpression
+    : ID ASSIGN argNumExpression
     | idArgs COMMA idArgs
+    ;
+
+argNumExpression
+    : numExpression
     ;
 
 literal

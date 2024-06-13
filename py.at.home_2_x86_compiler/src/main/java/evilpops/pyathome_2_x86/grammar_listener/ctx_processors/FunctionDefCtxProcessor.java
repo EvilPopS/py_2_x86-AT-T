@@ -14,6 +14,9 @@ public class FunctionDefCtxProcessor {
 
     public static void processOnEnter(PyAtHomeParser.FunctionDefContext ignored) {
         compilationInfoTracker.incScope();
+        compilationInfoTracker.setCurrFuncTakenGenPurposeRegsState(
+                symTabController.getAndFreeAllTakenGenPurposeRegs()
+        );
     }
 
     public static void processOnExit(PyAtHomeParser.FunctionDefContext ignored) {
@@ -24,6 +27,9 @@ public class FunctionDefCtxProcessor {
         );
         compilationInfoTracker.decFuncCtx();
         compilationInfoTracker.decScope();
+        symTabController.restoreTakenStateOfGivenGenPurposeRegs(
+                compilationInfoTracker.getCurrFuncTakenGenPurposeRegsState()
+        );
     }
 
 }

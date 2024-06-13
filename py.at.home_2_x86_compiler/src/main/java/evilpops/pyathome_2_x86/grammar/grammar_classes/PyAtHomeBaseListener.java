@@ -353,6 +353,18 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArgNumExpression(PyAtHomeParser.ArgNumExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArgNumExpression(PyAtHomeParser.ArgNumExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterLiteral(PyAtHomeParser.LiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}

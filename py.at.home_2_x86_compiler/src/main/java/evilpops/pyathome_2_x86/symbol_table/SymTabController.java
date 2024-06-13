@@ -10,6 +10,8 @@ import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.row_struct.ExplicitTy
 import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.row_struct.MainTabRow;
 import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.row_struct.ScopeRowArchetype;
 
+import java.util.Arrays;
+
 
 public class SymTabController implements ISymTabController {
     protected static ISymTabController symTabBean = null;
@@ -217,6 +219,16 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
+    public int getNumOfFuncParams(int ind) {
+        return this.functionTab.countFuncParams(this.mainTab.get(ind).getForeignId());
+    }
+
+    @Override
+    public int[] getAndFreeAllTakenGenPurposeRegs() {
+        return this.registerTab.getAndFreeAllTakenGenPurposeRegs();
+    }
+
+    @Override
     public void setDataType(int ind, DataType dataType) {
         MainTabRow rowData = this.mainTab.get(ind);
         this.getDataTypeTableByTabType(rowData.getRefTabType())
@@ -228,6 +240,13 @@ public class SymTabController implements ISymTabController {
         MainTabRow rowData = this.mainTab.get(ind);
         this.getExplicitTypeTableByTabType(rowData.getRefTabType())
                 .setExplicitType(rowData.getForeignId(), explicitType);
+    }
+
+    @Override
+    public void restoreTakenStateOfGivenGenPurposeRegs(int[] genPurposeRegsRefs) {
+        this.registerTab.restoreTakenStateOfGivenGenPurposeRegs(
+                Arrays.stream(genPurposeRegsRefs).boxed().toArray(Integer[]::new)
+        );
     }
 
     @Override
@@ -297,6 +316,7 @@ public class SymTabController implements ISymTabController {
             default -> throw new TabTypeEnumNotInSyncWithTabClassesException();
         };
     }
+
     private boolean checkIfIsOfGivenTabType(int ind, TabType tabType) {
         return this.mainTab.get(ind).getRefTabType().equals(tabType);
     }

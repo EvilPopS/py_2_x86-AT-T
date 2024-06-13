@@ -1,5 +1,5 @@
 
 def a(f: int, g: int) -> int:
-    return f
-v = 1-2
-a(12+21, 31-13)
+    return f + g
+
+a(a(1,2), a(3,4))

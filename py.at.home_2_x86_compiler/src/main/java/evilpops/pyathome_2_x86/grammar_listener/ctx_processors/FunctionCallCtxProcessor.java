@@ -22,10 +22,16 @@ public class FunctionCallCtxProcessor {
             processIdArgs(ctx.arguments().idArgs());
         }
 
+        compilationInfoTracker.resetFuncCallArgsCounter();
+
         assemblyGenerator.genFuncCall(
                 symTabController.getFuncName(calledFuncRef),
                 symTabController.getAllGenPurposeRegsInUse()
         );
+
+        int countOfFuncParams = symTabController.getNumOfFuncParams(calledFuncRef);
+        assemblyGenerator.genStackPointerInc(countOfFuncParams);
+        compilationInfoTracker.decCurrVarCounter(countOfFuncParams);
 
         int resRegRef = symTabController.takeRegister(symTabController.getDataType(calledFuncRef));
         assemblyGenerator.genMoveFuncRetRegToSymbol(
@@ -41,16 +47,17 @@ public class FunctionCallCtxProcessor {
         if (ctx.COMMA() != null) {
             processNonIdArgs(ctx.nonIdArgs(0), calledFuncRef);
             processNonIdArgs(ctx.nonIdArgs(1), calledFuncRef);
+            return;
         }
         compilationInfoTracker.incFuncCallArgsCounter();
 
-        int numExpRef = ctx.numExpression().getRefToSymTab();
+        int numExpRef = ctx.argNumExpression().getRefToSymTab();
         int paramRef = symTabController.getFuncParamRefByArgCountNum(
                 calledFuncRef,
                 compilationInfoTracker.getFuncCallArgsCounter()
         );
 
-        if (symTabController.getDataType(numExpRef) != symTabController.getDataType(paramRef))
+        if (!symTabController.getDataType(numExpRef).equals(symTabController.getDataType(paramRef)))
             LogHandler.getInstance().addWarning("Parameter and its corresponding value are not of the same data type!");
 
 
@@ -68,7 +75,7 @@ public class FunctionCallCtxProcessor {
             processIdArgs(ctx.idArgs(0));
         }
 
-        int numExpRef = ctx.numExpression().getRefToSymTab();
+        int numExpRef = ctx.argNumExpression().getRefToSymTab();
 
         //TODO all
     }

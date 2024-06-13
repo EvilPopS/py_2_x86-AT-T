@@ -7,6 +7,8 @@ import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.row_struct.RegisterTa
 
 import java.util.*;
 
+import static main.java.evilpops.pyathome_2_x86.assembly_generator.constants.AssemblyRegisterGroups.GEN_PURPOSE_REGS;
+
 
 public class RegisterTab extends DataTypeTableArchetype<RegisterTabRow> {
     private final Map<AssemblyRegister, Integer> regInds;
@@ -53,17 +55,39 @@ public class RegisterTab extends DataTypeTableArchetype<RegisterTabRow> {
     public AssemblyRegister[] getAllGenPurposeRegsInUse() {
         return this.table.stream().filter(row ->
                         !row.isAvailable() &&
-                                (Arrays.asList(AssemblyRegisterGroups.GEN_PURPOSE_REGS).contains(row.getRegisterName()) ||
+                                (Arrays.asList(GEN_PURPOSE_REGS).contains(row.getRegisterName()) ||
                                         Arrays.asList(AssemblyRegisterGroups.FLOAT_GEN_PURPOSE_REGS).contains(row.getRegisterName()))
                 )
                 .map(RegisterTabRow::getRegisterName)
                 .toArray(AssemblyRegister[]::new);
     }
 
+    public int[] getAndFreeAllTakenGenPurposeRegs() {
+        int[] allGenPurposeRegsInUseRef =
+                Arrays.stream(this.getAllGenPurposeRegsInUse()).mapToInt(regInds::get).toArray();
+
+        for (int regRef : allGenPurposeRegsInUseRef)
+            this.table.get(regRef).setAvailable(true);
+
+        return allGenPurposeRegsInUseRef;
+    }
+
+    public void restoreTakenStateOfGivenGenPurposeRegs(Integer[] regsRefs) {
+        int[] allGenPurposeRegsRefs =  this.table.stream().filter(row ->
+                                (Arrays.asList(GEN_PURPOSE_REGS).contains(row.getRegisterName()) ||
+                                        Arrays.asList(AssemblyRegisterGroups.FLOAT_GEN_PURPOSE_REGS).contains(row.getRegisterName()))
+                )
+                .map(RegisterTabRow::getRegisterName)
+                .mapToInt(regInds::get).toArray();
+
+        for (int regRef : allGenPurposeRegsRefs)
+            this.table.get(regRef).setAvailable(!Arrays.asList(regsRefs).contains(regRef));
+    }
+
     private AssemblyRegister getNextFreeGenPurposeReg(DataType dataType) {
         AssemblyRegister[] regGroup = dataType == DataType.FLOAT ?
                 AssemblyRegisterGroups.FLOAT_GEN_PURPOSE_REGS :
-                AssemblyRegisterGroups.GEN_PURPOSE_REGS;
+                GEN_PURPOSE_REGS;
 
         for (AssemblyRegister ar : regGroup)
             if (this.table.get(this.regInds.get(ar)).isAvailable())

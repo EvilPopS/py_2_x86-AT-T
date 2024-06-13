@@ -18,6 +18,8 @@ public class ExpressionCtxProcessor {
             return processIfLiteral(ctx);
         else if (ctx.ID() != null)
             return processIfId(ctx);
+        else if (ctx.functionCall() != null)
+            return processIfFuncCall(ctx);
         else
             throw new BadImplementationException();
     }
@@ -34,7 +36,10 @@ public class ExpressionCtxProcessor {
             return varRef;
         else
             return processIdIfVarOutOfCurrScope(varRef, varScope, currentScope);
+    }
 
+    private  static int processIfFuncCall(PyAtHomeParser.ExpressionContext ctx) {
+        return ctx.functionCall().getRefToSymTab();
     }
 
     private static int processIdIfVarOutOfCurrScope(int varRef, int varScope, int currentScope) {

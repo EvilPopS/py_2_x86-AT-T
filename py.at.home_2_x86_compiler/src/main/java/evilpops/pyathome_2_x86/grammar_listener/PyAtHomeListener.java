@@ -76,6 +76,12 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
     }
 
     @Override
+    public void exitArgNumExpression(PyAtHomeParser.ArgNumExpressionContext ctx) {
+        if (!logHandler.isSyntaxErrDetected())
+            ctx.setRefToSymTab(ArgNumExpressionCtxProcessor.processOnExit(ctx));
+    }
+
+    @Override
     public void exitNumExpression(PyAtHomeParser.NumExpressionContext ctx) {
         if (!logHandler.isSyntaxErrDetected())
             ctx.setRefToSymTab(NumExpressionCtxProcessor.processOnExit(ctx));

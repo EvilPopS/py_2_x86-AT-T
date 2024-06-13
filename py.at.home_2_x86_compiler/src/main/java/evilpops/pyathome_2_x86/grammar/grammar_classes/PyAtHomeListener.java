@@ -288,6 +288,16 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitIdArgs(PyAtHomeParser.IdArgsContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#argNumExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterArgNumExpression(PyAtHomeParser.ArgNumExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#argNumExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitArgNumExpression(PyAtHomeParser.ArgNumExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#literal}.
 	 * @param ctx the parse tree
 	 */

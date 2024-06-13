@@ -35,10 +35,13 @@ public interface ISymTabController {
     int getScope(int ind);
     int getCurrentScope();
     String getFuncName(int ind);
+    int getNumOfFuncParams(int ind);
+    int[] getAndFreeAllTakenGenPurposeRegs();
 
     /* 'Set field' methods */
     void setDataType(int ind, DataType dataType);
     void setExplicitType(int ind, DataType explicitType);
+    void restoreTakenStateOfGivenGenPurposeRegs(int[] genPurposeRegsRefs);
 
     /* Check if ... */
     boolean checkIfIsReg(int ind);

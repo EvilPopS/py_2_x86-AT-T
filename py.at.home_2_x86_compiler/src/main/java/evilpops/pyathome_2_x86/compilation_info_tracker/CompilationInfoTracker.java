@@ -14,16 +14,22 @@ public class CompilationInfoTracker {
         protected int varCounter;
         protected int nonFloatParamCnt;
         protected int floatParamCnt;
+        protected int[] takenGenPurposeRegs;
 
         public FuncCtxInfo(int funcRef) {
             this.funcRef = funcRef;
             this.varCounter = 0;
             this.nonFloatParamCnt = 0;
             this.floatParamCnt = 0;
+            this.takenGenPurposeRegs = null;
         }
 
         public int incAndGetVarCounter() {
             return ++this.varCounter;
+        }
+
+        public void decVarCounter(int amount) {
+            this.varCounter -= amount;
         }
 
         public int incAndGetNonFloatParamCnt() {
@@ -32,6 +38,14 @@ public class CompilationInfoTracker {
 
         public int incAndGetFloatParamCnt() {
             return ++this.floatParamCnt;
+        }
+
+        public void setTakenGenPurposeRegsState(int[] state) {
+            this.takenGenPurposeRegs = state;
+        }
+
+        public int[] getTakenGenPurposeRegsState() {
+            return this.takenGenPurposeRegs;
         }
     }
 
@@ -67,7 +81,6 @@ public class CompilationInfoTracker {
         return compilationInfoTracker;
     }
 
-
     public void incFuncCtx(int funcRef) {
         this.funcContexts.add(new FuncCtxInfo(funcRef));
         this.currFuncRef = funcRef;
@@ -102,6 +115,10 @@ public class CompilationInfoTracker {
         return this.getCurrFuncCtx().incAndGetVarCounter();
     }
 
+    public void decCurrVarCounter(int amount) {
+        this.getCurrFuncCtx().decVarCounter(amount);
+    }
+
     public int getCurrVarCounter() {
         return this.getCurrFuncCtx().getVarCounter();
     }
@@ -112,6 +129,14 @@ public class CompilationInfoTracker {
 
     public int incAndGetFloatParamCnt() {
         return this.getCurrFuncCtx().incAndGetFloatParamCnt();
+    }
+
+    public void setCurrFuncTakenGenPurposeRegsState(int[] state) {
+        this.getCurrFuncCtx().setTakenGenPurposeRegsState(state);
+    }
+
+    public int[] getCurrFuncTakenGenPurposeRegsState() {
+        return this.getCurrFuncCtx().getTakenGenPurposeRegsState();
     }
 
     private FuncCtxInfo getCurrFuncCtx() {
