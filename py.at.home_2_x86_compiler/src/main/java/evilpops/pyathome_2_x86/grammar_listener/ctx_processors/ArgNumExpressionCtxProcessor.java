@@ -23,7 +23,6 @@ public class ArgNumExpressionCtxProcessor {
         int idRef = symTabController.addVariable(
                 numExpDataType,
                 compilationInfoTracker.getScope(),
-                numExpDataType,
                 "",
                 compilationInfoTracker.incAndGetCurrVarCounter()
         );

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class SyntaxErrorListener extends BaseErrorListener {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-        LogHandler.getInstance().setSyntaxErrDetected(true);
+        LogHandler.getInstance().setCompilationErrorDetected(true);
         String offendingToken = ((Parser) recognizer).getCurrentToken().getText();
         if (offendingToken.equals("INVALID_DENT"))
             throw new SyntaxErrorException("Invalid indentation!");

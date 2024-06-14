@@ -61,6 +61,9 @@ public class AssemblyCodeFormats {
     public static final String LBL_CMP_END = "L_CMP_END_%s";
     public static final String LBL_FUNC_NAME = "L_FUNC_%s";
     public static final String LBL_FUNC_END = "L_FUNC_%s_END";
+    public static final String LBL_DEF_PARAM_COND = "L_DEF_PARAM_COND_%s";
+    public static final String LBL_DEF_PARAM_COND_END = "L_DEF_PARAM_COND_%s_END";
+    public static final String LBL_DEF_PARAM_NUM_EXP = "L_DEF_PARAM_NUM_EXP_%s";
 
     public static final String FLOAT_ZERO = "FLOAT_ZERO";
     public static final String NONE_LIT = "NONE";

@@ -16,6 +16,7 @@ public interface IAssemblyGenerator {
     void genMoveVarFromCustomBasePointerToReg(AssemblyRegister customBasePointer, AssemblyRegister destReg, int varOrdinality, boolean is64bit);
     void genMoveBoolToSymbol(boolean boolVal, String destSymbol);
     void genMoveFuncRetRegToSymbol(String destSymbol, boolean is64bit);
+    void genMovUndefinedToReg(AssemblyRegister descReg);
 
     // Operations - Instructions (Singular)
     void genAdditionSymbolToReg(String srcSymbol, AssemblyRegister destRegister, boolean is64bit);
@@ -27,6 +28,7 @@ public interface IAssemblyGenerator {
 
     // Compare - Instructions (Singular)
     void genCmpToZero(String srcSymbol, boolean is64bit);
+    void genCmpToUndefined64bit(String srcSymbol);
     void genCmpSymbolToSymbol(String symbol1, String symbol2, boolean is64bit);
 
     // Compare - Instructions (Multiple)
@@ -45,11 +47,21 @@ public interface IAssemblyGenerator {
 
     // Jump - Instructions
     void genJmp(String jmpInst, String lblName);
+    void genNonCondJmp(String lblName);
+    void genJmpIfEqual(String lblName);
     void genNonCondJmpToFuncEnd(String funcName);
+    void genNonCondJmpToDefParamCondStart(int lblNum);
+    void genNonCondJmpToDefParamCondEnd(int lblNum);
+    void genJmpIfEqToDefParamNumExpStart(int lblNum);
+
+    // Labels
+    void genLabel(String lblName);
+    void genDefParamNumExpLabel(int lblNum);
+    void genDefParamCondStartLabel(int lblNum);
+    void genDefParamCondEndLabel(int lblNum);
 
     // Other - Instructions (Singular)
     void genIntToFloatConversion(String srcSymbol, String destSymbol);
-    void genLabel(String lblName);
     void genPushReg(AssemblyRegister register, boolean is64bit);
     void genPopReg(AssemblyRegister register, boolean is64bit);
     void genStackPointerAlignmentCorrection(boolean isStackIncreasing);

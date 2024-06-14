@@ -456,6 +456,17 @@ public class NumExpressionCtxProcessor {
             );
             leftExpRef = regRef;
         }
+
+        if (!is64bit && !symTabController.checkIfIsReg(rightExpRef)) {
+            int regRef = symTabController.takeRegister(DataType.FLOAT);
+            assemblyGenerator.genMoveSymbolToReg(
+                    AssemblySymbolProcessor.createAssemblySymbol(rightExpRef),
+                    symTabController.getRegName(regRef),
+                    false
+            );
+            rightExpRef = regRef;
+        }
+
         assemblyGenerator.genCmpSymbolToSymbol(
                 AssemblySymbolProcessor.createAssemblySymbol(leftExpRef),
                 AssemblySymbolProcessor.createAssemblySymbol(rightExpRef),

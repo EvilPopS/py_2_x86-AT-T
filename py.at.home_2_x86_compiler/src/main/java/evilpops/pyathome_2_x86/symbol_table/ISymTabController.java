@@ -5,8 +5,8 @@ import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
 
 public interface ISymTabController {
     /* 'Add' methods */
-    int addVariable(DataType dataType, int scope, DataType explicitType, String name, int ordinality);
-    int addParameter(DataType dataType, int scope, DataType explicitType, String name, int functionRef, boolean isDefault, int ordinality);
+    int addVariable(DataType dataType, int scope, String name, int ordinality);
+    int addParameter(DataType dataType, int scope, String name, int functionRef, boolean isDefault, int totalOrdinality, int perDataTypeOrdinality);
     int addLiteral(String value, DataType dataType);
     int addFunction(int scope, String name);
     int addLiteralFloat(String value, DataType dataType, int dataLabelCounter);
@@ -25,12 +25,12 @@ public interface ISymTabController {
 
     /* 'Get data' methods */
     DataType getDataType(int ind);
-    DataType getExplicitType(int ind);
     String getLiteralValue(int ind);
     AssemblyRegister getRegName(int ind);
     AssemblyRegister[] getAllGenPurposeRegsInUse();
     int getVarOrdinality(int ind);
-    int getParamOrdinality(int ind);
+    int getTotalParamOrdinality(int ind);
+    int getPerDataTypeParamOrdinality(int ind);
     int getDataLabelCounter(int ind);
     int getScope(int ind);
     int getCurrentScope();
@@ -40,7 +40,6 @@ public interface ISymTabController {
 
     /* 'Set field' methods */
     void setDataType(int ind, DataType dataType);
-    void setExplicitType(int ind, DataType explicitType);
     void restoreTakenStateOfGivenGenPurposeRegs(int[] genPurposeRegsRefs);
 
     /* Check if ... */

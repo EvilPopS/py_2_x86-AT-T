@@ -40,6 +40,10 @@ public class CompilationInfoTracker {
             return ++this.floatParamCnt;
         }
 
+        public int getTotalParamCnt() {
+            return this.floatParamCnt + this.nonFloatParamCnt;
+        }
+
         public void setTakenGenPurposeRegsState(int[] state) {
             this.takenGenPurposeRegs = state;
         }
@@ -59,6 +63,9 @@ public class CompilationInfoTracker {
     protected int literalLblCounter;
 
     @Getter
+    protected int globalTotalCountOfDefParams;
+
+    @Getter
     protected int scope;
 
     @Getter
@@ -70,6 +77,7 @@ public class CompilationInfoTracker {
         this.argsCounters = new Stack<>();
         this.funcCallArgsCounter = 0;
         this.literalLblCounter = 0;
+        this.globalTotalCountOfDefParams = 0;
         this.scope = 0;
         this.funcContexts = new ArrayList<>();
         this.incFuncCtx(-1);
@@ -103,6 +111,10 @@ public class CompilationInfoTracker {
         return this.literalLblCounter++;
     }
 
+    public void incGlobalTotalCountOfDefParams() {
+        this.globalTotalCountOfDefParams++;
+    }
+
     public void incScope() {
         this.scope++;
     }
@@ -129,6 +141,10 @@ public class CompilationInfoTracker {
 
     public int incAndGetFloatParamCnt() {
         return this.getCurrFuncCtx().incAndGetFloatParamCnt();
+    }
+
+    public int getCurrFuncTotalParamCount() {
+        return this.getCurrFuncCtx().getTotalParamCnt();
     }
 
     public void setCurrFuncTakenGenPurposeRegsState(int[] state) {

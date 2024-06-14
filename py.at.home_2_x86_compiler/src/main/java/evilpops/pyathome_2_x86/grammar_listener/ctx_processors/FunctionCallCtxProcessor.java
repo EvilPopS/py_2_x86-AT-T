@@ -5,7 +5,7 @@ import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.compilation_info_tracker.CompilationInfoTracker;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.utils.AssemblySymbolProcessor;
-import main.java.evilpops.pyathome_2_x86.log_handler.LogHandler;
+import main.java.evilpops.pyathome_2_x86.log_handler.exceptions.CompilationError;
 import main.java.evilpops.pyathome_2_x86.symbol_table.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.symbol_table.SymTabController;
 
@@ -58,12 +58,11 @@ public class FunctionCallCtxProcessor {
         );
 
         if (!symTabController.getDataType(numExpRef).equals(symTabController.getDataType(paramRef)))
-            LogHandler.getInstance().addWarning("Parameter and its corresponding value are not of the same data type!");
-
+            throw new CompilationError("Parameter and its corresponding value are not of the same data type!");
 
         assemblyGenerator.genFuncArg(
                 AssemblySymbolProcessor.createAssemblySymbol(numExpRef),
-                symTabController.getParamOrdinality(paramRef),
+                symTabController.getTotalParamOrdinality(paramRef),
                 !symTabController.checkIfDataTypeIsFloat(paramRef)
         );
     }

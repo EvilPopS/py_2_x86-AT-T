@@ -6,6 +6,7 @@ import main.java.evilpops.pyathome_2_x86.compilation_info_tracker.CompilationInf
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.utils.AssemblySymbolProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.utils.TypesContextProcessor;
+import main.java.evilpops.pyathome_2_x86.log_handler.exceptions.CompilationError;
 import main.java.evilpops.pyathome_2_x86.symbol_table.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.symbol_table.SymTabController;
 import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
@@ -16,27 +17,28 @@ public class ParamNonDefValCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static void processOnExit(PyAtHomeParser.ParamNonDefValContext ctx) {
-        if (ctx.ID() == null)
+        if (ctx.COMMA() != null)
             return;
 
-        DataType explicitType = (ctx.varType() != null)
-                ? TypesContextProcessor.convertTypingCtxToDataType(ctx.varType().types())
-                : DataType.UNKNOWN;
+        if (ctx.varType() == null)
+            throw new CompilationError("Function parameter without default value must have explicit datatype.");
 
-        boolean is64bit = !explicitType.equals(DataType.FLOAT);
+        DataType paramDataType = TypesContextProcessor.convertTypingCtxToDataType(ctx.varType().types());
 
-        int paramOrdinality = is64bit
+        boolean is64bit = !paramDataType.equals(DataType.FLOAT);
+
+        int perDataTypeParamOrdinality = is64bit
                 ? compilationInfoTracker.incAndGetNonFloatParamCnt()
                 : compilationInfoTracker.incAndGetFloatParamCnt();
 
         int paramRef = symTabController.addParameter(
-                explicitType,
+                paramDataType,
                 compilationInfoTracker.getScope(),
-                explicitType,
                 ctx.ID().getText(),
                 compilationInfoTracker.getCurrFuncRef(),
                 false,
-                paramOrdinality
+                compilationInfoTracker.getCurrFuncTotalParamCount(),
+                perDataTypeParamOrdinality
         );
 
         paramRef = symTabController.transferParamToVar(
@@ -47,7 +49,10 @@ public class ParamNonDefValCtxProcessor {
         assemblyGenerator.genStackPointerDec(1);
         assemblyGenerator.genMoveSymbolToSymbol(
                 AssemblySymbolProcessor.createAssemblySymbol(
-                        symTabController.takeParamReg(paramOrdinality, symTabController.getDataType(paramRef))
+                        symTabController.takeParamReg(
+                                perDataTypeParamOrdinality,
+                                symTabController.getDataType(paramRef)
+                        )
                 ),
                 AssemblySymbolProcessor.createAssemblySymbol(paramRef),
                 is64bit

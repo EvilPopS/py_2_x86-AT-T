@@ -1,5 +1,4 @@
+def sum(x: int, y = 10) -> int:
+    return x + y
 
-def a(f: int, g: int) -> int:
-    return f + g
-
-a(a(1,2), a(3,4))
+sum(5, 15)

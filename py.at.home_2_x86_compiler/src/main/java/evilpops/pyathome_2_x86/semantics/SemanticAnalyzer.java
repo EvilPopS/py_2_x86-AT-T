@@ -2,7 +2,7 @@ package main.java.evilpops.pyathome_2_x86.semantics;
 
 
 import main.java.evilpops.pyathome_2_x86.exceptions.compilation.errors.DataTypesNotCompatibleException;
-import main.java.evilpops.pyathome_2_x86.exceptions.compilation.warnings.ImplAndExplTypesNotCompatibleWarning;
+import main.java.evilpops.pyathome_2_x86.exceptions.compilation.warnings.ImplicitAndExplicitTypesNotCompatibleWarning;
 import main.java.evilpops.pyathome_2_x86.symbol_table.data_type_utils.ArithOpsOperandsTypesComp;
 import main.java.evilpops.pyathome_2_x86.symbol_table.data_type_utils.RelOpsOperandsTypesComp;
 import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
@@ -66,7 +66,7 @@ public class SemanticAnalyzer {
 
     public static void areImplicitAndExplicitDataTypesTheSame(DataType implicit, DataType explicit) {
         if (!implicit.equals(explicit) && !explicit.equals(DataType.UNKNOWN))
-            throw new ImplAndExplTypesNotCompatibleWarning(implicit.toString(), explicit.toString());
+            throw new ImplicitAndExplicitTypesNotCompatibleWarning(implicit.toString(), explicit.toString());
     }
 
     private static void checkTypesCompatibility(

@@ -58,12 +58,12 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genFloatLiteral(String value, int lblCounter) {
-        this.dataSection.append(String.format(FLOAT_LIT_DATA_SEC, value, lblCounter));
+        this.dataSection.append(String.format(FLOAT_LIT_DATA_SEC, lblCounter, value));
     }
 
     @Override
     public void genStringLiteral(String value, int lblCounter) {
-        this.dataSection.append(String.format(STRING_LIT_DATA_SEC, value, lblCounter));
+        this.dataSection.append(String.format(STRING_LIT_DATA_SEC, lblCounter, value));
     }
 
     @Override
@@ -140,6 +140,15 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public void genMovUndefinedToReg(AssemblyRegister descReg) {
+        this.genMoveSymbolToReg(
+                this.makeDollarSymbol(UNDEFINED_LIT),
+                descReg,
+                true
+        );
+    }
+
+    @Override
     public void genAdditionSymbolToReg(String srcSymbol, AssemblyRegister destRegister, boolean is64bit) {
         this.currentFunc.append(String.format(
                 ADD_INST,
@@ -202,6 +211,15 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.currentFunc.append(String.format(
                 is64bit ? CMP_INT : CMP_FLOAT,
                 is64bit ? this.makeIntOrBoolSymbol("0") : FLOAT_ZERO,
+                srcSymbol
+        ));
+    }
+
+    @Override
+    public void genCmpToUndefined64bit(String srcSymbol) {
+        this.currentFunc.append(String.format(
+                CMP_INT,
+                this.makeIntOrBoolSymbol(UNDEFINED_LIT),
                 srcSymbol
         ));
     }
@@ -321,25 +339,59 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public void genNonCondJmp(String lblName) {
+        this.currentFunc.append(String.format(JMP_INST, JMP_NON_COND, lblName));
+    }
+
+    @Override
+    public void genJmpIfEqual(String lblName) {
+        this.currentFunc.append(String.format(JMP_INST, JMP_EQ, lblName));
+    }
+
+    @Override
     public void genNonCondJmpToFuncEnd(String funcName) {
-        this.currentFunc.append(
-                String.format(
-                        JMP_INST,
-                        JMP_NON_COND,
-                        String.format(LBL_FUNC_END, funcName)
-                )
-        );
+        this.genNonCondJmp(String.format(LBL_FUNC_END, funcName));
+    }
+
+    @Override
+    public void genNonCondJmpToDefParamCondStart(int lblNum) {
+        this.genNonCondJmp(String.format(LBL_DEF_PARAM_COND, lblNum));
 
     }
 
     @Override
-    public void genIntToFloatConversion(String srcSymbol, String destSymbol) {
-        this.currentFunc.append(String.format(BOOLINT_2_FLOAT_INST, srcSymbol, destSymbol));
+    public void genNonCondJmpToDefParamCondEnd(int lblNum) {
+        this.genNonCondJmp(String.format(LBL_DEF_PARAM_COND_END, lblNum));
+    }
+
+    @Override
+    public void genJmpIfEqToDefParamNumExpStart(int lblNum) {
+        this.genJmpIfEqual(String.format(LBL_DEF_PARAM_NUM_EXP, lblNum));
     }
 
     @Override
     public void genLabel(String lblName) {
         this.currentFunc.append(String.format(LBL_FORMAT, lblName));
+    }
+
+    @Override
+    public void genDefParamNumExpLabel(int lblNum) {
+        this.genLabel(String.format(LBL_DEF_PARAM_NUM_EXP, lblNum));
+    }
+
+    @Override
+    public void genDefParamCondStartLabel(int lblNum) {
+        this.genLabel(String.format(LBL_DEF_PARAM_COND, lblNum));
+    }
+
+    @Override
+    public void genDefParamCondEndLabel(int lblNum) {
+        this.genLabel(String.format(LBL_DEF_PARAM_COND_END, lblNum));
+    }
+
+    @Override
+    public void genIntToFloatConversion(String srcSymbol, String destSymbol) {
+        this.currentFunc.append(String.format(BOOLINT_2_FLOAT_INST, srcSymbol, destSymbol));
     }
 
 
