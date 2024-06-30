@@ -4,6 +4,8 @@ import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
 import main.java.evilpops.pyathome_2_x86.symbol_table.exceptions.FunctionNotFoundException;
 import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.row_struct.FunctionTabRow;
 
+import java.util.List;
+
 public class FunctionTab extends ScopeTableArchetype<FunctionTabRow> {
     protected int funcCount;
 
@@ -28,6 +30,11 @@ public class FunctionTab extends ScopeTableArchetype<FunctionTabRow> {
     public String getFuncName(int funcInd) {
         FunctionTabRow funcRow = this.table.get(funcInd);
         return funcRow.getName() + "_" + funcRow.getFuncNumId();
+    }
+
+    public List<Integer> getFuncsParamRefs(int funcInd) {
+        FunctionTabRow funcRow = this.table.get(funcInd);
+        return funcRow.getParameters();
     }
 
     public int countFuncParams(int funcInd) {

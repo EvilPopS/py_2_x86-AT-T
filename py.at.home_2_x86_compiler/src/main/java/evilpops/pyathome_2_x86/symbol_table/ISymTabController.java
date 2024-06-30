@@ -3,6 +3,8 @@ package main.java.evilpops.pyathome_2_x86.symbol_table;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.enums.AssemblyRegister;
 import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
 
+import java.util.List;
+
 public interface ISymTabController {
     /* 'Add' methods */
     int addVariable(DataType dataType, int scope, String name, int ordinality);
@@ -22,6 +24,7 @@ public interface ISymTabController {
     int getNoneLiteralRef();
     int getFuncRefByName(String funcName);
     int getFuncParamRefByArgCountNum(int funcRef, int argCountNum);
+    int getFuncParamRefByParamName(int funcRef, String paramName);
 
     /* 'Get data' methods */
     DataType getDataType(int ind);
@@ -34,7 +37,9 @@ public interface ISymTabController {
     int getDataLabelCounter(int ind);
     int getScope(int ind);
     int getCurrentScope();
+    String getParamName(int paramRef);
     String getFuncName(int ind);
+    List<Integer> getFuncsParamRefs(int ind);
     int getNumOfFuncParams(int ind);
     int[] getAndFreeAllTakenGenPurposeRegs();
 
@@ -50,6 +55,7 @@ public interface ISymTabController {
     boolean checkIfDataTypeIsString(int ind);
     boolean checkIfDataTypeIsBoolean(int ind);
     boolean checkIfDataTypeIsNone(int ind);
+    boolean checkIfIsDefParam(int ind);
 
     /* Delete methods */
     void freeIfIsRegister(int ind);

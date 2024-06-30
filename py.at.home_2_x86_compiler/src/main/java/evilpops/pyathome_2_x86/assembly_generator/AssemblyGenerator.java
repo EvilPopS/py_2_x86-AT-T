@@ -142,7 +142,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public void genMovUndefinedToReg(AssemblyRegister descReg) {
         this.genMoveSymbolToReg(
-                this.makeDollarSymbol(UNDEFINED_LIT),
+                this.makeUndefinedSymbol(),
                 descReg,
                 true
         );
@@ -219,7 +219,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     public void genCmpToUndefined64bit(String srcSymbol) {
         this.currentFunc.append(String.format(
                 CMP_INT,
-                this.makeIntOrBoolSymbol(UNDEFINED_LIT),
+                this.makeUndefinedSymbol(),
                 srcSymbol
         ));
     }
@@ -488,6 +488,11 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public String makeNoneSymbol() {
         return makeDollarSymbol(NONE_LIT);
+    }
+
+    @Override
+    public String makeUndefinedSymbol() {
+        return makeDollarSymbol(UNDEFINED_LIT);
     }
 
     @Override

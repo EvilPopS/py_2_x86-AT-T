@@ -30,6 +30,10 @@ public class ParameterTab extends ScopeTableArchetype<ParameterTabRow> {
         return this.table.get(ref).getName();
     }
 
+    public boolean isDefault(int ref) {
+        return this.table.get(ref).isDefault();
+    }
+
     public int getTotalOrdinality(int ref) {
         return this.table.get(ref).getTotalOrdinality();
     }
@@ -37,5 +41,4 @@ public class ParameterTab extends ScopeTableArchetype<ParameterTabRow> {
     public int getDataTypeParamOrdinality(int ref) {
         return this.table.get(ref).getPerDataTypeOrdinality();
     }
-
 }

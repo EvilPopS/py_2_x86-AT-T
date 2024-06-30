@@ -77,6 +77,7 @@ public interface IAssemblyGenerator {
     String makeFloatLiteralSymbol(int srcLabelCounter);
     String makeStringLiteralSymbol(int srcLabelCounter);
     String makeNoneSymbol();
+    String makeUndefinedSymbol();
     String makeIntOrBoolSymbol(String srcValue);
     String makeVarAccessSymbol(int varOrdinality);
     String makeRegisterAccessSymbol(AssemblyRegister register);

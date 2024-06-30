@@ -3,13 +3,16 @@ package main.java.evilpops.pyathome_2_x86.symbol_table;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.enums.AssemblyRegister;
 import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
 import main.java.evilpops.pyathome_2_x86.symbol_table.enums.TabType;
+import main.java.evilpops.pyathome_2_x86.symbol_table.exceptions.ParameterNotFoundException;
 import main.java.evilpops.pyathome_2_x86.symbol_table.exceptions.TabTypeEnumNotInSyncWithTabClassesException;
 import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.*;
 import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.row_struct.DataTypeRowArchetype;
 import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.row_struct.MainTabRow;
 import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.row_struct.ScopeRowArchetype;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class SymTabController implements ISymTabController {
@@ -156,10 +159,18 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
+    public int getFuncParamRefByParamName(int funcRef, String paramName) {
+        for (int paramRef : this.getFuncsParamRefs(funcRef)) {
+            if (this.parameterTab.getName(getForeignId(paramRef)).equals(paramName))
+                return paramRef;
+        }
+        throw new ParameterNotFoundException();
+    }
+
+    @Override
     public DataType getDataType(int ind) {
-        MainTabRow rowData = this.mainTab.get(ind);
-        return getDataTypeTableByTabType(rowData.getRefTabType())
-                .getDataType(rowData.getForeignId());
+        return getDataTypeTableByTabType(this.mainTab.get(ind).getRefTabType())
+                .getDataType(getForeignId(ind));
     }
 
     @Override
@@ -210,8 +221,18 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
+    public String getParamName(int paramRef) {
+        return this.parameterTab.getName(getForeignId(paramRef));
+    }
+
+    @Override
     public String getFuncName(int ind) {
         return this.functionTab.getFuncName(getForeignId(ind));
+    }
+
+    @Override
+    public List<Integer> getFuncsParamRefs(int ind) {
+        return new ArrayList<>(this.functionTab.getFuncsParamRefs(getForeignId(ind)));
     }
 
     @Override
@@ -271,6 +292,11 @@ public class SymTabController implements ISymTabController {
     @Override
     public boolean checkIfDataTypeIsNone(int ind) {
         return this.getDataType(ind) == DataType.NONE;
+    }
+
+    @Override
+    public boolean checkIfIsDefParam(int ind) {
+        return this.parameterTab.isDefault(getForeignId(ind));
     }
 
     @Override
