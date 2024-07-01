@@ -24,10 +24,19 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4" />
           <option name="autoGen" value="true" />
-          <option name="outputDir" value="D:\Projects\py.at.home_2_x86_compiler\py.at.home_2_x86_compiler\src" />
+          <option name="outputDir" value="H:\Projects\diplomski\py.at.home_2_x86_compiler\py.at.home_2_x86_compiler\src" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="main.java.evilpops.pyathome_2_x86.grammar.grammar_classes" />
+          <option name="language" value="Java" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/main/java/evilpops/pyathome_2_x86/_migration/grammar/PyAtHome.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="H:\Projects\diplomski\py.at.home_2_x86_compiler\py.at.home_2_x86_compiler\src" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="main.java.evilpops.pyathome_2_x86._migration.grammar.grammar_classes" />
           <option name="language" value="Java" />
         </PerGrammarGenerationSettings>
       </list>
@@ -40,7 +49,6 @@
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
-    <option name="workspaceImportForciblyTurnedOn" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_19" default="true" project-jdk-name="19" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />

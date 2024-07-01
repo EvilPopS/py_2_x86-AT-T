@@ -1,7 +1,7 @@
 grammar PyAtHome;
 
 
-tokens { INDENT, DEDENT }
+tokens { INDENT, DEDENT, INVALID_DENT }
 
 
 @lexer::members {
@@ -9,18 +9,21 @@ private final IndentationTracker indentTracker = new IndentationTracker();
 
 @Override
 public Token nextToken() {
-	Token tk = indentTracker.sendDentTokenIfNeeded();
-    if (tk != null)
+	Token tk = indentTracker.sendDentTokenIfNeeded(this.getLine());
+    if (tk != null) {
+        System.out.println(tk);
         return tk;
+    }
 
     tk = super.nextToken();
+    System.out.println(tk);
     indentTracker.processToken(tk);
     return tk;
 }
 }
 
 @parser::members {
- static class ContextExtention extends ParserRuleContext {
+static class ContextExtention extends ParserRuleContext {
     protected int refToSymTab;
     public ContextExtention(ParserRuleContext parent, int invokingState) {
          super(parent, invokingState);
@@ -41,7 +44,7 @@ options {
 
 /* Parser rules - START */
 program
-    : statementsList
+    : NEWLINE? statementsList simpleStatement? INVALID_DENT? EOF
     ;
 
 statementsList
@@ -50,18 +53,65 @@ statementsList
 
 statement
     : simpleStatement NEWLINE
-    | simpleStatement EOF
+    | compundStatement
     ;
 
 simpleStatement
     : assignStatement
+    | returnStatement
+    | functionCall
+    ;
+
+compundStatement
+    : functionDef
     ;
 
 assignStatement
-    : ID typing? ASSIGN numExpression
+    : ID varType? ASSIGN numExpression
     ;
 
-typing
+returnStatement
+    : RETURN numExpression
+    | RETURN
+    ;
+
+functionDef
+    : functionDeclaration INDENT statementsList DEDENT
+    ;
+
+functionDeclaration
+    : functionIdentifier L_PAREN parameters? R_PAREN retType? COLON NEWLINE
+    ;
+
+functionIdentifier
+    :  DEF ID
+    ;
+
+parameters
+    : paramNonDefVal COMMA paramDefVal
+    | paramNonDefVal
+    | paramDefVal
+    ;
+
+paramNonDefVal
+    : ID varType?
+    | paramNonDefVal COMMA paramNonDefVal
+    ;
+
+paramDefVal
+    : ID varType? ASSIGN numExpression
+    | paramDefVal COMMA paramDefVal
+    ;
+
+block
+    : INDENT statementsList DEDENT
+    ;
+
+retType
+    : ARROW types
+    ;
+
+varType
     : COLON types
     ;
 
@@ -112,14 +162,50 @@ logicOrOperator
 
 expression
     : literal
+    | functionCall
     | ID
     ;
 
+functionCall
+    : ID L_PAREN arguments? R_PAREN
+    ;
+
+arguments
+    : nonIdArgs COMMA idArgs
+    | nonIdArgs
+    | idArgs
+    ;
+
+nonIdArgs
+    : argNumExpression
+    | nonIdArgs COMMA nonIdArgs
+    ;
+
+idArgs
+    : ID ASSIGN argNumExpression
+    | idArgs COMMA idArgs
+    ;
+
+argNumExpression
+    : numExpression
+    ;
+
 literal
-    : INTEGER
-    | FLOAT
+    : integerLiteral
+    | floatLiteral
     | BOOLEAN
     | STRING
+    | NONE
+    ;
+
+integerLiteral
+    : INTEGER
+    | MINUS+ INTEGER
+    ;
+
+floatLiteral
+    : FLOAT
+    | MINUS+ FLOAT
     ;
 
 /* Parser rules - END */
@@ -137,15 +223,19 @@ NEWLINE
     | '\n'
     ;
 
+DEF: 'def';
+RETURN: 'return';
+
 T_INT: 'int';
 T_FLOAT: 'float';
 T_BOOLEAN: 'bool';
 T_STRING: 'str';
-T_NONE: 'None';
+T_NONE: 'none';
 
-COLON
-    : ':'
-    ;
+ARROW: '->';
+
+COMMA: ',';
+COLON: ':';
 
 ASSIGN: '=' ;
 
@@ -167,6 +257,10 @@ LSEQ: '<=';
 AND: 'and';
 OR: 'or';
 
+NONE
+    : 'None'
+    ;
+
 BOOLEAN
     : 'True'
     | 'False'
@@ -175,11 +269,14 @@ BOOLEAN
 ID: [a-zA-Z_][a-zA-Z0-9_]* ;
 
 FLOAT
-    : '-'?([1-9][0-9]*)?'.'[0-9]+
-    | '-'?[1-9][0-9]*'.'[0-9]*
+    : ([1-9][0-9]*)?'.'[0-9]+
+    | [1-9][0-9]*'.'[0-9]*
+    | [0-9]'.'[0-9]*
     ;
+
 INTEGER
-    : '-'?[0-9]+
+    : [1-9][0-9]+
+    | [0-9]
     ;
 
 STRING

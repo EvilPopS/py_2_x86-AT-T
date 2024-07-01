@@ -1,6 +1,6 @@
-a : int = 1
-a = "str"
-b = 2
-b : float = 1
-b = 2.3
-b : str = "afas"
+def sum(x: int, y:float) -> float:
+    def sum2(x:int, y: int) -> int:
+        return x + y
+    return y + y + sum2(1, 1)
+
+sum(1, 1.1)
