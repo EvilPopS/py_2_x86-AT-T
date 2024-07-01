@@ -4,8 +4,7 @@ import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
 import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.row_struct.ParameterTabRow;
 
 public class ParameterTab extends ScopeTableArchetype<ParameterTabRow> {
-    public void add(
-            int mainTabFK,
+    public int add(
             DataType dataType,
             int scope,
             String name,
@@ -15,7 +14,7 @@ public class ParameterTab extends ScopeTableArchetype<ParameterTabRow> {
     ) {
         this.table.add(
                 new ParameterTabRow(
-                        mainTabFK,
+                        -1,
                         dataType,
                         scope,
                         name,
@@ -24,6 +23,8 @@ public class ParameterTab extends ScopeTableArchetype<ParameterTabRow> {
                         perDataTypeOrdinality
                 )
         );
+
+        return this.getTableSize()-1;
     }
 
     public String getName(int ref) {

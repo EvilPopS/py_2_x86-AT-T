@@ -33,8 +33,7 @@ public class FunctionTab extends ScopeTableArchetype<FunctionTabRow> {
     }
 
     public List<Integer> getFuncsParamRefs(int funcInd) {
-        FunctionTabRow funcRow = this.table.get(funcInd);
-        return funcRow.getParameters();
+        return this.table.get(funcInd).getParameters();
     }
 
     public int countFuncParams(int funcInd) {

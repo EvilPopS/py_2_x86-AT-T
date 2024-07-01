@@ -50,7 +50,9 @@ public class ParamDefValCtxProcessor {
 
         int paramRef = symTabController.addParameter(
                 numExpDataType,
-                compilationInfoTracker.getScope(),
+                symTabController.getScope(
+                        compilationInfoTracker.getCurrFuncRef()
+                ),
                 ctx.ID().getText(),
                 compilationInfoTracker.getCurrFuncRef(),
                 true,
@@ -60,20 +62,42 @@ public class ParamDefValCtxProcessor {
 
         int paramAsVarRef = symTabController.transferParamToVar(
                 paramRef,
-                compilationInfoTracker.incAndGetCurrVarCounter()
+                compilationInfoTracker.incAndGetCurrVarCounter(),
+                compilationInfoTracker.getScope()
         );
 
         genAfterNumExpCode(paramAsVarRef, numExpRef, is64bit);
         genParamDefConditionCode(paramRef, paramAsVarRef);
     }
 
-    private static void genAfterNumExpCode(int paramRef, int numExpRef, boolean is64bit) {
+    private static void genAfterNumExpCode(int paramAsVarRef, int numExpRef, boolean is64bit) {
         assemblyGenerator.genStackPointerDec(1);
-        assemblyGenerator.genMoveSymbolToSymbol(
-                AssemblySymbolProcessor.createAssemblySymbol(numExpRef),
-                AssemblySymbolProcessor.createAssemblySymbol(paramRef),
-                is64bit
-        );
+        if (
+                (symTabController.checkIfIsLiteral(numExpRef) && !is64bit)
+                        || symTabController.checkIfIsVar(numExpRef)
+        ) {
+            int regRef = symTabController.takeRegister(symTabController.getDataType(numExpRef));
+            assemblyGenerator.genMoveSymbolToReg(
+                    AssemblySymbolProcessor.createAssemblySymbol(numExpRef),
+                    symTabController.getRegName(regRef),
+                    is64bit
+
+            );
+            assemblyGenerator.genMoveSymbolToSymbol(
+                    AssemblySymbolProcessor.createAssemblySymbol(regRef),
+                    AssemblySymbolProcessor.createAssemblySymbol(paramAsVarRef),
+                    is64bit
+            );
+            symTabController.freeIfIsRegister(regRef);
+        } else {
+            assemblyGenerator.genMoveSymbolToSymbol(
+                    AssemblySymbolProcessor.createAssemblySymbol(numExpRef),
+                    AssemblySymbolProcessor.createAssemblySymbol(paramAsVarRef),
+                    is64bit
+            );
+        }
+        symTabController.freeIfIsRegister(numExpRef);
+
         assemblyGenerator.genNonCondJmpToDefParamCondEnd(
                 compilationInfoTracker.getGlobalTotalCountOfDefParams()
         );
@@ -86,10 +110,10 @@ public class ParamDefValCtxProcessor {
 
         int paramRegRef = symTabController.takeParamReg(
                 symTabController.getPerDataTypeParamOrdinality(paramRef),
-                symTabController.getDataType(paramRef)
+                symTabController.getParamDataType(paramRef)
         );
 
-        if (symTabController.checkIfDataTypeIsFloat(paramRef))
+        if (symTabController.checkIfParamDataTypeIsFloat(paramRef))
             genParamDefConditionWhen128bit(paramRegRef, paramAsVarRef);
         else
             genParamDefConditionWhen64bit(paramRegRef, paramAsVarRef);

@@ -7,7 +7,7 @@ public class BlockCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static void processOnEnter(PyAtHomeParser.BlockContext ignored) {
-        compilationInfoTracker.incScope();
+//        compilationInfoTracker.incScope();
     }
 
 

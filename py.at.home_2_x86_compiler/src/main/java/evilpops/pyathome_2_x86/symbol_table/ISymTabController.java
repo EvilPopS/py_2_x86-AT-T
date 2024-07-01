@@ -15,7 +15,7 @@ public interface ISymTabController {
     int addLiteralString(String value, DataType dataType, int dataLabelCounter);
     int takeRegister(DataType dataType);
     int takeParamReg(int paramOrdinality, DataType dataType);
-    int transferParamToVar(int paramRef, int ordinality);
+    int transferParamToVar(int paramRef, int ordinality, int scope);
 
     /* 'Get reference' methods */
     int getVarRefByName(String name);
@@ -28,6 +28,7 @@ public interface ISymTabController {
 
     /* 'Get data' methods */
     DataType getDataType(int ind);
+    DataType getParamDataType(int paramRef);
     String getLiteralValue(int ind);
     AssemblyRegister getRegName(int ind);
     AssemblyRegister[] getAllGenPurposeRegsInUse();
@@ -36,7 +37,8 @@ public interface ISymTabController {
     int getPerDataTypeParamOrdinality(int ind);
     int getDataLabelCounter(int ind);
     int getScope(int ind);
-    int getCurrentScope();
+    int getParamScope(int paramRef);
+    int getRealTimeCurrentScope();
     String getParamName(int paramRef);
     String getFuncName(int ind);
     List<Integer> getFuncsParamRefs(int ind);
@@ -52,11 +54,13 @@ public interface ISymTabController {
     boolean checkIfIsLiteral(int ind);
     boolean checkIfIsVar(int ind);
     boolean checkIfDataTypeIsFloat(int ind);
+    boolean checkIfParamDataTypeIsFloat(int paramRef);
     boolean checkIfDataTypeIsString(int ind);
     boolean checkIfDataTypeIsBoolean(int ind);
     boolean checkIfDataTypeIsNone(int ind);
-    boolean checkIfIsDefParam(int ind);
+    boolean checkIfIsDefParam(int paramRef);
 
     /* Delete methods */
+    void deleteCurrentScope(int scope);
     void freeIfIsRegister(int ind);
 }

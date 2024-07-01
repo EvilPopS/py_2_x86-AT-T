@@ -78,7 +78,7 @@ public class AssemblyCodeFormats {
     public static final String FUNC_END = "\tpopq %rbp\n\tret\n\n";
 
     public static final String CONCAT_STRINGS_BUILTIN =
-            BUILT_IN_CONCAT_STRINGS_LBL +
+            String.format(LBL_FUNC_NAME, BUILT_IN_CONCAT_STRINGS_LBL) +
                     ":\n" +
                     FUNC_START +
                     "\tsubq $32, %rsp\n" +
@@ -104,7 +104,7 @@ public class AssemblyCodeFormats {
                     FUNC_END;
 
     public static final String STRINGS_MUL_BUILTIN =
-            BUILT_IN_STRINGS_MUL_LBL +
+            String.format(LBL_FUNC_NAME, BUILT_IN_STRINGS_MUL_LBL) +
                     ":\n" +
                     FUNC_START +
                     "\tsubq $32, %rsp\n" +
@@ -140,7 +140,7 @@ public class AssemblyCodeFormats {
                     FUNC_END;
 
     public static final String STRINGS_CMP_BUILTIN =
-            BUILT_IN_STRING_CMP_LBL +
+            String.format(LBL_FUNC_NAME, BUILT_IN_STRING_CMP_LBL) +
                     ":\n" +
                     FUNC_START +
                     "\tcall strcmp@plt\n" +
@@ -148,7 +148,7 @@ public class AssemblyCodeFormats {
                     FUNC_END;
 
     public static final String STRING_TO_BOOL_BUILTIN =
-            BUILT_IN_STRING_TO_BOOL_LBL +
+            String.format(LBL_FUNC_NAME, BUILT_IN_STRING_TO_BOOL_LBL) +
                     ":\n" +
                     FUNC_START +
                     "\tcall strlen@plt\n" +

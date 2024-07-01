@@ -25,8 +25,13 @@ public class FunctionDefCtxProcessor {
                 compilationInfoTracker.getCurrVarCounter(),
                 false //TODO check whether it's default return
         );
+
         compilationInfoTracker.decFuncCtx();
+
+        symTabController.deleteCurrentScope(compilationInfoTracker.getScope());
+
         compilationInfoTracker.decScope();
+
         symTabController.restoreTakenStateOfGivenGenPurposeRegs(
                 compilationInfoTracker.getCurrFuncTakenGenPurposeRegsState()
         );

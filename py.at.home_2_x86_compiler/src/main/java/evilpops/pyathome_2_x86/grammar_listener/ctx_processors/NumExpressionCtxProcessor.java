@@ -150,8 +150,6 @@ public class NumExpressionCtxProcessor {
         SemanticAnalyzer.areTypesCompatibleForMultiplication(leftExpDataType, rightExpDataType);
 
         DataType resultDataType = ResultDataTypeCalculator.getMultiplicationResultDataType(leftExpDataType, rightExpDataType);
-        leftExpRef = ConversionProcessor.processTypeConversion(leftExpRef, resultDataType);
-        rightExpRef = ConversionProcessor.processTypeConversion(rightExpRef, resultDataType);
 
         if (!resultDataType.equals(DataType.STRING)) {
             leftExpRef = ConversionProcessor.processTypeConversion(leftExpRef, resultDataType);

@@ -104,6 +104,24 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public void genMoveRegToPointerRegMem(AssemblyRegister srcReg, boolean is64bit) {
+        this.genMoveSymbolToSymbol(
+                this.makeRegisterAccessSymbol(srcReg),
+                String.format(MEM_ACCESS, "", this.makeRegisterAccessSymbol(STACK_POINTER)),
+                is64bit
+        );
+    }
+
+    @Override
+    public void genMovePointerRegMemToReg(AssemblyRegister destReg, boolean is64bit) {
+        this.genMoveSymbolToSymbol(
+                String.format(MEM_ACCESS, "", this.makeRegisterAccessSymbol(STACK_POINTER)),
+                this.makeRegisterAccessSymbol(destReg),
+                is64bit
+        );
+    }
+
+    @Override
     public void genMoveVarFromCustomBasePointerToReg(
             AssemblyRegister customBasePointer,
             AssemblyRegister destReg,
@@ -135,7 +153,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.genMoveSymbolToSymbol(
                 this.makeRegisterAccessSymbol(is64bit ? RET_REG : FLOAT_RET_REG),
                 destSymbol,
-                true
+                is64bit
         );
     }
 
@@ -282,7 +300,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.genMoveSymbolToSymbol(
                 srcSymbol,
                 this.makeRegisterAccessSymbol(
-                        is64bit ? PARAM_REGS[argOrdinality] : FLOAT_PARAM_REGS[argOrdinality]
+                        is64bit ? PARAM_REGS[argOrdinality-1] : FLOAT_PARAM_REGS[argOrdinality-1]
                 ),
                 is64bit
         );
@@ -397,26 +415,32 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genPushReg(AssemblyRegister register, boolean is64bit) {
-        if (is64bit)
+        if (is64bit) {
             this.stackAlignmentTracker.invCurrStackAlignment();
-
-        this.currentFunc.append(String.format(
-                PUSH_INST,
-                is64bit ? INST_SUFFIX : FLOAT_INST_SUFFIX,
-                this.makeRegisterAccessSymbol(register)
-        ));
+            this.currentFunc.append(String.format(
+                    PUSH_INST,
+                    "",
+                    this.makeRegisterAccessSymbol(register)
+            ));
+        } else {
+            this.genStackPointerDec(1);
+            this.genMoveRegToPointerRegMem(register, false);
+        }
     }
 
     @Override
     public void genPopReg(AssemblyRegister register, boolean is64bit) {
-        if (is64bit)
+        if (is64bit) {
             this.stackAlignmentTracker.invCurrStackAlignment();
-
-        this.currentFunc.append(String.format(
-                POP_INST,
-                is64bit ? INST_SUFFIX : FLOAT_INST_SUFFIX,
-                this.makeRegisterAccessSymbol(register)
-        ));
+            this.currentFunc.append(String.format(
+                    POP_INST,
+                    "",
+                    this.makeRegisterAccessSymbol(register)
+            ));
+        } else {
+            this.genMovePointerRegMemToReg(register, false);
+            this.genStackPointerInc(1);
+        }
 
     }
 

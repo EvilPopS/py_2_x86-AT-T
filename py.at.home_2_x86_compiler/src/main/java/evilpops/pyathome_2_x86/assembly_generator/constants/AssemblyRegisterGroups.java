@@ -18,8 +18,9 @@ public class AssemblyRegisterGroups {
     };
 
     public static final AssemblyRegister[] FLOAT_PARAM_REGS = new AssemblyRegister[]{
-            AssemblyRegister.XMM2, AssemblyRegister.XMM3, AssemblyRegister.XMM4,
-            AssemblyRegister.XMM5, AssemblyRegister.XMM6, AssemblyRegister.XMM7
+            AssemblyRegister.XMM1, AssemblyRegister.XMM2, AssemblyRegister.XMM3,
+            AssemblyRegister.XMM4, AssemblyRegister.XMM5, AssemblyRegister.XMM6,
+            AssemblyRegister.XMM7
     };
 
     public static final AssemblyRegister[] GEN_PURPOSE_REGS = new AssemblyRegister[]{

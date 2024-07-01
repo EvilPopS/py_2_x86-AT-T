@@ -31,7 +31,7 @@ public class ExpressionCtxProcessor {
     private static int processIfId(PyAtHomeParser.ExpressionContext ctx) {
         int varRef = symTabController.getVarRefByName(ctx.ID().getText());
         int varScope = symTabController.getScope(varRef);
-        int currentScope = symTabController.getCurrentScope();
+        int currentScope = symTabController.getRealTimeCurrentScope();
         if (varScope == currentScope)
             return varRef;
         else
@@ -58,8 +58,10 @@ public class ExpressionCtxProcessor {
                     symTabController.getVarOrdinality(varRef),
                     false
             );
+            symTabController.freeIfIsRegister(tempRegRef);
             return floatTempRegRef;
         } else {
+            symTabController.setDataType(tempRegRef, symTabController.getDataType(varRef));
             assemblyGenerator.genMoveVarFromCustomBasePointerToReg(
                     tempRegName,
                     tempRegName,

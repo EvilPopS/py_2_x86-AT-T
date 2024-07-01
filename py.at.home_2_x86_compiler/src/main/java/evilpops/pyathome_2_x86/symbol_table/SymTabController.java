@@ -43,7 +43,7 @@ public class SymTabController implements ISymTabController {
 
     @Override
     public int addVariable(DataType dataType, int scope, String name, int ordinality) {
-        int rowRef = this.mainTab.getNextFreeRowInd();
+        int rowRef = this.mainTab.getTableSize();
         this.variableTab.add(rowRef, dataType, scope, name, ordinality);
         this.mainTab.addVariable(this.variableTab.getLastRowInd());
         return rowRef;
@@ -59,19 +59,24 @@ public class SymTabController implements ISymTabController {
             int totalOrdinality,
             int perDataTypeOrdinality
     ) {
-        int rowRef = this.mainTab.getNextFreeRowInd();
-        this.parameterTab.add(rowRef, dataType, scope, name, isDefault, totalOrdinality, perDataTypeOrdinality);
-        this.mainTab.addParameter(this.parameterTab.getLastRowInd());
+        int paramRef = this.parameterTab.add(
+                dataType,
+                scope,
+                name,
+                isDefault,
+                totalOrdinality,
+                perDataTypeOrdinality
+        );
         this.functionTab.addParam(
                 this.mainTab.get(functionRef).getForeignId(),
-                rowRef
+                paramRef
         );
-        return rowRef;
+        return paramRef;
     }
 
     @Override
     public int addLiteral(String value, DataType dataType) {
-        int rowRef = this.mainTab.getNextFreeRowInd();
+        int rowRef = this.mainTab.getTableSize();
         this.literalTab.add(rowRef, dataType, value);
         this.mainTab.addLiteral(this.literalTab.getLastRowInd());
         return rowRef;
@@ -79,7 +84,7 @@ public class SymTabController implements ISymTabController {
 
     @Override
     public int addFunction(int scope, String name) {
-        int rowRef = this.mainTab.getNextFreeRowInd();
+        int rowRef = this.mainTab.getTableSize();
         this.functionTab.add(rowRef, scope, name);
         this.mainTab.addFunction(this.functionTab.getLastRowInd());
         return rowRef;
@@ -87,7 +92,7 @@ public class SymTabController implements ISymTabController {
 
     @Override
     public int addLiteralFloat(String value, DataType dataType, int dataLabelCounter) {
-        int rowRef = this.mainTab.getNextFreeRowInd();
+        int rowRef = this.mainTab.getTableSize();
         this.literalTab.addFloat(rowRef, value, dataLabelCounter);
         this.mainTab.addLiteral(this.literalTab.getLastRowInd());
         return rowRef;
@@ -95,7 +100,7 @@ public class SymTabController implements ISymTabController {
 
     @Override
     public int addLiteralString(String value, DataType dataType, int dataLabelCounter) {
-        int rowRef = this.mainTab.getNextFreeRowInd();
+        int rowRef = this.mainTab.getTableSize();
         this.literalTab.addString(rowRef, value, dataLabelCounter);
         this.mainTab.addLiteral(this.literalTab.getLastRowInd());
         return rowRef;
@@ -104,26 +109,26 @@ public class SymTabController implements ISymTabController {
 
     @Override
     public int takeRegister(DataType dataType) {
-        int rowRef = this.mainTab.getNextFreeRowInd();
+        int rowRef = this.mainTab.getTableSize();
         this.mainTab.addRegister(this.registerTab.takeGenPurposeReg(rowRef, dataType));
         return rowRef;
     }
 
     @Override
     public int takeParamReg(int paramOrdinality, DataType dataType) {
-        int rowRef = this.mainTab.getNextFreeRowInd();
+        int rowRef = this.mainTab.getTableSize();
         this.mainTab.addRegister(this.registerTab.takeParamReg(rowRef, paramOrdinality, dataType));
         return rowRef;
     }
 
     @Override
-    public int transferParamToVar(int paramRef, int ordinality) {
-        paramRef = this.mainTab.get(paramRef).getForeignId();
+    public int transferParamToVar(int paramRef, int ordinality, int scope) {
         return this.addVariable(
                 this.parameterTab.getDataType(paramRef),
-                this.parameterTab.getScope(paramRef),
+                scope,
                 this.parameterTab.getName(paramRef),
-                ordinality);
+                ordinality
+        );
     }
 
     @Override
@@ -138,7 +143,7 @@ public class SymTabController implements ISymTabController {
 
     @Override
     public int takeReturnReg(DataType dataType) {
-        int rowRef = this.mainTab.getNextFreeRowInd();
+        int rowRef = this.mainTab.getTableSize();
         this.mainTab.addRegister(this.registerTab.takeReturnReg(rowRef, dataType));
         return rowRef;
     }
@@ -161,7 +166,7 @@ public class SymTabController implements ISymTabController {
     @Override
     public int getFuncParamRefByParamName(int funcRef, String paramName) {
         for (int paramRef : this.getFuncsParamRefs(funcRef)) {
-            if (this.parameterTab.getName(getForeignId(paramRef)).equals(paramName))
+            if (this.parameterTab.getName(paramRef).equals(paramName))
                 return paramRef;
         }
         throw new ParameterNotFoundException();
@@ -171,6 +176,11 @@ public class SymTabController implements ISymTabController {
     public DataType getDataType(int ind) {
         return getDataTypeTableByTabType(this.mainTab.get(ind).getRefTabType())
                 .getDataType(getForeignId(ind));
+    }
+
+    @Override
+    public DataType getParamDataType(int paramRef) {
+        return this.parameterTab.getDataType(paramRef);
     }
 
     @Override
@@ -200,7 +210,7 @@ public class SymTabController implements ISymTabController {
 
     @Override
     public int getPerDataTypeParamOrdinality(int ind) {
-        return this.parameterTab.getDataTypeParamOrdinality(getForeignId(ind));
+        return this.parameterTab.getDataTypeParamOrdinality(ind);
     }
 
     @Override
@@ -216,7 +226,12 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public int getCurrentScope() {
+    public int getParamScope(int paramRef) {
+        return this.parameterTab.getScope(paramRef);
+    }
+
+    @Override
+    public int getRealTimeCurrentScope() {
         return this.functionTab.getCurrentFuncScope();
     }
 
@@ -280,6 +295,11 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
+    public boolean checkIfParamDataTypeIsFloat(int paramRef) {
+        return this.getParamDataType(paramRef).equals(DataType.FLOAT);
+    }
+
+    @Override
     public boolean checkIfDataTypeIsString(int ind) {
         return this.getDataType(ind).equals(DataType.STRING);
     }
@@ -295,8 +315,25 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public boolean checkIfIsDefParam(int ind) {
-        return this.parameterTab.isDefault(getForeignId(ind));
+    public boolean checkIfIsDefParam(int paramRef) {
+        return this.parameterTab.isDefault(paramRef);
+    }
+
+    @Override
+    public void deleteCurrentScope(int scope) {
+        for (int ind = this.mainTab.getTableSize() - 1; ind >= 0; ind--) {
+            try {
+                if (this.getScope(ind) < scope)
+                    return;
+            } catch (Exception ignored) {
+            }
+
+            if (!this.checkIfIsReg(ind))
+                this.getDataTypeTableByTabType(this.mainTab.get(ind).getRefTabType())
+                        .removeRowByInd(getForeignId(ind));
+
+            this.mainTab.removeRowByInd(ind);
+        }
     }
 
     @Override

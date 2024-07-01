@@ -13,6 +13,8 @@ public interface IAssemblyGenerator {
     void genMoveSymbolToReg(String srcSymbol, AssemblyRegister destReg, boolean is64bit);
     void genMoveMemOfBasePointerToReg64bit(AssemblyRegister destReg);
     void genMoveMemOfRegToReg64bit(AssemblyRegister srcReg, AssemblyRegister destReg);
+    void genMoveRegToPointerRegMem(AssemblyRegister srcReg, boolean is64bit);
+    void genMovePointerRegMemToReg(AssemblyRegister destReg, boolean is64bit);
     void genMoveVarFromCustomBasePointerToReg(AssemblyRegister customBasePointer, AssemblyRegister destReg, int varOrdinality, boolean is64bit);
     void genMoveBoolToSymbol(boolean boolVal, String destSymbol);
     void genMoveFuncRetRegToSymbol(String destSymbol, boolean is64bit);

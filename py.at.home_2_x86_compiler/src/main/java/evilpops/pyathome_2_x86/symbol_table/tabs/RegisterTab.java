@@ -101,8 +101,8 @@ public class RegisterTab extends DataTypeTableArchetype<RegisterTabRow> {
         AssemblyRegister[] regGroup = dataType == DataType.FLOAT ?
                 AssemblyRegisterGroups.FLOAT_PARAM_REGS :
                 AssemblyRegisterGroups.PARAM_REGS;
-        if (ordinality < 5)
-            return regGroup[ordinality];
+        if (ordinality < 7)
+            return regGroup[ordinality-1];
         return null;
     }
 

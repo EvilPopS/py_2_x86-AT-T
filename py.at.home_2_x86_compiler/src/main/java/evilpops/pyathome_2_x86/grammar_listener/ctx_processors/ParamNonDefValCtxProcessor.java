@@ -33,7 +33,9 @@ public class ParamNonDefValCtxProcessor {
 
         int paramRef = symTabController.addParameter(
                 paramDataType,
-                compilationInfoTracker.getScope(),
+                symTabController.getScope(
+                        compilationInfoTracker.getCurrFuncRef()
+                ),
                 ctx.ID().getText(),
                 compilationInfoTracker.getCurrFuncRef(),
                 false,
@@ -43,7 +45,8 @@ public class ParamNonDefValCtxProcessor {
 
         paramRef = symTabController.transferParamToVar(
                 paramRef,
-                compilationInfoTracker.incAndGetCurrVarCounter()
+                compilationInfoTracker.incAndGetCurrVarCounter(),
+                compilationInfoTracker.getScope()
         );
 
         assemblyGenerator.genStackPointerDec(1);

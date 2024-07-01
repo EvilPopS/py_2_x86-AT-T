@@ -68,15 +68,16 @@ public class FunctionCallCtxProcessor {
                 compilationInfoTracker.getFuncCallArgsCounter()
         );
 
-        if (!symTabController.getDataType(numExpRef).equals(symTabController.getDataType(paramRef)))
+        if (!symTabController.getDataType(numExpRef).equals(symTabController.getParamDataType(paramRef)))
             throw new CompilationError("Parameter and its corresponding value are not of the same data type!");
 
         assemblyGenerator.genFuncArg(
                 AssemblySymbolProcessor.createAssemblySymbol(numExpRef),
                 symTabController.getPerDataTypeParamOrdinality(paramRef),
-                !symTabController.checkIfDataTypeIsFloat(paramRef)
+                !symTabController.checkIfParamDataTypeIsFloat(paramRef)
         );
 
+        symTabController.freeIfIsRegister(numExpRef);
         paramRefs.removeIf(elem -> elem == paramRef);
     }
 
@@ -97,15 +98,16 @@ public class FunctionCallCtxProcessor {
 
         int paramRef = symTabController.getFuncParamRefByParamName(calledFuncRef, ctx.ID().getText());
 
-        if (!symTabController.getDataType(numExpRef).equals(symTabController.getDataType(paramRef)))
+        if (!symTabController.getDataType(numExpRef).equals(symTabController.getParamDataType(paramRef)))
             throw new CompilationError("Parameter and its corresponding value are not of the same data type!");
 
         assemblyGenerator.genFuncArg(
                 AssemblySymbolProcessor.createAssemblySymbol(numExpRef),
                 symTabController.getPerDataTypeParamOrdinality(paramRef),
-                !symTabController.checkIfDataTypeIsFloat(paramRef)
+                !symTabController.checkIfParamDataTypeIsFloat(paramRef)
         );
 
+        symTabController.freeIfIsRegister(numExpRef);
         paramRefs.removeIf(elem -> elem == paramRef);
     }
 
@@ -114,7 +116,7 @@ public class FunctionCallCtxProcessor {
             if (!symTabController.checkIfIsDefParam(paramRef))
                 throw new MissingParameterInFunctionCallException(symTabController.getParamName(paramRef));
 
-            if (symTabController.checkIfDataTypeIsFloat(paramRef)) {
+            if (symTabController.checkIfParamDataTypeIsFloat(paramRef)) {
                 int undefinedAddressRegRef = symTabController.takeRegister(DataType.INTEGER);
                 int undefinedAddressRefRefAs128bit = symTabController.takeRegister(DataType.FLOAT);
 
@@ -131,7 +133,7 @@ public class FunctionCallCtxProcessor {
                                 symTabController.getRegName(undefinedAddressRefRefAs128bit)
                         ),
                         symTabController.getPerDataTypeParamOrdinality(paramRef),
-                        !symTabController.checkIfDataTypeIsFloat(paramRef)
+                        false
                 );
 
                 symTabController.freeIfIsRegister(undefinedAddressRefRefAs128bit);
@@ -139,7 +141,7 @@ public class FunctionCallCtxProcessor {
                 assemblyGenerator.genFuncArg(
                         assemblyGenerator.makeUndefinedSymbol(),
                         symTabController.getPerDataTypeParamOrdinality(paramRef),
-                        !symTabController.checkIfDataTypeIsFloat(paramRef)
+                        true
                 );
             }
         }
