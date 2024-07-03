@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_def_domain;
 
 
 import main.java.evilpops.pyathome_2_x86.assembly_generator.AssemblyGenerator;
@@ -18,8 +18,8 @@ public class ParamDefValCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static void processOnEnter() {
-        compilationInfoTracker.incGlobalTotalCountOfDefParams();
-        int lblNum = compilationInfoTracker.getGlobalTotalCountOfDefParams();
+        compilationInfoTracker.getDefParamsLblTracker().incLblCount();
+        int lblNum = compilationInfoTracker.getDefParamsLblTracker().getLblCounter();
         assemblyGenerator.genNonCondJmpToDefParamCondStart(lblNum);
         assemblyGenerator.genDefParamNumExpLabel(lblNum);
     }
@@ -45,25 +45,26 @@ public class ParamDefValCtxProcessor {
         boolean is64bit = !numExpDataType.equals(DataType.FLOAT);
 
         int perDataTypeParamOrdinality = is64bit
-                ? compilationInfoTracker.incAndGetNonFloatParamCnt()
-                : compilationInfoTracker.incAndGetFloatParamCnt();
+                ? compilationInfoTracker.getCurrFuncTracker().incAndGetNonFloatParamCnt()
+                : compilationInfoTracker.getCurrFuncTracker().incAndGetFloatParamCnt();
 
         int paramRef = symTabController.addParameter(
                 numExpDataType,
-                symTabController.getScope(
-                        compilationInfoTracker.getCurrFuncRef()
+                symTabController.getFuncScope(
+                        compilationInfoTracker.getCurrFuncTracker().getFuncRef()
                 ),
+                compilationInfoTracker.getBlockScopeTracker().getScope(),
                 ctx.ID().getText(),
-                compilationInfoTracker.getCurrFuncRef(),
+                compilationInfoTracker.getCurrFuncTracker().getFuncRef(),
                 true,
-                compilationInfoTracker.getCurrFuncTotalParamCount(),
-                perDataTypeParamOrdinality
-        );
+                compilationInfoTracker.getCurrFuncTracker().getTotalParamCnt(),
+                perDataTypeParamOrdinality);
 
         int paramAsVarRef = symTabController.transferParamToVar(
                 paramRef,
-                compilationInfoTracker.incAndGetCurrVarCounter(),
-                compilationInfoTracker.getScope()
+                compilationInfoTracker.getCurrFuncTracker().incAndGetVarCounter(),
+                compilationInfoTracker.getFunctionScopeTracker().getScope(),
+                compilationInfoTracker.getBlockScopeTracker().getScope()
         );
 
         genAfterNumExpCode(paramAsVarRef, numExpRef, is64bit);
@@ -99,13 +100,14 @@ public class ParamDefValCtxProcessor {
         symTabController.freeIfIsRegister(numExpRef);
 
         assemblyGenerator.genNonCondJmpToDefParamCondEnd(
-                compilationInfoTracker.getGlobalTotalCountOfDefParams()
+                compilationInfoTracker.getDefParamsLblTracker().getLblCounter()
         );
 
     }
 
     private static void genParamDefConditionCode(int paramRef, int paramAsVarRef) {
-        int lblNum = compilationInfoTracker.getGlobalTotalCountOfDefParams();
+        //TODO lbl counter za param def
+        int lblNum = compilationInfoTracker.getDefParamsLblTracker().getLblCounter();
         assemblyGenerator.genDefParamCondStartLabel(lblNum);
 
         int paramRegRef = symTabController.takeParamReg(
@@ -126,7 +128,7 @@ public class ParamDefValCtxProcessor {
                 AssemblySymbolProcessor.createAssemblySymbol(paramRegRef)
         );
         assemblyGenerator.genJmpIfEqToDefParamNumExpStart(
-                compilationInfoTracker.getGlobalTotalCountOfDefParams()
+                compilationInfoTracker.getDefParamsLblTracker().getLblCounter()
         );
         assemblyGenerator.genStackPointerDec(1);
         assemblyGenerator.genMoveSymbolToSymbol(
@@ -155,7 +157,7 @@ public class ParamDefValCtxProcessor {
         symTabController.freeIfIsRegister(undefinedAddressRefRefAs128bit);
 
         assemblyGenerator.genJmpIfEqToDefParamNumExpStart(
-                compilationInfoTracker.getGlobalTotalCountOfDefParams()
+                compilationInfoTracker.getDefParamsLblTracker().getLblCounter()
         );
         assemblyGenerator.genStackPointerDec(1);
         assemblyGenerator.genMoveSymbolToSymbol(

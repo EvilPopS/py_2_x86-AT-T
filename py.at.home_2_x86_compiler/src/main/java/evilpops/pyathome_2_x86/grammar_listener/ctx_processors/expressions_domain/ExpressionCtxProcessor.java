@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.expressions_domain;
 
 import main.java.evilpops.pyathome_2_x86.assembly_generator.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
@@ -18,7 +18,7 @@ public class ExpressionCtxProcessor {
             return processIfLiteral(ctx);
         else if (ctx.ID() != null)
             return processIfId(ctx);
-        else if (ctx.functionCall() != null)
+        else if (ctx.funcCallExpression() != null)
             return processIfFuncCall(ctx);
         else
             throw new BadImplementationException();
@@ -29,8 +29,8 @@ public class ExpressionCtxProcessor {
     }
 
     private static int processIfId(PyAtHomeParser.ExpressionContext ctx) {
-        int varRef = symTabController.getVarRefByName(ctx.ID().getText());
-        int varScope = symTabController.getScope(varRef);
+        int varRef = symTabController.getVarRefByNameInAnyScope(ctx.ID().getText());
+        int varScope = symTabController.getFuncScope(varRef);
         int currentScope = symTabController.getRealTimeCurrentScope();
         if (varScope == currentScope)
             return varRef;
@@ -39,7 +39,7 @@ public class ExpressionCtxProcessor {
     }
 
     private  static int processIfFuncCall(PyAtHomeParser.ExpressionContext ctx) {
-        return ctx.functionCall().getRefToSymTab();
+        return ctx.funcCallExpression().getRefToSymTab();
     }
 
     private static int processIdIfVarOutOfCurrScope(int varRef, int varScope, int currentScope) {

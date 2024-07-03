@@ -1,86 +1,40 @@
 package main.java.evilpops.pyathome_2_x86.compilation_info_tracker;
 
 import lombok.Getter;
+import main.java.evilpops.pyathome_2_x86.compilation_info_tracker.components.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 public class CompilationInfoTracker {
-    private static class FuncCtxInfo {
-        @Getter
-        protected int funcRef;
-        @Getter
-        protected int varCounter;
-        protected int nonFloatParamCnt;
-        protected int floatParamCnt;
-        protected int[] takenGenPurposeRegs;
-
-        public FuncCtxInfo(int funcRef) {
-            this.funcRef = funcRef;
-            this.varCounter = 0;
-            this.nonFloatParamCnt = 0;
-            this.floatParamCnt = 0;
-            this.takenGenPurposeRegs = null;
-        }
-
-        public int incAndGetVarCounter() {
-            return ++this.varCounter;
-        }
-
-        public void decVarCounter(int amount) {
-            this.varCounter -= amount;
-        }
-
-        public int incAndGetNonFloatParamCnt() {
-            return ++this.nonFloatParamCnt;
-        }
-
-        public int incAndGetFloatParamCnt() {
-            return ++this.floatParamCnt;
-        }
-
-        public int getTotalParamCnt() {
-            return this.floatParamCnt + this.nonFloatParamCnt;
-        }
-
-        public void setTakenGenPurposeRegsState(int[] state) {
-            this.takenGenPurposeRegs = state;
-        }
-
-        public int[] getTakenGenPurposeRegsState() {
-            return this.takenGenPurposeRegs;
-        }
-    }
-
     private static CompilationInfoTracker compilationInfoTracker;
 
-    protected Stack<Integer> argsCounters;
+    private final Stack<FunctionInfoTracker> funcContexts;
 
     @Getter
-    protected int funcCallArgsCounter;
-
-    protected int literalLblCounter;
-
+    protected final IfStatementLblTracker ifStatLblTracker;
     @Getter
-    protected int globalTotalCountOfDefParams;
-
+    protected final DefParamsLblTracker defParamsLblTracker;
     @Getter
-    protected int scope;
-
+    protected final LiteralsLblTracker literalsLblTracker;
     @Getter
-    protected int currFuncRef;
-
-    private final List<FuncCtxInfo> funcContexts;
+    protected final NonIdArgCountTracker nonIdArgCountTracker;
+    @Getter
+    protected final FunctionScopeTracker functionScopeTracker;
+    @Getter
+    protected final BlockScopeTracker blockScopeTracker;
+    @Getter
+    protected final ReturnStatInfoTracker returnStatInfoTracker;
 
     private CompilationInfoTracker() {
-        this.argsCounters = new Stack<>();
-        this.funcCallArgsCounter = 0;
-        this.literalLblCounter = 0;
-        this.globalTotalCountOfDefParams = 0;
-        this.scope = 0;
-        this.funcContexts = new ArrayList<>();
-        this.incFuncCtx(-1);
+        this.funcContexts = new Stack<>();
+        this.ifStatLblTracker = new IfStatementLblTracker();
+        this.defParamsLblTracker = new DefParamsLblTracker();
+        this.literalsLblTracker = new LiteralsLblTracker();
+        this.nonIdArgCountTracker = new NonIdArgCountTracker();
+        this.functionScopeTracker = new FunctionScopeTracker();
+        this.blockScopeTracker = new BlockScopeTracker();
+        this.returnStatInfoTracker = new ReturnStatInfoTracker();
+        this.onNewFunctionStart(-1);
     }
 
     public static CompilationInfoTracker getInstance() {
@@ -89,73 +43,15 @@ public class CompilationInfoTracker {
         return compilationInfoTracker;
     }
 
-    public void incFuncCtx(int funcRef) {
-        this.funcContexts.add(new FuncCtxInfo(funcRef));
-        this.currFuncRef = funcRef;
+    public FunctionInfoTracker getCurrFuncTracker() {
+        return this.funcContexts.peek();
     }
 
-    public void decFuncCtx() {
-        this.funcContexts.remove(this.funcContexts.size() - 1);
-        this.currFuncRef = this.getCurrFuncCtx().getFuncRef();
+    public void onNewFunctionStart(int funcRef) {
+        this.funcContexts.push(new FunctionInfoTracker(funcRef));
     }
 
-    public void incFuncCallArgsCounter() {
-        this.funcCallArgsCounter++;
-    }
-
-    public void resetFuncCallArgsCounter() {
-        this.funcCallArgsCounter = 0;
-    }
-
-    public int getAndIncLitLblCounter() {
-        return this.literalLblCounter++;
-    }
-
-    public void incGlobalTotalCountOfDefParams() {
-        this.globalTotalCountOfDefParams++;
-    }
-
-    public void incScope() {
-        this.scope++;
-    }
-
-    public void decScope() {
-        this.scope--;
-    }
-
-    public int incAndGetCurrVarCounter() {
-        return this.getCurrFuncCtx().incAndGetVarCounter();
-    }
-
-    public void decCurrVarCounter(int amount) {
-        this.getCurrFuncCtx().decVarCounter(amount);
-    }
-
-    public int getCurrVarCounter() {
-        return this.getCurrFuncCtx().getVarCounter();
-    }
-
-    public int incAndGetNonFloatParamCnt() {
-        return this.getCurrFuncCtx().incAndGetNonFloatParamCnt();
-    }
-
-    public int incAndGetFloatParamCnt() {
-        return this.getCurrFuncCtx().incAndGetFloatParamCnt();
-    }
-
-    public int getCurrFuncTotalParamCount() {
-        return this.getCurrFuncCtx().getTotalParamCnt();
-    }
-
-    public void setCurrFuncTakenGenPurposeRegsState(int[] state) {
-        this.getCurrFuncCtx().setTakenGenPurposeRegsState(state);
-    }
-
-    public int[] getCurrFuncTakenGenPurposeRegsState() {
-        return this.getCurrFuncCtx().getTakenGenPurposeRegsState();
-    }
-
-    private FuncCtxInfo getCurrFuncCtx() {
-        return this.funcContexts.get(this.funcContexts.size() - 1);
+    public void onFunctionEnd() {
+        this.funcContexts.pop();
     }
 }

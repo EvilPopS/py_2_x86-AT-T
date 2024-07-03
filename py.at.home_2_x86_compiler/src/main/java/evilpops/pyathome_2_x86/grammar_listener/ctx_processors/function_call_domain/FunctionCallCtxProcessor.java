@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain;
 
 import main.java.evilpops.pyathome_2_x86.assembly_generator.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
@@ -18,7 +18,7 @@ public class FunctionCallCtxProcessor {
     private static final ISymTabController symTabController = SymTabController.getInstance();
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
-    public static int processOnExit(PyAtHomeParser.FunctionCallContext ctx) {
+    public static void processOnExit(PyAtHomeParser.FunctionCallContext ctx) {
         int calledFuncRef = symTabController.getFuncRefByName(ctx.ID().getText());
 
         if (ctx.arguments() != null) {
@@ -28,7 +28,7 @@ public class FunctionCallCtxProcessor {
             processMissingArgs(paramRefs);
         }
 
-        compilationInfoTracker.resetFuncCallArgsCounter();
+        compilationInfoTracker.getNonIdArgCountTracker().resetCounter();
 
         assemblyGenerator.genFuncCall(
                 symTabController.getFuncName(calledFuncRef),
@@ -36,15 +36,10 @@ public class FunctionCallCtxProcessor {
         );
 
         int countOfFuncParams = symTabController.getNumOfFuncParams(calledFuncRef);
-        assemblyGenerator.genStackPointerInc(countOfFuncParams);
-        compilationInfoTracker.decCurrVarCounter(countOfFuncParams);
-
-        int resRegRef = symTabController.takeRegister(symTabController.getDataType(calledFuncRef));
-        assemblyGenerator.genMoveFuncRetRegToSymbol(
-                AssemblySymbolProcessor.createAssemblySymbol(resRegRef),
-                !symTabController.checkIfDataTypeIsFloat(calledFuncRef)
-        );
-        return resRegRef;
+        if (countOfFuncParams != 0) {
+            assemblyGenerator.genStackPointerInc(countOfFuncParams);
+            compilationInfoTracker.getCurrFuncTracker().decVarCounterByAmount(countOfFuncParams);
+        }
     }
 
     private static void processNonIdArgs(
@@ -60,12 +55,12 @@ public class FunctionCallCtxProcessor {
             return;
         }
 
-        compilationInfoTracker.incFuncCallArgsCounter();
+        compilationInfoTracker.getNonIdArgCountTracker().incCounter();
 
         int numExpRef = ctx.argNumExpression().getRefToSymTab();
         int paramRef = symTabController.getFuncParamRefByArgCountNum(
                 calledFuncRef,
-                compilationInfoTracker.getFuncCallArgsCounter()
+                compilationInfoTracker.getNonIdArgCountTracker().getFuncCallArgsCounter()
         );
 
         if (!symTabController.getDataType(numExpRef).equals(symTabController.getParamDataType(paramRef)))

@@ -138,6 +138,66 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitParamDefVal(PyAtHomeParser.ParamDefValContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#ifElifElseStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfElifElseStatement(PyAtHomeParser.IfElifElseStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#ifElifElseStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfElifElseStatement(PyAtHomeParser.IfElifElseStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#ifStatPart}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfStatPart(PyAtHomeParser.IfStatPartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#ifStatPart}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfStatPart(PyAtHomeParser.IfStatPartContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#ifConditionPart}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfConditionPart(PyAtHomeParser.IfConditionPartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#ifConditionPart}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfConditionPart(PyAtHomeParser.IfConditionPartContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#elifStatPart}.
+	 * @param ctx the parse tree
+	 */
+	void enterElifStatPart(PyAtHomeParser.ElifStatPartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#elifStatPart}.
+	 * @param ctx the parse tree
+	 */
+	void exitElifStatPart(PyAtHomeParser.ElifStatPartContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#elifConditionPart}.
+	 * @param ctx the parse tree
+	 */
+	void enterElifConditionPart(PyAtHomeParser.ElifConditionPartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#elifConditionPart}.
+	 * @param ctx the parse tree
+	 */
+	void exitElifConditionPart(PyAtHomeParser.ElifConditionPartContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#elseStatPart}.
+	 * @param ctx the parse tree
+	 */
+	void enterElseStatPart(PyAtHomeParser.ElseStatPartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#elseStatPart}.
+	 * @param ctx the parse tree
+	 */
+	void exitElseStatPart(PyAtHomeParser.ElseStatPartContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#block}.
 	 * @param ctx the parse tree
 	 */
@@ -247,6 +307,16 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExpression(PyAtHomeParser.ExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#funcCallExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncCallExpression(PyAtHomeParser.FuncCallExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#funcCallExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncCallExpression(PyAtHomeParser.FuncCallExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#functionCall}.
 	 * @param ctx the parse tree

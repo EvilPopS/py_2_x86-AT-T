@@ -1,8 +1,9 @@
-package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.simple_statements_domain;
 
 import main.java.evilpops.pyathome_2_x86.assembly_generator.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.compilation_info_tracker.CompilationInfoTracker;
+import main.java.evilpops.pyathome_2_x86.exceptions.compilation.errors.ReturnNotAllowedOutsideOfFuncDefException;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.utils.AssemblySymbolProcessor;
 import main.java.evilpops.pyathome_2_x86.log_handler.LogHandler;
@@ -17,13 +18,23 @@ public class ReturnStatementCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static void processOnExit(PyAtHomeParser.ReturnStatementContext ctx) {
-        DataType funcRetDataType = symTabController.getDataType(compilationInfoTracker.getCurrFuncRef());
+        if (!compilationInfoTracker.getReturnStatInfoTracker().isReturnAllowed())
+            throw new ReturnNotAllowedOutsideOfFuncDefException();
+
+        compilationInfoTracker.getReturnStatInfoTracker().onReturnStatementCreate();
+
+        DataType funcRetDataType = symTabController.getDataType(
+                compilationInfoTracker.getCurrFuncTracker().getFuncRef()
+        );
 
         boolean is64bit = !funcRetDataType.equals(DataType.FLOAT);
 
         int numExpRef = ctx.numExpression() != null
                 ? ctx.numExpression().getRefToSymTab()
-                : symTabController.getNoneLiteralRef();
+                : symTabController.addLiteralNone(
+                        compilationInfoTracker.getFunctionScopeTracker().getScope(),
+                        compilationInfoTracker.getBlockScopeTracker().getScope()
+                );
 
         if (!symTabController.getDataType(numExpRef).equals(funcRetDataType))
             LogHandler.getInstance().addWarning("Return type of the function is not the same as value returned!");
@@ -35,9 +46,8 @@ public class ReturnStatementCtxProcessor {
                 symTabController.getRegName(returnRegRef),
                 is64bit
         );
-        assemblyGenerator.genStackPointerInc(compilationInfoTracker.getCurrVarCounter());
         assemblyGenerator.genNonCondJmpToFuncEnd(
-                symTabController.getFuncName(compilationInfoTracker.getCurrFuncRef())
+                symTabController.getFuncName(compilationInfoTracker.getCurrFuncTracker().getFuncRef())
         );
 
     }

@@ -1,5 +1,6 @@
 package main.java.evilpops.pyathome_2_x86.assembly_generator.constants;
 
+@SuppressWarnings("ALL")
 public class AssemblyCodeFormats {
     public static final String SECTION = ".section .%s\n";
     public static final String GLOBAL_MAIN = ".globl main\n";
@@ -59,11 +60,19 @@ public class AssemblyCodeFormats {
     public static final String LBL_FORMAT = "%s:\n";
     public static final String LBL_CMP_TRUE = "L_CMP_TRUE_%s";
     public static final String LBL_CMP_END = "L_CMP_END_%s";
+
     public static final String LBL_FUNC_NAME = "L_FUNC_%s";
     public static final String LBL_FUNC_END = "L_FUNC_%s_END";
+
     public static final String LBL_DEF_PARAM_COND = "L_DEF_PARAM_COND_%s";
     public static final String LBL_DEF_PARAM_COND_END = "L_DEF_PARAM_COND_%s_END";
     public static final String LBL_DEF_PARAM_NUM_EXP = "L_DEF_PARAM_NUM_EXP_%s";
+
+    public static final String LBL_IF_STAT_START = "L_IF_STAT_START_%s";
+    public static final String LBL_IF_STAT_END = "L_IF_STAT_END_%s";
+    public static final String LBL_ELIF_STAT_START = "L_ELIF_STAT_START_%s_%s";
+    public static final String LBL_ELIF_STAT_END = "L_ELIF_STAT_END_%s_%s";
+    public static final String LBL_ELSE_STAT_START = "L_ELSE_STAT_START_%s";
 
     public static final String FLOAT_ZERO = "FLOAT_ZERO";
     public static final String NONE_LIT = "NONE";
@@ -75,7 +84,10 @@ public class AssemblyCodeFormats {
     public static final String BUILT_IN_STRING_TO_BOOL_LBL = "BUILT_IN_STRING_TO_BOOL";
 
     public static final String FUNC_START = "\tpushq %rbp\n\tmovq %rsp, %rbp\n\n";
-    public static final String FUNC_END = "\tpopq %rbp\n\tret\n\n";
+    public static final String FUNC_END =
+            "\tmovq %rbp, %rsp\n" +
+                    "\tpopq %rbp\n"+
+                    "\tret\n\n";
 
     public static final String CONCAT_STRINGS_BUILTIN =
             String.format(LBL_FUNC_NAME, BUILT_IN_CONCAT_STRINGS_LBL) +

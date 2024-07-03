@@ -2,7 +2,6 @@ package main.java.evilpops.pyathome_2_x86.log_handler;
 
 import lombok.Getter;
 import lombok.Setter;
-import main.java.evilpops.pyathome_2_x86.log_handler.exceptions.CompilationError;
 
 import java.util.ArrayList;
 import java.util.List;

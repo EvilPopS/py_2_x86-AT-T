@@ -39,7 +39,7 @@ public interface IAssemblyGenerator {
     // Function related - Instructions
     void genCall(String lblName);
     void genFuncStart(String funcName);
-    void genFuncEnd(String funcName, int funcTotalVarsCount, boolean isDefaultReturn);
+    void genFuncEnd(String funcName);
     void genFuncArg(String srcSymbol, int argOrdinality, boolean is64bit);
     void genFuncCall(String funcName, AssemblyRegister[] regsToSave);
     void genStringToBoolConversionBuiltInFuncCall(String argSymbol, AssemblyRegister[] regsToSave);
@@ -55,12 +55,20 @@ public interface IAssemblyGenerator {
     void genNonCondJmpToDefParamCondStart(int lblNum);
     void genNonCondJmpToDefParamCondEnd(int lblNum);
     void genJmpIfEqToDefParamNumExpStart(int lblNum);
+    void genJmpAfterIfStatCondition(int lblNum);
+    void genJmpAfterElifStatCondition(int lblNum1, int lblNum2);
+
 
     // Labels
     void genLabel(String lblName);
     void genDefParamNumExpLabel(int lblNum);
     void genDefParamCondStartLabel(int lblNum);
     void genDefParamCondEndLabel(int lblNum);
+    void genIfStatStartLabel(int lblNum);
+    void genIfStatEndLabel(int lblNum);
+    void genElifStatStartLabel(int lblNum1, int lblNum2);
+    void genElifStatEndLabel(int lblNum1, int lblNum2);
+    void genElseStatStartLabel(int lblNum);
 
     // Other - Instructions (Singular)
     void genIntToFloatConversion(String srcSymbol, String destSymbol);

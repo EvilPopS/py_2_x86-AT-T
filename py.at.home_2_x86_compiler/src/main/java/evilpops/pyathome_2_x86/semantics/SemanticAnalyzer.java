@@ -64,11 +64,6 @@ public class SemanticAnalyzer {
         );
     }
 
-    public static void areImplicitAndExplicitDataTypesTheSame(DataType implicit, DataType explicit) {
-        if (!implicit.equals(explicit) && !explicit.equals(DataType.UNKNOWN))
-            throw new ImplicitAndExplicitTypesNotCompatibleWarning(implicit.toString(), explicit.toString());
-    }
-
     private static void checkTypesCompatibility(
             Map<DataType, Map<DataType, Boolean>> map,
             DataType leftExpDataType,

@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_def_domain;
 
 import main.java.evilpops.pyathome_2_x86.assembly_generator.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
@@ -28,25 +28,26 @@ public class ParamNonDefValCtxProcessor {
         boolean is64bit = !paramDataType.equals(DataType.FLOAT);
 
         int perDataTypeParamOrdinality = is64bit
-                ? compilationInfoTracker.incAndGetNonFloatParamCnt()
-                : compilationInfoTracker.incAndGetFloatParamCnt();
+                ? compilationInfoTracker.getCurrFuncTracker().incAndGetNonFloatParamCnt()
+                : compilationInfoTracker.getCurrFuncTracker().incAndGetFloatParamCnt();
 
         int paramRef = symTabController.addParameter(
                 paramDataType,
-                symTabController.getScope(
-                        compilationInfoTracker.getCurrFuncRef()
+                symTabController.getFuncScope(
+                        compilationInfoTracker.getCurrFuncTracker().getFuncRef()
                 ),
+                compilationInfoTracker.getBlockScopeTracker().getScope(),
                 ctx.ID().getText(),
-                compilationInfoTracker.getCurrFuncRef(),
+                compilationInfoTracker.getCurrFuncTracker().getFuncRef(),
                 false,
-                compilationInfoTracker.getCurrFuncTotalParamCount(),
-                perDataTypeParamOrdinality
-        );
+                compilationInfoTracker.getCurrFuncTracker().getTotalParamCnt(),
+                perDataTypeParamOrdinality);
 
         paramRef = symTabController.transferParamToVar(
                 paramRef,
-                compilationInfoTracker.incAndGetCurrVarCounter(),
-                compilationInfoTracker.getScope()
+                compilationInfoTracker.getCurrFuncTracker().incAndGetVarCounter(),
+                compilationInfoTracker.getFunctionScopeTracker().getScope(),
+                compilationInfoTracker.getBlockScopeTracker().getScope()
         );
 
         assemblyGenerator.genStackPointerDec(1);

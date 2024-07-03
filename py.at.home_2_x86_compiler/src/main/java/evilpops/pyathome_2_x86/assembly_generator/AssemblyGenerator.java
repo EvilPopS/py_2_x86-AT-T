@@ -6,10 +6,7 @@ import main.java.evilpops.pyathome_2_x86.assembly_generator.enums.AssemblyRegist
 import main.java.evilpops.pyathome_2_x86.assembly_generator.enums.ConditionalJump;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.utils.StackAlignmentTracker;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 import static main.java.evilpops.pyathome_2_x86.assembly_generator.constants.AssemblyCodeFormats.*;
 import static main.java.evilpops.pyathome_2_x86.assembly_generator.constants.AssemblyRegisterGroups.*;
@@ -282,13 +279,8 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
-    public void genFuncEnd(String funcName, int funcTotalVarsCount, boolean isDefaultReturn) {
-        if (isDefaultReturn)
-            this.genStackPointerInc(funcTotalVarsCount);
-
-        this.genLabel(
-                String.format(LBL_FUNC_END, funcName)
-        );
+    public void genFuncEnd(String funcName) {
+        this.genLabel(String.format(LBL_FUNC_END, funcName));
         this.currentFunc.append(FUNC_END);
         this.funcIndStack.pop();
         this.currentFunc = this.funcDefs.get(this.funcIndStack.peek());
@@ -319,6 +311,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         if (!stackAlignmentTracker.isCurrentBlockStackAligned())
             this.genStackPointerAlignmentCorrection(true);
 
+        Collections.reverse(Arrays.asList(regsToSave));
         for (AssemblyRegister reg : regsToSave)
             this.genPopReg(reg, Arrays.asList(GEN_PURPOSE_REGS).contains(reg));
     }
@@ -388,6 +381,16 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public void genJmpAfterIfStatCondition(int lblNum) {
+        this.genJmpIfEqual(String.format(LBL_IF_STAT_END, lblNum));
+    }
+
+    @Override
+    public void genJmpAfterElifStatCondition(int lblNum1, int lblNum2) {
+        this.genJmpIfEqual(String.format(LBL_ELIF_STAT_END, lblNum1, lblNum2));
+    }
+
+    @Override
     public void genLabel(String lblName) {
         this.currentFunc.append(String.format(LBL_FORMAT, lblName));
     }
@@ -405,6 +408,31 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public void genDefParamCondEndLabel(int lblNum) {
         this.genLabel(String.format(LBL_DEF_PARAM_COND_END, lblNum));
+    }
+
+    @Override
+    public void genIfStatStartLabel(int lblNum) {
+        this.genLabel(String.format(LBL_IF_STAT_START, lblNum));
+    }
+
+    @Override
+    public void genIfStatEndLabel(int lblNum) {
+        this.genLabel(String.format(LBL_IF_STAT_END, lblNum));
+    }
+
+    @Override
+    public void genElifStatStartLabel(int lblNum1, int lblNum2) {
+        this.genLabel(String.format(LBL_ELIF_STAT_START, lblNum1, lblNum2));
+    }
+
+    @Override
+    public void genElifStatEndLabel(int lblNum1, int lblNum2) {
+        this.genLabel(String.format(LBL_ELIF_STAT_END, lblNum1, lblNum2));
+    }
+
+    @Override
+    public void genElseStatStartLabel(int lblNum) {
+        this.genLabel(String.format(LBL_ELSE_STAT_START, lblNum));
     }
 
     @Override
@@ -555,6 +583,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         System.out.println(this.dataSection.toString() + this.buildFuncDefs() + this.builtInFuncs.toString());
     }
 
+    @SuppressWarnings("SameParameterValue")
     private String getMemAccessOffset(int offsetMultiplier, String offsetBlock) {
         return offsetMultiplier != 0 ?
                 Integer.toString(Integer.parseInt(offsetBlock) * offsetMultiplier) :

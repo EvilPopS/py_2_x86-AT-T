@@ -1,6 +1,10 @@
-def sum(x: int, y:float) -> float:
-    def sum2(x:int, y: int) -> int:
-        return x + y
-    return y + y + sum2(1, 1)
+def Fibonacci(n: int)->int:
+    if n == 0:
+        return 0
+    elif n == 1 or n == 2:
+        return 1
+    else:
+        return Fibonacci(n-1) + Fibonacci(n-2)
 
-sum(1, 1.1)
+a = Fibonacci(7)
+

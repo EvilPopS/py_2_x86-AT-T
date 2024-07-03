@@ -6,8 +6,8 @@ import main.java.evilpops.pyathome_2_x86.symbol_table.tabs.row_struct.ParameterT
 public class ParameterTab extends ScopeTableArchetype<ParameterTabRow> {
     public int add(
             DataType dataType,
-            int scope,
-            String name,
+            int funcScope,
+            int blockScope, String name,
             boolean isDefault,
             int totalOrdinality,
             int perDataTypeOrdinality
@@ -16,15 +16,15 @@ public class ParameterTab extends ScopeTableArchetype<ParameterTabRow> {
                 new ParameterTabRow(
                         -1,
                         dataType,
-                        scope,
+                        funcScope,
+                        blockScope,
                         name,
                         isDefault,
                         totalOrdinality,
-                        perDataTypeOrdinality
-                )
+                        perDataTypeOrdinality)
         );
 
-        return this.getTableSize()-1;
+        return this.getTableSize() - 1;
     }
 
     public String getName(int ref) {

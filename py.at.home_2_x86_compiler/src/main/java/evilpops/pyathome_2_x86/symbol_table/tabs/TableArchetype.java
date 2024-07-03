@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class TableArchetype<RowType extends RowArchetype> {
-    protected List<RowType> table;
+    protected final List<RowType> table;
 
     public TableArchetype() {
         this.table = new ArrayList<>();
