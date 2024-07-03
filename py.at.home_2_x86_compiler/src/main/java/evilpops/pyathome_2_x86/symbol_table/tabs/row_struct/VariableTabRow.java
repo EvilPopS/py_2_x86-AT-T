@@ -12,8 +12,8 @@ public class VariableTabRow extends ScopeRowArchetype {
     protected String name;
     protected int ordinality;
 
-    public VariableTabRow(int foreignId, DataType dataType, int scope, String name, int ordinality) {
-        super(foreignId, dataType, scope);
+    public VariableTabRow(int foreignId, DataType dataType, int funcScope, int blockScope, String name, int ordinality) {
+        super(foreignId, dataType, funcScope, blockScope);
         this.name = name;
         this.ordinality = ordinality;
     }

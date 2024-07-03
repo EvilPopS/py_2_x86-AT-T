@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.expressions_domain;
 
 import main.java.evilpops.pyathome_2_x86.assembly_generator.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
@@ -393,14 +393,14 @@ public class NumExpressionCtxProcessor {
         rightExpRef = ConversionProcessor.processTypeConversion(rightExpRef, DataType.BOOLEAN);
 
         int resRef;
-        if (symTabController.checkIfIsReg(leftExpRef)) {
+        if (symTabController.checkIfIsReg(rightExpRef)) {
             genLogicalInst(leftExpRef, rightExpRef, isAnd);
-            symTabController.freeIfIsRegister(rightExpRef);
-            resRef = leftExpRef;
-        } else if (symTabController.checkIfIsReg(rightExpRef)) {
-            genLogicalInst(rightExpRef, leftExpRef, isAnd);
             symTabController.freeIfIsRegister(leftExpRef);
             resRef = rightExpRef;
+        } else if (symTabController.checkIfIsReg(leftExpRef)) {
+            genLogicalInst(rightExpRef, leftExpRef, isAnd);
+            symTabController.freeIfIsRegister(rightExpRef);
+            resRef = leftExpRef;
         } else {
             resRef = symTabController.takeRegister(DataType.BOOLEAN);
             assemblyGenerator.genMoveSymbolToReg(
@@ -408,7 +408,8 @@ public class NumExpressionCtxProcessor {
                     symTabController.getRegName(resRef),
                     true
             );
-            genLogicalInst(resRef, rightExpRef, isAnd);
+            symTabController.freeIfIsRegister(leftExpRef);
+            genLogicalInst(rightExpRef, resRef, isAnd);
         }
         return resRef;
     }
@@ -439,40 +440,42 @@ public class NumExpressionCtxProcessor {
     }
 
     private static int processNumberComparison(int leftExpRef, int rightExpRef, ConditionalJump jmpType) {
-        boolean is64bit = !(symTabController.checkIfDataTypeIsFloat(leftExpRef)
-                || symTabController.checkIfDataTypeIsFloat(rightExpRef));
+        boolean is64bit = !(symTabController.checkIfDataTypeIsFloat(leftExpRef))
+                && !(symTabController.checkIfDataTypeIsFloat(rightExpRef));
         DataType resDT = is64bit ? DataType.INTEGER : DataType.FLOAT;
-        leftExpRef = ConversionProcessor.processTypeConversion(leftExpRef, resDT);
-        rightExpRef = ConversionProcessor.processTypeConversion(rightExpRef, resDT);
+        int destExpRef = ConversionProcessor.processTypeConversion(leftExpRef, resDT);
+        int srcExpRed = ConversionProcessor.processTypeConversion(rightExpRef, resDT);
 
-        if (!symTabController.checkIfIsReg(leftExpRef)) {
+
+        if (!is64bit && !symTabController.checkIfIsReg(srcExpRed)) {
             int regRef = symTabController.takeRegister(resDT);
             assemblyGenerator.genMoveSymbolToReg(
-                    AssemblySymbolProcessor.createAssemblySymbol(leftExpRef),
-                    symTabController.getRegName(regRef),
-                    is64bit
-            );
-            leftExpRef = regRef;
-        }
-
-        if (!is64bit && !symTabController.checkIfIsReg(rightExpRef)) {
-            int regRef = symTabController.takeRegister(DataType.FLOAT);
-            assemblyGenerator.genMoveSymbolToReg(
-                    AssemblySymbolProcessor.createAssemblySymbol(rightExpRef),
+                    AssemblySymbolProcessor.createAssemblySymbol(srcExpRed),
                     symTabController.getRegName(regRef),
                     false
             );
-            rightExpRef = regRef;
+            srcExpRed = regRef;
         }
 
+        if (!symTabController.checkIfIsReg(destExpRef)) {
+            int regRef = symTabController.takeRegister(resDT);
+            assemblyGenerator.genMoveSymbolToReg(
+                    AssemblySymbolProcessor.createAssemblySymbol(destExpRef),
+                    symTabController.getRegName(regRef),
+                    is64bit
+            );
+            destExpRef = regRef;
+        }
+
+
         assemblyGenerator.genCmpSymbolToSymbol(
-                AssemblySymbolProcessor.createAssemblySymbol(leftExpRef),
-                AssemblySymbolProcessor.createAssemblySymbol(rightExpRef),
+                AssemblySymbolProcessor.createAssemblySymbol(srcExpRed),
+                AssemblySymbolProcessor.createAssemblySymbol(destExpRef),
                 is64bit
         );
 
-        symTabController.freeIfIsRegister(leftExpRef);
-        symTabController.freeIfIsRegister(rightExpRef);
+        symTabController.freeIfIsRegister(srcExpRed);
+        symTabController.freeIfIsRegister(destExpRef);
 
         int resRef = symTabController.takeRegister(DataType.BOOLEAN);
         assemblyGenerator.genCmpAfterFlow(symTabController.getRegName(resRef), jmpType, is64bit);

@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.expressions_domain;
 
 import main.java.evilpops.pyathome_2_x86.assembly_generator.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
@@ -35,7 +35,12 @@ public class LiteralCtxProcessor {
             value = "-" + ctx.INTEGER().getText();
         else
             value = ctx.INTEGER().getText();
-        return symTabController.addLiteral(value, DataType.INTEGER);
+        return symTabController.addLiteral(
+                DataType.INTEGER,
+                compilationInfoTracker.getFunctionScopeTracker().getScope(),
+                compilationInfoTracker.getBlockScopeTracker().getScope(),
+                value
+        );
 
     }
 
@@ -46,11 +51,15 @@ public class LiteralCtxProcessor {
         else
             value = ctx.FLOAT().getText();
 
+        compilationInfoTracker.getLiteralsLblTracker().incLblCounter();
+
         int literalRef = symTabController.addLiteralFloat(
+                compilationInfoTracker.getFunctionScopeTracker().getScope(),
+                compilationInfoTracker.getBlockScopeTracker().getScope(),
                 value,
-                DataType.FLOAT,
-                compilationInfoTracker.getAndIncLitLblCounter()
+                compilationInfoTracker.getLiteralsLblTracker().getLblCounter()
         );
+
         assemblyGenerator.genFloatLiteral(
                 symTabController.getLiteralValue(literalRef),
                 symTabController.getDataLabelCounter(literalRef)
@@ -60,18 +69,25 @@ public class LiteralCtxProcessor {
 
     private static int processIfBoolean(PyAtHomeParser.LiteralContext ctx) {
         return symTabController.addLiteral(
-                ctx.BOOLEAN().getText().equals("True") ? "1" : "0",
-                DataType.BOOLEAN
+                DataType.BOOLEAN,
+                compilationInfoTracker.getFunctionScopeTracker().getScope(),
+                compilationInfoTracker.getBlockScopeTracker().getScope(),
+                ctx.BOOLEAN().getText().equals("True") ? "1" : "0"
         );
     }
 
     private static int processIfString(PyAtHomeParser.LiteralContext ctx) {
         String strVal = ctx.STRING().getText();
+
+        compilationInfoTracker.getLiteralsLblTracker().incLblCounter();
+
         int literalRef = symTabController.addLiteralString(
+                compilationInfoTracker.getFunctionScopeTracker().getScope(),
+                compilationInfoTracker.getBlockScopeTracker().getScope(),
                 strVal.substring(1, strVal.length() - 1),
-                DataType.STRING,
-                compilationInfoTracker.getAndIncLitLblCounter()
+                compilationInfoTracker.getLiteralsLblTracker().getLblCounter()
         );
+
         assemblyGenerator.genStringLiteral(
                 symTabController.getLiteralValue(literalRef),
                 symTabController.getDataLabelCounter(literalRef)
@@ -80,7 +96,10 @@ public class LiteralCtxProcessor {
     }
 
     private static int processIfNone() {
-        return symTabController.getNoneLiteralRef();
+        return symTabController.addLiteralNone(
+                compilationInfoTracker.getFunctionScopeTracker().getScope(),
+                compilationInfoTracker.getBlockScopeTracker().getScope()
+        );
     }
 
 }

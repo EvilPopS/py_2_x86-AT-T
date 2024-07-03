@@ -16,8 +16,8 @@ public class FunctionTabRow extends ScopeRowArchetype {
     protected int funcNumId;
     protected List<Integer> parameters;
 
-    public FunctionTabRow(int foreignId, DataType dataType, int scope, int funcNumId, String name) {
-        super(foreignId, dataType, scope);
+    public FunctionTabRow(int foreignId, DataType dataType, int funcScope, int blockScope, int funcNumId, String name) {
+        super(foreignId, dataType, funcScope, blockScope);
         this.name = name;
         this.funcNumId = funcNumId;
         this.parameters = new ArrayList<>();

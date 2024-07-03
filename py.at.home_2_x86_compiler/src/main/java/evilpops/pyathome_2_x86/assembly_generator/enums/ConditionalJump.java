@@ -10,5 +10,5 @@ public enum ConditionalJump {
     JA,
     JB,
     JAE,
-    JBE;
+    JBE
 }

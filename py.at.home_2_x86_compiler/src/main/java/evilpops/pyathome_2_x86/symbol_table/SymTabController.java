@@ -32,7 +32,6 @@ public class SymTabController implements ISymTabController {
         this.registerTab = new RegisterTab();
         this.functionTab = new FunctionTab();
         this.parameterTab = new ParameterTab();
-        this.addLiteral(null, DataType.NONE);
     }
 
     public static ISymTabController getInstance() {
@@ -42,9 +41,9 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public int addVariable(DataType dataType, int scope, String name, int ordinality) {
+    public int addVariable(DataType dataType, int funcScope, int blockScope, String name, int ordinality) {
         int rowRef = this.mainTab.getTableSize();
-        this.variableTab.add(rowRef, dataType, scope, name, ordinality);
+        this.variableTab.add(rowRef, dataType, funcScope, blockScope, name, ordinality);
         this.mainTab.addVariable(this.variableTab.getLastRowInd());
         return rowRef;
     }
@@ -52,7 +51,8 @@ public class SymTabController implements ISymTabController {
     @Override
     public int addParameter(
             DataType dataType,
-            int scope,
+            int funcScope,
+            int blockScope,
             String name,
             int functionRef,
             boolean isDefault,
@@ -61,12 +61,12 @@ public class SymTabController implements ISymTabController {
     ) {
         int paramRef = this.parameterTab.add(
                 dataType,
-                scope,
+                funcScope,
+                blockScope,
                 name,
                 isDefault,
                 totalOrdinality,
-                perDataTypeOrdinality
-        );
+                perDataTypeOrdinality);
         this.functionTab.addParam(
                 this.mainTab.get(functionRef).getForeignId(),
                 paramRef
@@ -75,37 +75,41 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public int addLiteral(String value, DataType dataType) {
+    public int addLiteral(DataType dataType, int funcScope, int blockScope, String value) {
         int rowRef = this.mainTab.getTableSize();
-        this.literalTab.add(rowRef, dataType, value);
+        this.literalTab.add(rowRef, dataType, funcScope, blockScope, value);
         this.mainTab.addLiteral(this.literalTab.getLastRowInd());
         return rowRef;
     }
 
     @Override
-    public int addFunction(int scope, String name) {
+    public int addFunction(int funcScope, int blockScope, String name) {
         int rowRef = this.mainTab.getTableSize();
-        this.functionTab.add(rowRef, scope, name);
+        this.functionTab.add(rowRef, funcScope, blockScope, name);
         this.mainTab.addFunction(this.functionTab.getLastRowInd());
         return rowRef;
     }
 
     @Override
-    public int addLiteralFloat(String value, DataType dataType, int dataLabelCounter) {
+    public int addLiteralFloat(int funcScope, int blockScope, String value, int dataLabelCounter) {
         int rowRef = this.mainTab.getTableSize();
-        this.literalTab.addFloat(rowRef, value, dataLabelCounter);
+        this.literalTab.addFloat(rowRef, funcScope, blockScope, value, dataLabelCounter);
         this.mainTab.addLiteral(this.literalTab.getLastRowInd());
         return rowRef;
     }
 
     @Override
-    public int addLiteralString(String value, DataType dataType, int dataLabelCounter) {
+    public int addLiteralString(int funcScope, int blockScope, String value, int dataLabelCounter) {
         int rowRef = this.mainTab.getTableSize();
-        this.literalTab.addString(rowRef, value, dataLabelCounter);
+        this.literalTab.addString(rowRef, funcScope, blockScope, value, dataLabelCounter);
         this.mainTab.addLiteral(this.literalTab.getLastRowInd());
         return rowRef;
     }
 
+    @Override
+    public int addLiteralNone(int funcScope, int blockScope) {
+        return this.addLiteral(DataType.NONE, funcScope, blockScope, null);
+    }
 
     @Override
     public int takeRegister(DataType dataType) {
@@ -122,23 +126,23 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public int transferParamToVar(int paramRef, int ordinality, int scope) {
+    public int transferParamToVar(int paramRef, int ordinality, int funcScope, int blockScope) {
         return this.addVariable(
                 this.parameterTab.getDataType(paramRef),
-                scope,
+                funcScope,
+                blockScope,
                 this.parameterTab.getName(paramRef),
-                ordinality
-        );
+                ordinality);
     }
 
     @Override
-    public int getVarRefByName(String name) {
-        return this.variableTab.getByName(name).getForeignId();
+    public int getVarRefByNameInAnyScope(String name) {
+        return this.variableTab.getByNameInAnyScope(name).getForeignId();
     }
 
     @Override
-    public Integer getVarRefByNameInCurrentScope(String name, int currScope) {
-        return this.variableTab.getByNameInCurrentScope(name, currScope).getForeignId();
+    public int getVarRefByNameInCurrentFuncScope(String name, int currScope) {
+        return this.variableTab.getByNameInCurrentFuncScope(name, currScope).getForeignId();
     }
 
     @Override
@@ -146,11 +150,6 @@ public class SymTabController implements ISymTabController {
         int rowRef = this.mainTab.getTableSize();
         this.mainTab.addRegister(this.registerTab.takeReturnReg(rowRef, dataType));
         return rowRef;
-    }
-
-    @Override
-    public int getNoneLiteralRef() {
-        return this.literalTab.getNoneRowRef();
     }
 
     @Override
@@ -219,15 +218,22 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public int getScope(int ind) {
+    public int getFuncScope(int ind) {
         MainTabRow rowData = this.mainTab.get(ind);
         return getScopeTableByTabType(rowData.getRefTabType())
-                .getScope(rowData.getForeignId());
+                .getFuncScope(rowData.getForeignId());
+    }
+
+    @Override
+    public int getBlockScope(int ind) {
+        MainTabRow rowData = this.mainTab.get(ind);
+        return getScopeTableByTabType(rowData.getRefTabType())
+                .getBlockScope(rowData.getForeignId());
     }
 
     @Override
     public int getParamScope(int paramRef) {
-        return this.parameterTab.getScope(paramRef);
+        return this.parameterTab.getFuncScope(paramRef);
     }
 
     @Override
@@ -320,10 +326,10 @@ public class SymTabController implements ISymTabController {
     }
 
     @Override
-    public void deleteCurrentScope(int scope) {
+    public void deleteCurrentFuncScope(int targetScope) {
         for (int ind = this.mainTab.getTableSize() - 1; ind >= 0; ind--) {
             try {
-                if (this.getScope(ind) < scope)
+                if (this.getFuncScope(ind) < targetScope)
                     return;
             } catch (Exception ignored) {
             }
@@ -331,6 +337,25 @@ public class SymTabController implements ISymTabController {
             if (!this.checkIfIsReg(ind))
                 this.getDataTypeTableByTabType(this.mainTab.get(ind).getRefTabType())
                         .removeRowByInd(getForeignId(ind));
+
+            this.mainTab.removeRowByInd(ind);
+        }
+    }
+
+    @Override
+    public void deleteCurrentBlockScope(int targetScope) {
+        for (int ind = this.mainTab.getTableSize() - 1; ind >= 0; ind--) {
+            try {
+                if (this.getBlockScope(ind) < targetScope)
+                    return;
+            } catch (Exception ignored) {
+            }
+
+            if (!this.checkIfIsReg(ind))
+                this.getDataTypeTableByTabType(this.mainTab.get(ind).getRefTabType())
+                        .removeRowByInd(getForeignId(ind));
+            else
+                this.freeIfIsRegister(ind);
 
             this.mainTab.removeRowByInd(ind);
         }
@@ -357,6 +382,7 @@ public class SymTabController implements ISymTabController {
             case VARIABLE -> this.variableTab;
             case PARAMETER -> this.parameterTab;
             case FUNCTION -> this.functionTab;
+            case LITERAL -> this.literalTab;
             default -> throw new TabTypeEnumNotInSyncWithTabClassesException();
         };
     }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StackAlignmentTracker {
-    protected List<Boolean> stackAlignments;
+    protected final List<Boolean> stackAlignments;
 
     public StackAlignmentTracker() {
         this.stackAlignments = new ArrayList<>() {{

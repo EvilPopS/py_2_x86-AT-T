@@ -9,10 +9,12 @@ import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
 @Setter
 @Accessors(chain = true)
 public class ScopeRowArchetype extends DataTypeRowArchetype {
-    protected int scope;
+    protected int funcScope;
+    protected int blockScope;
 
-    public ScopeRowArchetype(int foreignId, DataType dataType, int scope) {
+    public ScopeRowArchetype(int foreignId, DataType dataType, int funcScope, int blockScope) {
         super(foreignId, dataType);
-        this.scope = scope;
+        this.funcScope = funcScope;
+        this.blockScope = blockScope;
     }
 }

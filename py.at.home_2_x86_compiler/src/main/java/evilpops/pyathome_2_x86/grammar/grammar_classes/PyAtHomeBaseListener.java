@@ -173,6 +173,78 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterIfElifElseStatement(PyAtHomeParser.IfElifElseStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIfElifElseStatement(PyAtHomeParser.IfElifElseStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIfStatPart(PyAtHomeParser.IfStatPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIfStatPart(PyAtHomeParser.IfStatPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIfConditionPart(PyAtHomeParser.IfConditionPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIfConditionPart(PyAtHomeParser.IfConditionPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterElifStatPart(PyAtHomeParser.ElifStatPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElifStatPart(PyAtHomeParser.ElifStatPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterElifConditionPart(PyAtHomeParser.ElifConditionPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElifConditionPart(PyAtHomeParser.ElifConditionPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterElseStatPart(PyAtHomeParser.ElseStatPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElseStatPart(PyAtHomeParser.ElseStatPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBlock(PyAtHomeParser.BlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -300,6 +372,18 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpression(PyAtHomeParser.ExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFuncCallExpression(PyAtHomeParser.FuncCallExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFuncCallExpression(PyAtHomeParser.FuncCallExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

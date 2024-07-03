@@ -13,13 +13,13 @@ public class FunctionTab extends ScopeTableArchetype<FunctionTabRow> {
         this.funcCount = 0;
     }
 
-    public void add(int mainTabFK, int scope, String name) {
-        this.table.add(new FunctionTabRow(mainTabFK, DataType.UNKNOWN, scope, ++this.funcCount, name));
+    public void add(int mainTabFK, int funcScope, int blockScope, String name) {
+        this.table.add(new FunctionTabRow(mainTabFK, DataType.UNKNOWN, funcScope, blockScope, ++this.funcCount, name));
     }
 
     public int getCurrentFuncScope() {
         return this.getLastRowInd() >= 0
-                ? this.table.get(this.getLastRowInd()).getScope() + 1
+                ? this.table.get(this.getLastRowInd()).getFuncScope() + 1
                 : 0;
     }
 

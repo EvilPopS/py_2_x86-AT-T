@@ -10,14 +10,14 @@ public class LiteralTabRow extends ScopeRowArchetype {
     protected String value;
     protected int dataLabelNum;
 
-    public LiteralTabRow(int foreignId, DataType dataType, int scope, String value) {
-        super(foreignId, dataType, scope);
+    public LiteralTabRow(int foreignId, DataType dataType, int funcScope, int blockScope, String value) {
+        super(foreignId, dataType, funcScope, blockScope);
         this.value = value;
         this.dataLabelNum = -1;
     }
 
-    public LiteralTabRow(int foreignId, DataType dataType, int scope, String value, int dataLabelNum) {
-        super(foreignId, dataType, scope);
+    public LiteralTabRow(int foreignId, DataType dataType, int funcScope, int blockScope, String value, int dataLabelNum) {
+        super(foreignId, dataType, funcScope, blockScope);
         this.value = value;
         this.dataLabelNum = dataLabelNum;
     }

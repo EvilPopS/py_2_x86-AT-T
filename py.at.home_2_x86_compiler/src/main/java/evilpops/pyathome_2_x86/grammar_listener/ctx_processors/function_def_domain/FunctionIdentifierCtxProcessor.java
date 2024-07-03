@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_def_domain;
 
 import main.java.evilpops.pyathome_2_x86.assembly_generator.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
@@ -15,8 +15,12 @@ public class FunctionIdentifierCtxProcessor {
 
     public static void processOnExit(PyAtHomeParser.FunctionIdentifierContext ctx) {
         String funcName = ctx.ID().getText();
-        int funcRef = symTabController.addFunction(compilationInfoTracker.getScope()-1, funcName);
-        compilationInfoTracker.incFuncCtx(funcRef);
+        int funcRef = symTabController.addFunction(
+                compilationInfoTracker.getFunctionScopeTracker().getScope() - 1,
+                compilationInfoTracker.getBlockScopeTracker().getScope(),
+                funcName
+        );
+        compilationInfoTracker.onNewFunctionStart(funcRef);
         assemblyGenerator.genFuncStart(symTabController.getFuncName(funcRef));
     }
 }

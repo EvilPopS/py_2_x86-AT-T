@@ -52,7 +52,7 @@ statementsList
     ;
 
 statement
-    : simpleStatement NEWLINE
+    : simpleStatement NEWLINE*
     | compundStatement
     ;
 
@@ -64,6 +64,7 @@ simpleStatement
 
 compundStatement
     : functionDef
+    | ifElifElseStatement
     ;
 
 assignStatement
@@ -101,6 +102,30 @@ paramNonDefVal
 paramDefVal
     : ID varType? ASSIGN numExpression
     | paramDefVal COMMA paramDefVal
+    ;
+
+ifElifElseStatement
+    : ifStatPart elifStatPart* elseStatPart?
+    ;
+
+ifStatPart
+    :  ifConditionPart block
+    ;
+
+ifConditionPart
+    : IF numExpression COLON NEWLINE
+    ;
+
+elifStatPart
+    : elifConditionPart block
+    ;
+
+elifConditionPart
+    : ELIF numExpression COLON NEWLINE
+    ;
+
+elseStatPart
+    : ELSE COLON NEWLINE block
     ;
 
 block
@@ -162,8 +187,12 @@ logicOrOperator
 
 expression
     : literal
-    | functionCall
+    | funcCallExpression
     | ID
+    ;
+
+funcCallExpression
+    : functionCall
     ;
 
 functionCall
@@ -225,6 +254,10 @@ NEWLINE
 
 DEF: 'def';
 RETURN: 'return';
+
+IF: 'if';
+ELIF: 'elif';
+ELSE: 'else';
 
 T_INT: 'int';
 T_FLOAT: 'float';

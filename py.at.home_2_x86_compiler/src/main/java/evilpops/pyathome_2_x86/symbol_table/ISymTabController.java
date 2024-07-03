@@ -7,21 +7,21 @@ import java.util.List;
 
 public interface ISymTabController {
     /* 'Add' methods */
-    int addVariable(DataType dataType, int scope, String name, int ordinality);
-    int addParameter(DataType dataType, int scope, String name, int functionRef, boolean isDefault, int totalOrdinality, int perDataTypeOrdinality);
-    int addLiteral(String value, DataType dataType);
-    int addFunction(int scope, String name);
-    int addLiteralFloat(String value, DataType dataType, int dataLabelCounter);
-    int addLiteralString(String value, DataType dataType, int dataLabelCounter);
+    int addVariable(DataType dataType, int funcScope, int blockScope, String name, int ordinality);
+    int addParameter(DataType dataType, int funcScope, int blockScope, String name, int functionRef, boolean isDefault, int totalOrdinality, int perDataTypeOrdinality);
+    int addLiteral(DataType dataType, int funcScope, int blockScope, String value);
+    int addFunction(int funcScope, int blockScope, String name);
+    int addLiteralFloat(int funcScope, int blockScope, String value, int dataLabelCounter);
+    int addLiteralString(int funcScope, int blockScope, String value, int dataLabelCounter);
+    int addLiteralNone(int funcScope, int blockScope);
     int takeRegister(DataType dataType);
     int takeParamReg(int paramOrdinality, DataType dataType);
-    int transferParamToVar(int paramRef, int ordinality, int scope);
+    int transferParamToVar(int paramRef, int ordinality, int funcScope, int blockScope);
 
     /* 'Get reference' methods */
-    int getVarRefByName(String name);
-    Integer getVarRefByNameInCurrentScope(String name, int currScope);
+    int getVarRefByNameInAnyScope(String name);
+    int getVarRefByNameInCurrentFuncScope(String name, int currScope);
     int takeReturnReg(DataType dataType);
-    int getNoneLiteralRef();
     int getFuncRefByName(String funcName);
     int getFuncParamRefByArgCountNum(int funcRef, int argCountNum);
     int getFuncParamRefByParamName(int funcRef, String paramName);
@@ -36,7 +36,8 @@ public interface ISymTabController {
     int getTotalParamOrdinality(int ind);
     int getPerDataTypeParamOrdinality(int ind);
     int getDataLabelCounter(int ind);
-    int getScope(int ind);
+    int getFuncScope(int ind);
+    int getBlockScope(int ind);
     int getParamScope(int paramRef);
     int getRealTimeCurrentScope();
     String getParamName(int paramRef);
@@ -61,6 +62,7 @@ public interface ISymTabController {
     boolean checkIfIsDefParam(int paramRef);
 
     /* Delete methods */
-    void deleteCurrentScope(int scope);
+    void deleteCurrentFuncScope(int targetScope);
+    void deleteCurrentBlockScope(int targetScope);
     void freeIfIsRegister(int ind);
 }

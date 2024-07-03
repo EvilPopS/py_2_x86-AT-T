@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_def_domain;
 
 import main.java.evilpops.pyathome_2_x86.compilation_info_tracker.CompilationInfoTracker;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
@@ -22,6 +22,9 @@ public class FunctionDeclarationProcessor {
             else if (ctx.retType().types().T_STRING() != null)
                 funcRetType = DataType.STRING;
         }
-        symTabController.setDataType(compilationInfoTracker.getCurrFuncRef(), funcRetType);
+        symTabController.setDataType(
+                compilationInfoTracker.getCurrFuncTracker().getFuncRef(),
+                funcRetType
+        );
     }
 }

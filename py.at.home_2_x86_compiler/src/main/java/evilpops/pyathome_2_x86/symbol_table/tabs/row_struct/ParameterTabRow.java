@@ -19,13 +19,14 @@ public class ParameterTabRow extends ScopeRowArchetype {
     public ParameterTabRow(
             int foreignId,
             DataType dataType,
-            int scope,
+            int funcScope,
+            int blockScope,
             String name,
             boolean isDefault,
             int totalOrdinality,
             int perDataTypeOrdinality
     ) {
-        super(foreignId, dataType, scope);
+        super(foreignId, dataType, funcScope, blockScope);
         this.name = name;
         this.isDefault = isDefault;
         this.totalOrdinality = totalOrdinality;
