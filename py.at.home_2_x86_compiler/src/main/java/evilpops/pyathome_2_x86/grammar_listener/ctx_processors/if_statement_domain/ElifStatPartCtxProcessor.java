@@ -17,8 +17,10 @@ public class ElifStatPartCtxProcessor {
     }
 
     public static void processOnExit() {
+        int ifElifElseLblNum = compilationInfoTracker.getIfStatLblTracker().getCurrLblNum();
+        assemblyGenerator.genJmpIfElifElseEnd(ifElifElseLblNum);
         assemblyGenerator.genElifStatEndLabel(
-                compilationInfoTracker.getIfStatLblTracker().getCurrLblNum(),
+                ifElifElseLblNum,
                 compilationInfoTracker.getIfStatLblTracker().getCurrElifLblNum()
         );
     }

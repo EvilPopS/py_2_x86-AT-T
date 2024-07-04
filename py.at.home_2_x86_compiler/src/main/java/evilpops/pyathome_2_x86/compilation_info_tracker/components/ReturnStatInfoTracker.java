@@ -55,7 +55,7 @@ public class ReturnStatInfoTracker {
     }
 
     protected final Stack<BlockReturnInfo> funcBlocks;
-    protected Stack<BlockReturnInfo> currBlocksTrack  ;
+    protected Stack<BlockReturnInfo> currBlocksTrack;
 
     public ReturnStatInfoTracker() {
         this.funcBlocks = new Stack<>();
@@ -67,7 +67,9 @@ public class ReturnStatInfoTracker {
     }
 
     public boolean doesFunctionHasReturn() {
-        return this.funcBlocks.peek().checkHasReturn();
+        if (!this.funcBlocks.isEmpty())
+            return this.funcBlocks.peek().checkHasReturn();
+        return false;
     }
 
     public void onReturnStatementCreate() {
@@ -75,11 +77,13 @@ public class ReturnStatInfoTracker {
     }
 
     public void onIfStatementCreate() {
-        this.currBlocksTrack.peek().setHasElseStatementFalse();
+        if (!this.funcBlocks.isEmpty())
+            this.currBlocksTrack.peek().setHasElseStatementFalse();
     }
 
     public void onElsePartCreate() {
-        this.currBlocksTrack.peek().setHasElseStatementTrue();
+        if (!this.funcBlocks.isEmpty())
+            this.currBlocksTrack.peek().setHasElseStatementTrue();
     }
 
     public void onNewFuncStart() {
@@ -93,15 +97,19 @@ public class ReturnStatInfoTracker {
     }
 
     public void onBlockStart() {
-        BlockReturnInfo newCurrBlockInfo = this.currBlocksTrack.peek().addBranch();
-        this.currBlocksTrack.pop();
-        this.currBlocksTrack.push(newCurrBlockInfo);
+        if (!this.funcBlocks.isEmpty()) {
+            BlockReturnInfo newCurrBlockInfo = this.currBlocksTrack.peek().addBranch();
+            this.currBlocksTrack.pop();
+            this.currBlocksTrack.push(newCurrBlockInfo);
+        }
     }
 
     public void onBlockEnd() {
-        BlockReturnInfo parentBlockInfo = this.currBlocksTrack.peek().getParentBlock();
-        this.currBlocksTrack.pop();
-        this.currBlocksTrack.push(parentBlockInfo);
+        if (!this.funcBlocks.isEmpty()) {
+            BlockReturnInfo parentBlockInfo = this.currBlocksTrack.peek().getParentBlock();
+            this.currBlocksTrack.pop();
+            this.currBlocksTrack.push(parentBlockInfo);
+        }
     }
 
 }

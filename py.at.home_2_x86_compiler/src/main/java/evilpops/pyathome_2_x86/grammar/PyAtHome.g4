@@ -44,7 +44,7 @@ options {
 
 /* Parser rules - START */
 program
-    : NEWLINE? statementsList simpleStatement? INVALID_DENT? EOF
+    : NEWLINE* statementsList simpleStatement? INVALID_DENT? EOF
     ;
 
 statementsList
@@ -52,13 +52,14 @@ statementsList
     ;
 
 statement
-    : simpleStatement NEWLINE*
-    | compundStatement
+    : simpleStatement NEWLINE+
+    | compundStatement NEWLINE*
     ;
 
 simpleStatement
     : assignStatement
     | returnStatement
+    | printFunctionCall
     | functionCall
     ;
 
@@ -74,6 +75,10 @@ assignStatement
 returnStatement
     : RETURN numExpression
     | RETURN
+    ;
+
+printFunctionCall
+    : INBUILT_PRINT_FUNC L_PAREN numExpression R_PAREN
     ;
 
 functionDef
@@ -254,6 +259,7 @@ NEWLINE
 
 DEF: 'def';
 RETURN: 'return';
+INBUILT_PRINT_FUNC: 'print';
 
 IF: 'if';
 ELIF: 'elif';

@@ -39,7 +39,6 @@ public interface ISymTabController {
     int getFuncScope(int ind);
     int getBlockScope(int ind);
     int getParamScope(int paramRef);
-    int getRealTimeCurrentScope();
     String getParamName(int paramRef);
     String getFuncName(int ind);
     List<Integer> getFuncsParamRefs(int ind);

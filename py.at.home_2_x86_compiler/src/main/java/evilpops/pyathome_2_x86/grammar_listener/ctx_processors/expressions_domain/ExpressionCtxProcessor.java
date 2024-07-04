@@ -3,6 +3,7 @@ package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.expres
 import main.java.evilpops.pyathome_2_x86.assembly_generator.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.enums.AssemblyRegister;
+import main.java.evilpops.pyathome_2_x86.compilation_info_tracker.CompilationInfoTracker;
 import main.java.evilpops.pyathome_2_x86.exceptions.other.BadImplementationException;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.symbol_table.ISymTabController;
@@ -12,6 +13,7 @@ import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
 public class ExpressionCtxProcessor {
     private static final IAssemblyGenerator assemblyGenerator = AssemblyGenerator.getInstance();
     private static final ISymTabController symTabController = SymTabController.getInstance();
+    private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static int processOnExit(PyAtHomeParser.ExpressionContext ctx) {
         if (ctx.literal() != null)
@@ -31,7 +33,7 @@ public class ExpressionCtxProcessor {
     private static int processIfId(PyAtHomeParser.ExpressionContext ctx) {
         int varRef = symTabController.getVarRefByNameInAnyScope(ctx.ID().getText());
         int varScope = symTabController.getFuncScope(varRef);
-        int currentScope = symTabController.getRealTimeCurrentScope();
+        int currentScope = compilationInfoTracker.getFunctionScopeTracker().getScope();
         if (varScope == currentScope)
             return varRef;
         else

@@ -15,9 +15,9 @@ public class IfStatPartCtxProcessor {
     }
 
     public static void processOnExit() {
-        assemblyGenerator.genIfStatEndLabel(
-                compilationInfoTracker.getIfStatLblTracker().getCurrLblNum()
-        );
+        int ifElifElseLblNum = compilationInfoTracker.getIfStatLblTracker().getCurrLblNum();
+        assemblyGenerator.genJmpIfElifElseEnd(ifElifElseLblNum);
+        assemblyGenerator.genIfStatEndLabel(ifElifElseLblNum);
     }
 
 }

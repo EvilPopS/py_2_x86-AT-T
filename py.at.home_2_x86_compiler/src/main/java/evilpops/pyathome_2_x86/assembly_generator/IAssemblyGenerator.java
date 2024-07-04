@@ -41,11 +41,13 @@ public interface IAssemblyGenerator {
     void genFuncStart(String funcName);
     void genFuncEnd(String funcName);
     void genFuncArg(String srcSymbol, int argOrdinality, boolean is64bit);
+    void genPrintBuiltInFuncFloatArg(String srcSymbol);
     void genFuncCall(String funcName, AssemblyRegister[] regsToSave);
     void genStringToBoolConversionBuiltInFuncCall(String argSymbol, AssemblyRegister[] regsToSave);
     void genStringAdditionBuiltInFuncCall(String argSymbol1, String argSymbol2, AssemblyRegister[] regsToSave);
     void genStringMultiplicationBuiltInFuncCall(String argStr, String argInt, AssemblyRegister[] regsToSave);
     void genStringComparisonBuiltInFuncCall(String argSymbol1, String argSymbol2, AssemblyRegister[] regsToSave);
+    void genPrintBuiltInFuncCall(AssemblyRegister[] regsToSave);
 
     // Jump - Instructions
     void genJmp(String jmpInst, String lblName);
@@ -54,6 +56,7 @@ public interface IAssemblyGenerator {
     void genNonCondJmpToFuncEnd(String funcName);
     void genNonCondJmpToDefParamCondStart(int lblNum);
     void genNonCondJmpToDefParamCondEnd(int lblNum);
+    void genJmpIfElifElseEnd(int lblNum);
     void genJmpIfEqToDefParamNumExpStart(int lblNum);
     void genJmpAfterIfStatCondition(int lblNum);
     void genJmpAfterElifStatCondition(int lblNum1, int lblNum2);
@@ -64,6 +67,7 @@ public interface IAssemblyGenerator {
     void genDefParamNumExpLabel(int lblNum);
     void genDefParamCondStartLabel(int lblNum);
     void genDefParamCondEndLabel(int lblNum);
+    void genIfElifElseStartLabel(int lblNum);
     void genIfStatStartLabel(int lblNum);
     void genIfStatEndLabel(int lblNum);
     void genElifStatStartLabel(int lblNum1, int lblNum2);
@@ -91,6 +95,9 @@ public interface IAssemblyGenerator {
     String makeIntOrBoolSymbol(String srcValue);
     String makeVarAccessSymbol(int varOrdinality);
     String makeRegisterAccessSymbol(AssemblyRegister register);
+    String makePrintIntOrBoolFormatSymbol();
+    String makePrintFloatFormatSymbol();
+    String makePrintStringFormatSymbol();
 
     String makeJmpInst(ConditionalJump conditionalJump, boolean is64bit);
 

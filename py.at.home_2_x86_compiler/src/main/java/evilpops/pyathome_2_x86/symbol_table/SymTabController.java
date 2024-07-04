@@ -236,10 +236,6 @@ public class SymTabController implements ISymTabController {
         return this.parameterTab.getFuncScope(paramRef);
     }
 
-    @Override
-    public int getRealTimeCurrentScope() {
-        return this.functionTab.getCurrentFuncScope();
-    }
 
     @Override
     public String getParamName(int paramRef) {
