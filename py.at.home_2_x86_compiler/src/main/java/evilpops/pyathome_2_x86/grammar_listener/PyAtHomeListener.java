@@ -9,6 +9,7 @@ import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.express
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain.ArgNumExpressionCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain.FuncCallExpressionCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain.FunctionCallCtxProcessor;
+import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain.PrintFunctionCallCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_def_domain.*;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.if_statement_domain.*;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.shared_domain.BlockCtxProcessor;
@@ -132,6 +133,12 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
     public void exitReturnStatement(PyAtHomeParser.ReturnStatementContext ctx) {
         if (!logHandler.isCompilationErrorDetected())
             ReturnStatementCtxProcessor.processOnExit(ctx);
+    }
+
+    @Override
+    public void exitPrintFunctionCall(PyAtHomeParser.PrintFunctionCallContext ctx) {
+        if (!logHandler.isCompilationErrorDetected())
+            PrintFunctionCallCtxProcessor.processOnExit(ctx);
     }
 
     @Override

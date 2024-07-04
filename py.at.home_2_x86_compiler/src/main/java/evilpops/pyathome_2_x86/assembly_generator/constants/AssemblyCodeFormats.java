@@ -48,14 +48,32 @@ public class AssemblyCodeFormats {
     public static final String REG_ACCESS = "%%%s";
     public static final String MEM_ACCESS = "%s(%s)";
     public static final String LITERAL_W_DOLLAR = "$%s";
+
     public static final String DATA_SEC_FLOAT_REF = "FLOAT_VAL%s";
     public static final String DATA_SEC_STRING_REF = "STRING_VAL%s";
-    public static final String FLOAT_LIT_DATA_SEC = "\tFLOAT_VAL%s: .double %s\n";
-    public static final String STRING_LIT_DATA_SEC = "\tSTRING_VAL%s: .string \"%s\"\n";
-    public static final String NONE_LIT_DATA_SEC = "\tNONE: .asciz \"None\"\n";
-    public static final String FLOAT_ZERO_DATA_SEC = "\tFLOAT_ZERO: .double 0.0\n";
-    public static final String UNDEFINED_LIT_DATA_SEC = "\tUNDEFINED: .asciz \"Undefined\"\n";
-    public static final String DATA_SECTION_INIT = NONE_LIT_DATA_SEC + FLOAT_ZERO_DATA_SEC + UNDEFINED_LIT_DATA_SEC;
+    public static final String FLOAT_LIT_DATA_SEC = "\t" + DATA_SEC_FLOAT_REF + ": .double %s\n";
+    public static final String STRING_LIT_DATA_SEC = "\t" + DATA_SEC_STRING_REF + ": .string \"%s\"\n";
+
+    public static final String FLOAT_ZERO = "FLOAT_ZERO";
+    public static final String NONE_LIT = "NONE";
+    public static final String UNDEFINED_LIT = "UNDEFINED";
+    public static final String PRINT_INT_OR_BOOL = "PRINT_INT_OR_BOOL_FORMAT";
+    public static final String PRINT_FLOAT = "PRINT_FLOAT";
+    public static final String PRINT_STRING = "PRINT_STRING_FORMAT";
+
+    public static final String FLOAT_ZERO_DATA_SEC = "\t" + FLOAT_ZERO + ": .double 0.0\n";
+    public static final String NONE_LIT_DATA_SEC = "\t" + NONE_LIT + ": .asciz \"None\"\n";
+    public static final String UNDEFINED_LIT_DATA_SEC = "\t" + UNDEFINED_LIT + ": .asciz \"Undefined\"\n";
+    public static final String PRINT_INT_OR_BOOL_DATA_SEC = "\t" + PRINT_INT_OR_BOOL + ": .asciz \"%d\\n\"\n";
+    public static final String PRINT_FLOAT_DATA_SEC = "\t" + PRINT_FLOAT + ": .asciz \"%.3f\\n\"\n";
+    public static final String PRINT_STRING_DATA_SEC = "\t" + PRINT_STRING + ": .asciz \"%s\\n\"\n";
+    public static final String DATA_SECTION_INIT =
+            NONE_LIT_DATA_SEC +
+                    FLOAT_ZERO_DATA_SEC +
+                    UNDEFINED_LIT_DATA_SEC +
+                    PRINT_INT_OR_BOOL_DATA_SEC +
+                    PRINT_FLOAT_DATA_SEC +
+                    PRINT_STRING_DATA_SEC;
 
     public static final String LBL_FORMAT = "%s:\n";
     public static final String LBL_CMP_TRUE = "L_CMP_TRUE_%s";
@@ -68,25 +86,23 @@ public class AssemblyCodeFormats {
     public static final String LBL_DEF_PARAM_COND_END = "L_DEF_PARAM_COND_%s_END";
     public static final String LBL_DEF_PARAM_NUM_EXP = "L_DEF_PARAM_NUM_EXP_%s";
 
+    public static final String LBL_IF_ELIF_ELSE_STAT_END = "L_IF_ELIF_ELSE_STAT_END_%s";
     public static final String LBL_IF_STAT_START = "L_IF_STAT_START_%s";
     public static final String LBL_IF_STAT_END = "L_IF_STAT_END_%s";
     public static final String LBL_ELIF_STAT_START = "L_ELIF_STAT_START_%s_%s";
     public static final String LBL_ELIF_STAT_END = "L_ELIF_STAT_END_%s_%s";
     public static final String LBL_ELSE_STAT_START = "L_ELSE_STAT_START_%s";
 
-    public static final String FLOAT_ZERO = "FLOAT_ZERO";
-    public static final String NONE_LIT = "NONE";
-    public static final String UNDEFINED_LIT = "UNDEFINED";
-
     public static final String BUILT_IN_CONCAT_STRINGS_LBL = "BUILT_IN_STRING_CONCAT";
     public static final String BUILT_IN_STRINGS_MUL_LBL = "BUILT_IN_STRING_MUL";
     public static final String BUILT_IN_STRING_CMP_LBL = "BUILT_IN_STRING_CMP";
     public static final String BUILT_IN_STRING_TO_BOOL_LBL = "BUILT_IN_STRING_TO_BOOL";
+    public static final String BUILT_IN_PRINT_LBL = "printf@plt";
 
     public static final String FUNC_START = "\tpushq %rbp\n\tmovq %rsp, %rbp\n\n";
     public static final String FUNC_END =
             "\tmovq %rbp, %rsp\n" +
-                    "\tpopq %rbp\n"+
+                    "\tpopq %rbp\n" +
                     "\tret\n\n";
 
     public static final String CONCAT_STRINGS_BUILTIN =

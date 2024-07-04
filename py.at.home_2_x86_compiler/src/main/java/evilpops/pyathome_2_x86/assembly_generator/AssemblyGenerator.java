@@ -292,9 +292,18 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.genMoveSymbolToSymbol(
                 srcSymbol,
                 this.makeRegisterAccessSymbol(
-                        is64bit ? PARAM_REGS[argOrdinality-1] : FLOAT_PARAM_REGS[argOrdinality-1]
+                        is64bit ? PARAM_REGS[argOrdinality - 1] : FLOAT_PARAM_REGS[argOrdinality - 1]
                 ),
                 is64bit
+        );
+    }
+
+    @Override
+    public void genPrintBuiltInFuncFloatArg(String srcSymbol) {
+        this.genMoveSymbolToSymbol(
+                srcSymbol,
+                this.makeRegisterAccessSymbol(FLOAT_RET_REG),
+                false
         );
     }
 
@@ -318,31 +327,48 @@ public class AssemblyGenerator implements IAssemblyGenerator {
 
     @Override
     public void genStringToBoolConversionBuiltInFuncCall(String argSymbol, AssemblyRegister[] regsToSave) {
-        this.genFuncArg(argSymbol, 0, true);
+        this.genFuncArg(argSymbol, 1, true);
         this.genFuncCall(BUILT_IN_STRING_TO_BOOL_LBL, regsToSave);
     }
 
     @Override
     public void genStringAdditionBuiltInFuncCall(String argSymbol1, String argSymbol2, AssemblyRegister[] regsToSave) {
-        this.genFuncArg(argSymbol1, 0, true);
-        this.genFuncArg(argSymbol2, 1, true);
+        this.genFuncArg(argSymbol1, 1, true);
+        this.genFuncArg(argSymbol2, 2, true);
         this.genFuncCall(BUILT_IN_CONCAT_STRINGS_LBL, regsToSave);
     }
 
     @Override
     public void genStringMultiplicationBuiltInFuncCall(String argStr, String argInt, AssemblyRegister[] regsToSave) {
-        this.genFuncArg(argStr, 0, true);
-        this.genFuncArg(argInt, 1, true);
+        this.genFuncArg(argStr, 1, true);
+        this.genFuncArg(argInt, 2, true);
         this.genFuncCall(BUILT_IN_STRINGS_MUL_LBL, regsToSave);
     }
 
     @Override
     public void genStringComparisonBuiltInFuncCall(String argSymbol1, String argSymbol2, AssemblyRegister[] regsToSave) {
-        this.genFuncArg(argSymbol1, 0, true);
-        this.genFuncArg(argSymbol2, 1, true);
+        this.genFuncArg(argSymbol1, 1, true);
+        this.genFuncArg(argSymbol2, 2, true);
         this.genFuncCall(BUILT_IN_STRING_CMP_LBL, regsToSave);
     }
 
+    @Override
+    public void genPrintBuiltInFuncCall(AssemblyRegister[] regsToSave) {
+        for (AssemblyRegister reg : regsToSave)
+            this.genPushReg(reg, Arrays.asList(GEN_PURPOSE_REGS).contains(reg));
+
+        if (!stackAlignmentTracker.isCurrentBlockStackAligned())
+            this.genStackPointerAlignmentCorrection(false);
+
+        this.genCall(String.format(BUILT_IN_PRINT_LBL));
+
+        if (!stackAlignmentTracker.isCurrentBlockStackAligned())
+            this.genStackPointerAlignmentCorrection(true);
+
+        Collections.reverse(Arrays.asList(regsToSave));
+        for (AssemblyRegister reg : regsToSave)
+            this.genPopReg(reg, Arrays.asList(GEN_PURPOSE_REGS).contains(reg));
+    }
 
     @Override
     public void genJmp(String jmpInst, String lblName) {
@@ -373,6 +399,11 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public void genNonCondJmpToDefParamCondEnd(int lblNum) {
         this.genNonCondJmp(String.format(LBL_DEF_PARAM_COND_END, lblNum));
+    }
+
+    @Override
+    public void genJmpIfElifElseEnd(int lblNum) {
+        this.genNonCondJmp(String.format(LBL_IF_ELIF_ELSE_STAT_END, lblNum));
     }
 
     @Override
@@ -408,6 +439,11 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public void genDefParamCondEndLabel(int lblNum) {
         this.genLabel(String.format(LBL_DEF_PARAM_COND_END, lblNum));
+    }
+
+    @Override
+    public void genIfElifElseStartLabel(int lblNum) {
+        this.genLabel(String.format(LBL_IF_ELIF_ELSE_STAT_END, lblNum));
     }
 
     @Override
@@ -564,6 +600,21 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public String makeRegisterAccessSymbol(AssemblyRegister register) {
         return String.format(REG_ACCESS, register);
+    }
+
+    @Override
+    public String makePrintIntOrBoolFormatSymbol() {
+        return this.makeDollarSymbol(PRINT_INT_OR_BOOL);
+    }
+
+    @Override
+    public String makePrintFloatFormatSymbol() {
+        return this.makeDollarSymbol(PRINT_FLOAT);
+    }
+
+    @Override
+    public String makePrintStringFormatSymbol() {
+        return this.makeDollarSymbol(PRINT_STRING);
     }
 
     @Override
