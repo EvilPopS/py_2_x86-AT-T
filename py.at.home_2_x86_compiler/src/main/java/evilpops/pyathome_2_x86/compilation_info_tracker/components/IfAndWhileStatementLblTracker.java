@@ -5,7 +5,7 @@ import lombok.Getter;
 
 import java.util.Stack;
 
-public class IfStatementLblTracker {
+public class IfAndWhileStatementLblTracker {
     @Getter
     @AllArgsConstructor
     protected static class Counters {
@@ -20,16 +20,16 @@ public class IfStatementLblTracker {
     protected int globalCounter;
     protected final Stack<Counters> countersStack;
 
-    public IfStatementLblTracker() {
+    public IfAndWhileStatementLblTracker() {
         this.globalCounter = 0;
         this.countersStack = new Stack<>();
     }
 
-    public void onNewIfStatementStart() {
+    public void onNewStatementStart() {
         this.countersStack.push(new Counters(++this.globalCounter, 1));
     }
 
-    public void onIfStatementEnd() {
+    public void onStatementEnd() {
         this.countersStack.pop();
     }
 

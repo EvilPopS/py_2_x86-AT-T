@@ -185,6 +185,42 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterWhileElseStatement(PyAtHomeParser.WhileElseStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhileElseStatement(PyAtHomeParser.WhileElseStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterWhileStatPart(PyAtHomeParser.WhileStatPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhileStatPart(PyAtHomeParser.WhileStatPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterWhileConditionPart(PyAtHomeParser.WhileConditionPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhileConditionPart(PyAtHomeParser.WhileConditionPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterIfElifElseStatement(PyAtHomeParser.IfElifElseStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -252,6 +288,30 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitElseStatPart(PyAtHomeParser.ElseStatPartContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNonTerminalBlock(PyAtHomeParser.NonTerminalBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNonTerminalBlock(PyAtHomeParser.NonTerminalBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTerminalBlock(PyAtHomeParser.TerminalBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTerminalBlock(PyAtHomeParser.TerminalBlockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

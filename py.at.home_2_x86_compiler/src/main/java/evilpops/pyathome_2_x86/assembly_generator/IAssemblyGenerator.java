@@ -30,6 +30,7 @@ public interface IAssemblyGenerator {
 
     // Compare - Instructions (Singular)
     void genCmpToZero(String srcSymbol, boolean is64bit);
+    void genCmpToOne(String srcSymbol);
     void genCmpToUndefined64bit(String srcSymbol);
     void genCmpSymbolToSymbol(String symbol1, String symbol2, boolean is64bit);
 
@@ -56,18 +57,32 @@ public interface IAssemblyGenerator {
     void genNonCondJmpToFuncEnd(String funcName);
     void genNonCondJmpToDefParamCondStart(int lblNum);
     void genNonCondJmpToDefParamCondEnd(int lblNum);
-    void genJmpIfElifElseEnd(int lblNum);
+    void genJmpWhileElseStatEnd(int lblNum);
+    void genJmpWhileStatPartEnd(int lblNum);
+    void genJmpWhileConditionStartLbl(int lblNum);
+    void genJmpIfEqToWhileOnFirstTimeEnterLbl(int lblNum);
+    void genJmpIfEqToWhileBlockStart(int lblNum);
+    void genJmpWhileBlockEnd(int lblNum);
+    void genJmpWhileLoopStart(int lblNum);
+    void genJmpIfEqToWhileLoopEnd(int lblNum);
     void genJmpIfEqToDefParamNumExpStart(int lblNum);
+    void genJmpIfElifElseEnd(int lblNum);
     void genJmpAfterIfStatCondition(int lblNum);
     void genJmpAfterElifStatCondition(int lblNum1, int lblNum2);
-
 
     // Labels
     void genLabel(String lblName);
     void genDefParamNumExpLabel(int lblNum);
     void genDefParamCondStartLabel(int lblNum);
     void genDefParamCondEndLabel(int lblNum);
-    void genIfElifElseStartLabel(int lblNum);
+    void genWhileElseEndLabel(int lblNum);
+    void genWhileConditionStartLbl(int lblNum);
+    void genWhileOnFirstTimeEnterLbl(int lblNum);
+    void genWhileStatPartEndLbl(int lblNum);
+    void genWhileBlockStartLbl(int lblNum);
+    void genWhileBlockEndLbl(int lblNum);
+    void genWhileLoopStartLbl(int lblNum);
+    void genIfElifElseEndLabel(int lblNum);
     void genIfStatStartLabel(int lblNum);
     void genIfStatEndLabel(int lblNum);
     void genElifStatStartLabel(int lblNum1, int lblNum2);
@@ -81,9 +96,6 @@ public interface IAssemblyGenerator {
     void genStackPointerAlignmentCorrection(boolean isStackIncreasing);
     void genStackPointerDec(int times);
     void genStackPointerInc(int times);
-
-    // Compound
-    void genFunctionEnd(String funcName, int funcVarsCount);
 
     void genCodeEnd();
 
