@@ -101,6 +101,18 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPassStatement(PyAtHomeParser.PassStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPassStatement(PyAtHomeParser.PassStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterPrintFunctionCall(PyAtHomeParser.PrintFunctionCallContext ctx) { }
 	/**
 	 * {@inheritDoc}

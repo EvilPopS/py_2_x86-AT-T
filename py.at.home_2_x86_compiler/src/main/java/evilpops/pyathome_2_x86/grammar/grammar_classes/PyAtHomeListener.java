@@ -78,6 +78,16 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitReturnStatement(PyAtHomeParser.ReturnStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#passStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterPassStatement(PyAtHomeParser.PassStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#passStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitPassStatement(PyAtHomeParser.PassStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#printFunctionCall}.
 	 * @param ctx the parse tree
 	 */
