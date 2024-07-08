@@ -83,6 +83,10 @@ public class WhileConditionPartProcessor {
         );
 
         assemblyGenerator.genJmpIfEqToWhileBlockStart(lblNum);
+
+        assemblyGenerator.genStackPointerInc(1);
+        compilationInfoTracker.getCurrFuncTracker().decVarCounterByAmount(1);
+
         assemblyGenerator.genJmpWhileStatPartEnd(lblNum);
     }
 

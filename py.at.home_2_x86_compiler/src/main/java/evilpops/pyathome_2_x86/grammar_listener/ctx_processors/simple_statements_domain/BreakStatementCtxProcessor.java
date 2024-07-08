@@ -5,7 +5,7 @@ import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.compilation_info_tracker.CompilationInfoTracker;
 import main.java.evilpops.pyathome_2_x86.exceptions.compilation.errors.InvalidContinueStatementException;
 
-public class ContinueStatementCtxProcessor {
+public class BreakStatementCtxProcessor {
     private static final IAssemblyGenerator assemblyGenerator = AssemblyGenerator.getInstance();
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
@@ -13,7 +13,7 @@ public class ContinueStatementCtxProcessor {
         if (!compilationInfoTracker.getWhileStatementInfoTracker().canDoContinueOrBreak())
             throw new InvalidContinueStatementException();
 
-        assemblyGenerator.genJmpWhileConditionStartLbl(
+        assemblyGenerator.genJmpWhileBlockEnd(
                 compilationInfoTracker.getWhileStatementInfoTracker().getCurrLblNum()
         );
     }

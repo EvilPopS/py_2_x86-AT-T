@@ -1,10 +1,10 @@
-n = 1
-while n < 5:
-    if n != 2:
-        print(n)
-    else:
-        n = n + 2
-        continue
-    n = n +1
-else:
-    print("Radi!")
+def printXmasTree(size: int):
+    while size > 0:
+        n = size
+        while n > 0:
+            print(n*"Q")
+            n = n-1
+        size = size - 1
+
+
+printXmasTree(4)

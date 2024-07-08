@@ -60,6 +60,7 @@ simpleStatement
     : assignStatement
     | returnStatement
     | continueStatement
+    | breakStatement
     | passStatement
     | printFunctionCall
     | functionCall
@@ -82,6 +83,10 @@ returnStatement
 
 continueStatement
     : CONTINUE
+    ;
+
+breakStatement
+    : BREAK
     ;
 
 passStatement
@@ -292,6 +297,7 @@ DEF: 'def';
 RETURN: 'return';
 PASS: 'pass';
 CONTINUE: 'continue';
+BREAK: 'break';
 INBUILT_PRINT_FUNC: 'print';
 
 WHILE: 'while';
