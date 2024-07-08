@@ -437,15 +437,6 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.genNonCondJmp(String.format(LBL_WHILE_BLOCK_END, lblNum));
     }
 
-    @Override
-    public void genJmpWhileLoopStart(int lblNum) {
-        this.genNonCondJmp(String.format(LBL_WHILE_LOOP_START, lblNum));
-    }
-
-    @Override
-    public void genJmpIfEqToWhileLoopEnd(int lblNum) {
-        this.genJmpIfEqual(String.format(LBL_WHILE_LOOP_END, lblNum));
-    }
 
     @Override
     public void genJmpIfEqToDefParamNumExpStart(int lblNum) {
@@ -517,10 +508,6 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.genLabel(String.format(LBL_WHILE_BLOCK_END, lblNum));
     }
 
-    @Override
-    public void genWhileLoopStartLbl(int lblNum) {
-        this.genLabel(String.format(LBL_WHILE_LOOP_START, lblNum));
-    }
 
     @Override
     public void genIfElifElseEndLabel(int lblNum) {
@@ -548,15 +535,9 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
-    public void genElseStatStartLabel(int lblNum) {
-        this.genLabel(String.format(LBL_ELSE_STAT_START, lblNum));
-    }
-
-    @Override
     public void genIntToFloatConversion(String srcSymbol, String destSymbol) {
         this.currentFunc.append(String.format(BOOLINT_2_FLOAT_INST, srcSymbol, destSymbol));
     }
-
 
     @Override
     public void genPushReg(AssemblyRegister register, boolean is64bit) {

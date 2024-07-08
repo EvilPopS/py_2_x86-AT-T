@@ -25,7 +25,7 @@ public class IfConditionPartCtxProcessor {
         );
 
         assemblyGenerator.genJmpAfterIfStatCondition(
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum()
+                compilationInfoTracker.getIfStatementLblTracker().getCurrLblNum()
         );
     }
 }

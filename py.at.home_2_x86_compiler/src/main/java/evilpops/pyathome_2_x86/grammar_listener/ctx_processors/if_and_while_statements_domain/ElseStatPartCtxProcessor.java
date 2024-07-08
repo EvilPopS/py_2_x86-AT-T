@@ -9,9 +9,6 @@ public class ElseStatPartCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static void processOnEnter() {
-        assemblyGenerator.genElseStatStartLabel(
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum()
-        );
         compilationInfoTracker.getReturnStatInfoTracker().onElsePartCreate();
     }
 }

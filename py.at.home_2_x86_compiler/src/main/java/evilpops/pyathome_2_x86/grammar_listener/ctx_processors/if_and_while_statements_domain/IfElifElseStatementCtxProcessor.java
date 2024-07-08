@@ -9,14 +9,14 @@ public class IfElifElseStatementCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static void processOnEnter() {
-        compilationInfoTracker.getIfAndWhileStatementLblTracker().onNewStatementStart();
+        compilationInfoTracker.getIfStatementLblTracker().onNewStatementStart();
         compilationInfoTracker.getReturnStatInfoTracker().onIfOrWhileStatementCreate();
     }
 
     public static void processOnExit() {
         assemblyGenerator.genIfElifElseEndLabel(
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum()
+                compilationInfoTracker.getIfStatementLblTracker().getCurrLblNum()
         );
-        compilationInfoTracker.getIfAndWhileStatementLblTracker().onStatementEnd();
+        compilationInfoTracker.getIfStatementLblTracker().onStatementEnd();
     }
 }

@@ -24,8 +24,8 @@ public class ElifConditionPartCtxProcessor {
         );
 
         assemblyGenerator.genJmpAfterElifStatCondition(
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum(),
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrElifLblNum()
+                compilationInfoTracker.getIfStatementLblTracker().getCurrLblNum(),
+                compilationInfoTracker.getIfStatementLblTracker().getCurrElifLblNum()
         );
     }
 

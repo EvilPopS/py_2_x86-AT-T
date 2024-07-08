@@ -9,19 +9,19 @@ public class ElifStatPartCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static void processOnEnter() {
-        compilationInfoTracker.getIfAndWhileStatementLblTracker().incCurrElifLblNum();
+        compilationInfoTracker.getIfStatementLblTracker().incCurrElifLblNum();
         assemblyGenerator.genElifStatStartLabel(
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum(),
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrElifLblNum()
+                compilationInfoTracker.getIfStatementLblTracker().getCurrLblNum(),
+                compilationInfoTracker.getIfStatementLblTracker().getCurrElifLblNum()
         );
     }
 
     public static void processOnExit() {
-        int ifElifElseLblNum = compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum();
+        int ifElifElseLblNum = compilationInfoTracker.getIfStatementLblTracker().getCurrLblNum();
         assemblyGenerator.genJmpIfElifElseEnd(ifElifElseLblNum);
         assemblyGenerator.genElifStatEndLabel(
                 ifElifElseLblNum,
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrElifLblNum()
+                compilationInfoTracker.getIfStatementLblTracker().getCurrElifLblNum()
         );
     }
 }

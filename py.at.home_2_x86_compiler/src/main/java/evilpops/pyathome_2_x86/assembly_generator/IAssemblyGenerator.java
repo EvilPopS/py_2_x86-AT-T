@@ -63,8 +63,6 @@ public interface IAssemblyGenerator {
     void genJmpIfEqToWhileOnFirstTimeEnterLbl(int lblNum);
     void genJmpIfEqToWhileBlockStart(int lblNum);
     void genJmpWhileBlockEnd(int lblNum);
-    void genJmpWhileLoopStart(int lblNum);
-    void genJmpIfEqToWhileLoopEnd(int lblNum);
     void genJmpIfEqToDefParamNumExpStart(int lblNum);
     void genJmpIfElifElseEnd(int lblNum);
     void genJmpAfterIfStatCondition(int lblNum);
@@ -81,13 +79,11 @@ public interface IAssemblyGenerator {
     void genWhileStatPartEndLbl(int lblNum);
     void genWhileBlockStartLbl(int lblNum);
     void genWhileBlockEndLbl(int lblNum);
-    void genWhileLoopStartLbl(int lblNum);
     void genIfElifElseEndLabel(int lblNum);
     void genIfStatStartLabel(int lblNum);
     void genIfStatEndLabel(int lblNum);
     void genElifStatStartLabel(int lblNum1, int lblNum2);
     void genElifStatEndLabel(int lblNum1, int lblNum2);
-    void genElseStatStartLabel(int lblNum);
 
     // Other - Instructions (Singular)
     void genIntToFloatConversion(String srcSymbol, String destSymbol);
