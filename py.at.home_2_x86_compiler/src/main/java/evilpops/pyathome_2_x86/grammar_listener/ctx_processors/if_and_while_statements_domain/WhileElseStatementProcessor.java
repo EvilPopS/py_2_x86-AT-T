@@ -9,14 +9,14 @@ public class WhileElseStatementProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static void processOnEnter() {
-        compilationInfoTracker.getIfAndWhileStatementLblTracker().onNewStatementStart();
+        compilationInfoTracker.getWhileStatementInfoTracker().onNewStatementStart();
         compilationInfoTracker.getReturnStatInfoTracker().onIfOrWhileStatementCreate();
     }
 
     public static void processOnExit() {
         assemblyGenerator.genWhileElseEndLabel(
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum()
+                compilationInfoTracker.getWhileStatementInfoTracker().getCurrLblNum()
         );
-        compilationInfoTracker.getIfAndWhileStatementLblTracker().onStatementEnd();
+        compilationInfoTracker.getWhileStatementInfoTracker().onStatementEnd();
     }
 }

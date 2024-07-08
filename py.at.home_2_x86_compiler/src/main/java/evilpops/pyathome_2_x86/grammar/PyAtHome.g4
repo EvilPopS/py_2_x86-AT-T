@@ -59,6 +59,7 @@ statement
 simpleStatement
     : assignStatement
     | returnStatement
+    | continueStatement
     | passStatement
     | printFunctionCall
     | functionCall
@@ -77,6 +78,10 @@ assignStatement
 returnStatement
     : RETURN numExpression
     | RETURN
+    ;
+
+continueStatement
+    : CONTINUE
     ;
 
 passStatement
@@ -286,6 +291,7 @@ NEWLINE
 DEF: 'def';
 RETURN: 'return';
 PASS: 'pass';
+CONTINUE: 'continue';
 INBUILT_PRINT_FUNC: 'print';
 
 WHILE: 'while';

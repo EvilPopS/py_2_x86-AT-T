@@ -22,7 +22,7 @@ public class WhileConditionPartProcessor {
         );
 
         assemblyGenerator.genWhileConditionStartLbl(
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum()
+                compilationInfoTracker.getWhileStatementInfoTracker().getCurrLblNum()
         );
     }
 
@@ -30,7 +30,7 @@ public class WhileConditionPartProcessor {
         int conditionRef = processConditionPart(ctx);
         processCheckIfIsFirstTimeEnterBranches(conditionRef);
         assemblyGenerator.genWhileBlockStartLbl(
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum()
+                compilationInfoTracker.getWhileStatementInfoTracker().getCurrLblNum()
         );
     }
 
@@ -49,7 +49,7 @@ public class WhileConditionPartProcessor {
         );
 
         assemblyGenerator.genJmpIfEqToWhileOnFirstTimeEnterLbl(
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum()
+                compilationInfoTracker.getWhileStatementInfoTracker().getCurrLblNum()
         );
 
         processOnNewIterationEnter(conditionRef);
@@ -57,7 +57,7 @@ public class WhileConditionPartProcessor {
     }
 
     private static void processOnNewIterationEnter(int conditionRef) {
-        int lblNum = compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum();
+        int lblNum = compilationInfoTracker.getWhileStatementInfoTracker().getCurrLblNum();
 
         assemblyGenerator.genCmpToOne(
                 AssemblySymbolProcessor.createAssemblySymbol(conditionRef)
@@ -68,7 +68,7 @@ public class WhileConditionPartProcessor {
     }
 
     private static void processOnFirstTimeEnter(int conditionRef) {
-        int lblNum = compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum();
+        int lblNum = compilationInfoTracker.getWhileStatementInfoTracker().getCurrLblNum();
         assemblyGenerator.genWhileOnFirstTimeEnterLbl(lblNum);
 
         assemblyGenerator.genMoveBoolToSymbol(

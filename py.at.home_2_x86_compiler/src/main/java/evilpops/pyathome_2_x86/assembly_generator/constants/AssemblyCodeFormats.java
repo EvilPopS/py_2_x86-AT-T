@@ -101,8 +101,6 @@ public class AssemblyCodeFormats {
     public static final String LBL_ELIF_STAT_START = "L_ELIF_STAT_START_%s_%s";
     public static final String LBL_ELIF_STAT_END = "L_ELIF_STAT_END_%s_%s";
 
-    public static final String LBL_ELSE_STAT_START = "L_ELSE_STAT_START_%s";
-
     public static final String BUILT_IN_CONCAT_STRINGS_LBL = "BUILT_IN_STRING_CONCAT";
     public static final String BUILT_IN_STRINGS_MUL_LBL = "BUILT_IN_STRING_MUL";
     public static final String BUILT_IN_STRING_CMP_LBL = "BUILT_IN_STRING_CMP";

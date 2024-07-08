@@ -10,12 +10,12 @@ public class IfStatPartCtxProcessor {
 
     public static void processOnEnter() {
         assemblyGenerator.genIfStatStartLabel(
-                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum()
+                compilationInfoTracker.getIfStatementLblTracker().getCurrLblNum()
         );
     }
 
     public static void processOnExit() {
-        int ifElifElseLblNum = compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum();
+        int ifElifElseLblNum = compilationInfoTracker.getIfStatementLblTracker().getCurrLblNum();
         assemblyGenerator.genJmpIfElifElseEnd(ifElifElseLblNum);
         assemblyGenerator.genIfStatEndLabel(ifElifElseLblNum);
     }

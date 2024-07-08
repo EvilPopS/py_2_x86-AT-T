@@ -11,8 +11,12 @@ public class WhileStatPartCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
     private static final ISymTabController symTabController = SymTabController.getInstance();
 
+    public static void processOnEnter() {
+        compilationInfoTracker.getWhileStatementInfoTracker().incWhileLoopDepth();
+    }
+
     public static void processOnExit() {
-        int lblNum = compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum();
+        int lblNum = compilationInfoTracker.getWhileStatementInfoTracker().getCurrLblNum();
         assemblyGenerator.genJmpWhileConditionStartLbl(lblNum);
 
         assemblyGenerator.genWhileBlockEndLbl(lblNum);
@@ -34,5 +38,7 @@ public class WhileStatPartCtxProcessor {
         assemblyGenerator.genJmpWhileElseStatEnd(lblNum);
 
         assemblyGenerator.genWhileStatPartEndLbl(lblNum);
+
+        compilationInfoTracker.getWhileStatementInfoTracker().decWhileLoopDepth();
     }
 }
