@@ -76,7 +76,7 @@ public class ReturnStatInfoTracker {
         this.currBlocksTrack.peek().setHasExplicitReturnTrue();
     }
 
-    public void onIfStatementCreate() {
+    public void onIfOrWhileStatementCreate() {
         if (!this.funcBlocks.isEmpty())
             this.currBlocksTrack.peek().setHasElseStatementFalse();
     }

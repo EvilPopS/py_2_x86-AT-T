@@ -148,6 +148,36 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitParamDefVal(PyAtHomeParser.ParamDefValContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#whileElseStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileElseStatement(PyAtHomeParser.WhileElseStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#whileElseStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileElseStatement(PyAtHomeParser.WhileElseStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#whileStatPart}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileStatPart(PyAtHomeParser.WhileStatPartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#whileStatPart}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileStatPart(PyAtHomeParser.WhileStatPartContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#whileConditionPart}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileConditionPart(PyAtHomeParser.WhileConditionPartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#whileConditionPart}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileConditionPart(PyAtHomeParser.WhileConditionPartContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#ifElifElseStatement}.
 	 * @param ctx the parse tree
 	 */
@@ -207,6 +237,26 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitElseStatPart(PyAtHomeParser.ElseStatPartContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#nonTerminalBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterNonTerminalBlock(PyAtHomeParser.NonTerminalBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#nonTerminalBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitNonTerminalBlock(PyAtHomeParser.NonTerminalBlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#terminalBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterTerminalBlock(PyAtHomeParser.TerminalBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#terminalBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitTerminalBlock(PyAtHomeParser.TerminalBlockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#block}.
 	 * @param ctx the parse tree

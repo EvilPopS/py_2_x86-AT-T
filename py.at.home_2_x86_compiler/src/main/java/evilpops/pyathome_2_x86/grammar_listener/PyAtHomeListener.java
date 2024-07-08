@@ -11,8 +11,9 @@ import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.functio
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain.FunctionCallCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain.PrintFunctionCallCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_def_domain.*;
-import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.if_statement_domain.*;
-import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.shared_domain.BlockCtxProcessor;
+import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.if_and_while_statements_domain.*;
+import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.shared_domain.NonTerminalBlockCtxProcessor;
+import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.shared_domain.TerminalBlockCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.shared_domain.ProgramCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.simple_statements_domain.AssignStatementCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.simple_statements_domain.ReturnStatementCtxProcessor;
@@ -67,6 +68,36 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
     public void exitParamDefVal(PyAtHomeParser.ParamDefValContext ctx) {
         if (!logHandler.isCompilationErrorDetected())
             ParamDefValCtxProcessor.processOnExit(ctx);
+    }
+
+    @Override
+    public void enterWhileElseStatement(PyAtHomeParser.WhileElseStatementContext ignored) {
+        if (!logHandler.isCompilationErrorDetected())
+            WhileElseStatementProcessor.processOnEnter();
+    }
+
+    @Override
+    public void exitWhileElseStatement(PyAtHomeParser.WhileElseStatementContext ignored) {
+        if (!logHandler.isCompilationErrorDetected())
+            WhileElseStatementProcessor.processOnExit();
+    }
+
+    @Override
+    public void exitWhileStatPart(PyAtHomeParser.WhileStatPartContext ignored) {
+        if (!logHandler.isCompilationErrorDetected())
+            WhileStatPartCtxProcessor.processOnExit();
+    }
+
+    @Override
+    public void enterWhileConditionPart(PyAtHomeParser.WhileConditionPartContext ignored) {
+        if (!logHandler.isCompilationErrorDetected())
+            WhileConditionPartProcessor.processOnEnter();
+    }
+
+    @Override
+    public void exitWhileConditionPart(PyAtHomeParser.WhileConditionPartContext ctx) {
+        if (!logHandler.isCompilationErrorDetected())
+            WhileConditionPartProcessor.processOnExit(ctx);
     }
 
     @Override
@@ -142,15 +173,21 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
     }
 
     @Override
-    public void enterBlock(PyAtHomeParser.BlockContext ctx) {
+    public void enterNonTerminalBlock(PyAtHomeParser.NonTerminalBlockContext ignored) {
         if (!logHandler.isCompilationErrorDetected())
-            BlockCtxProcessor.processOnEnter(ctx);
+            NonTerminalBlockCtxProcessor.processOnEnter();
     }
 
     @Override
-    public void exitBlock(PyAtHomeParser.BlockContext ctx) {
+    public void enterTerminalBlock(PyAtHomeParser.TerminalBlockContext ignored) {
         if (!logHandler.isCompilationErrorDetected())
-            BlockCtxProcessor.processOnExit(ctx);
+            TerminalBlockCtxProcessor.processOnEnter();
+    }
+
+    @Override
+    public void exitTerminalBlock(PyAtHomeParser.TerminalBlockContext ignored) {
+        if (!logHandler.isCompilationErrorDetected())
+            TerminalBlockCtxProcessor.processOnExit();
     }
 
     @Override

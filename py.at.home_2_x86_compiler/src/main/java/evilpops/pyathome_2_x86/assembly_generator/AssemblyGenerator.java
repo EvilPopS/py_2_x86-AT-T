@@ -231,6 +231,15 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
+    public void genCmpToOne(String srcSymbol) {
+        this.currentFunc.append(String.format(
+                CMP_INT,
+                this.makeIntOrBoolSymbol("1"),
+                srcSymbol
+        ));
+    }
+
+    @Override
     public void genCmpToUndefined64bit(String srcSymbol) {
         this.currentFunc.append(String.format(
                 CMP_INT,
@@ -272,9 +281,7 @@ public class AssemblyGenerator implements IAssemblyGenerator {
         this.funcIndStack.push(this.funcDefs.size() - 1);
         this.currentFunc = this.funcDefs.get(this.funcIndStack.peek());
         this.stackAlignmentTracker.increaseBlock();
-        this.genLabel(
-                String.format(LBL_FUNC_NAME, funcName)
-        );
+        this.genLabel(String.format(LBL_FUNC_NAME, funcName));
         this.currentFunc.append(FUNC_START);
     }
 
@@ -393,7 +400,6 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public void genNonCondJmpToDefParamCondStart(int lblNum) {
         this.genNonCondJmp(String.format(LBL_DEF_PARAM_COND, lblNum));
-
     }
 
     @Override
@@ -402,13 +408,53 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
-    public void genJmpIfElifElseEnd(int lblNum) {
-        this.genNonCondJmp(String.format(LBL_IF_ELIF_ELSE_STAT_END, lblNum));
+    public void genJmpWhileElseStatEnd(int lblNum) {
+        this.genNonCondJmp(String.format(LBL_WHILE_ELSE_STAT_END, lblNum));
+    }
+
+    @Override
+    public void genJmpWhileStatPartEnd(int lblNum) {
+        this.genNonCondJmp(String.format(LBL_WHILE_STAT_PART_END, lblNum));
+    }
+
+    @Override
+    public void genJmpWhileConditionStartLbl(int lblNum) {
+        this.genNonCondJmp(String.format(LBL_WHILE_CONDITION_START, lblNum));
+    }
+
+    @Override
+    public void genJmpIfEqToWhileOnFirstTimeEnterLbl(int lblNum) {
+        this.genJmpIfEqual(String.format(LBL_WHILE_ON_FIRST_TIME_ENTER, lblNum));
+    }
+
+    @Override
+    public void genJmpIfEqToWhileBlockStart(int lblNum) {
+        this.genJmpIfEqual(String.format(LBL_WHILE_BLOCK_START, lblNum));
+    }
+
+    @Override
+    public void genJmpWhileBlockEnd(int lblNum) {
+        this.genNonCondJmp(String.format(LBL_WHILE_BLOCK_END, lblNum));
+    }
+
+    @Override
+    public void genJmpWhileLoopStart(int lblNum) {
+        this.genNonCondJmp(String.format(LBL_WHILE_LOOP_START, lblNum));
+    }
+
+    @Override
+    public void genJmpIfEqToWhileLoopEnd(int lblNum) {
+        this.genJmpIfEqual(String.format(LBL_WHILE_LOOP_END, lblNum));
     }
 
     @Override
     public void genJmpIfEqToDefParamNumExpStart(int lblNum) {
         this.genJmpIfEqual(String.format(LBL_DEF_PARAM_NUM_EXP, lblNum));
+    }
+
+    @Override
+    public void genJmpIfElifElseEnd(int lblNum) {
+        this.genNonCondJmp(String.format(LBL_IF_ELIF_ELSE_STAT_END, lblNum));
     }
 
     @Override
@@ -442,7 +488,42 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     }
 
     @Override
-    public void genIfElifElseStartLabel(int lblNum) {
+    public void genWhileElseEndLabel(int lblNum) {
+        this.genLabel(String.format(LBL_WHILE_ELSE_STAT_END, lblNum));
+    }
+
+    @Override
+    public void genWhileConditionStartLbl(int lblNum) {
+        this.genLabel(String.format(LBL_WHILE_CONDITION_START, lblNum));
+    }
+
+    @Override
+    public void genWhileOnFirstTimeEnterLbl(int lblNum) {
+        this.genLabel(String.format(LBL_WHILE_ON_FIRST_TIME_ENTER, lblNum));
+    }
+
+    @Override
+    public void genWhileStatPartEndLbl(int lblNum) {
+        this.genLabel(String.format(LBL_WHILE_STAT_PART_END, lblNum));
+    }
+
+    @Override
+    public void genWhileBlockStartLbl(int lblNum) {
+        this.genLabel(String.format(LBL_WHILE_BLOCK_START, lblNum));
+    }
+
+    @Override
+    public void genWhileBlockEndLbl(int lblNum) {
+        this.genLabel(String.format(LBL_WHILE_BLOCK_END, lblNum));
+    }
+
+    @Override
+    public void genWhileLoopStartLbl(int lblNum) {
+        this.genLabel(String.format(LBL_WHILE_LOOP_START, lblNum));
+    }
+
+    @Override
+    public void genIfElifElseEndLabel(int lblNum) {
         this.genLabel(String.format(LBL_IF_ELIF_ELSE_STAT_END, lblNum));
     }
 
@@ -544,18 +625,6 @@ public class AssemblyGenerator implements IAssemblyGenerator {
                 ),
                 this.makeRegisterAccessSymbol(AssemblyRegister.RSP)
         ));
-    }
-
-    @Override
-    public void genFunctionEnd(String funcName, int funcVarsCount) {
-//        this.genStackPointerInc(currVarCount);
-//        this.genLabel(
-//                String.format(FUNC_END_LBL_NAME_FORMAT, funcName)
-//        );
-//        this.currentFunc.append(FUNC_END);
-//        this.funcIndStack.pop();
-//        this.currentFunc = this.funcDefs.get(this.funcIndStack.peek());
-//        this.stackAlignTracker.decreaseBlock();
     }
 
     @Override

@@ -11,7 +11,7 @@ public class CompilationInfoTracker {
     private final Stack<FunctionInfoTracker> funcContexts;
 
     @Getter
-    protected final IfStatementLblTracker ifStatLblTracker;
+    protected final IfAndWhileStatementLblTracker ifAndWhileStatementLblTracker;
     @Getter
     protected final DefParamsLblTracker defParamsLblTracker;
     @Getter
@@ -27,7 +27,7 @@ public class CompilationInfoTracker {
 
     private CompilationInfoTracker() {
         this.funcContexts = new Stack<>();
-        this.ifStatLblTracker = new IfStatementLblTracker();
+        this.ifAndWhileStatementLblTracker = new IfAndWhileStatementLblTracker();
         this.defParamsLblTracker = new DefParamsLblTracker();
         this.literalsLblTracker = new LiteralsLblTracker();
         this.nonIdArgCountTracker = new NonIdArgCountTracker();

@@ -1,4 +1,4 @@
-package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.if_statement_domain;
+package main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.if_and_while_statements_domain;
 
 import main.java.evilpops.pyathome_2_x86.assembly_generator.AssemblyGenerator;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.IAssemblyGenerator;
@@ -10,12 +10,12 @@ public class IfStatPartCtxProcessor {
 
     public static void processOnEnter() {
         assemblyGenerator.genIfStatStartLabel(
-                compilationInfoTracker.getIfStatLblTracker().getCurrLblNum()
+                compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum()
         );
     }
 
     public static void processOnExit() {
-        int ifElifElseLblNum = compilationInfoTracker.getIfStatLblTracker().getCurrLblNum();
+        int ifElifElseLblNum = compilationInfoTracker.getIfAndWhileStatementLblTracker().getCurrLblNum();
         assemblyGenerator.genJmpIfElifElseEnd(ifElifElseLblNum);
         assemblyGenerator.genIfStatEndLabel(ifElifElseLblNum);
     }

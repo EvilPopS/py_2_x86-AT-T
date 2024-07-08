@@ -65,6 +65,7 @@ simpleStatement
 
 compundStatement
     : functionDef
+    | whileElseStatement
     | ifElifElseStatement
     ;
 
@@ -109,12 +110,24 @@ paramDefVal
     | paramDefVal COMMA paramDefVal
     ;
 
+whileElseStatement
+    : whileStatPart elseStatPart?
+    ;
+
+whileStatPart
+    : whileConditionPart nonTerminalBlock
+    ;
+
+whileConditionPart
+    : WHILE numExpression COLON NEWLINE
+    ;
+
 ifElifElseStatement
     : ifStatPart elifStatPart* elseStatPart?
     ;
 
 ifStatPart
-    :  ifConditionPart block
+    :  ifConditionPart terminalBlock
     ;
 
 ifConditionPart
@@ -122,7 +135,7 @@ ifConditionPart
     ;
 
 elifStatPart
-    : elifConditionPart block
+    : elifConditionPart terminalBlock
     ;
 
 elifConditionPart
@@ -130,7 +143,15 @@ elifConditionPart
     ;
 
 elseStatPart
-    : ELSE COLON NEWLINE block
+    : ELSE COLON NEWLINE terminalBlock
+    ;
+
+nonTerminalBlock
+    : block
+    ;
+
+terminalBlock
+    : block
     ;
 
 block
@@ -261,6 +282,7 @@ DEF: 'def';
 RETURN: 'return';
 INBUILT_PRINT_FUNC: 'print';
 
+WHILE: 'while';
 IF: 'if';
 ELIF: 'elif';
 ELSE: 'else';

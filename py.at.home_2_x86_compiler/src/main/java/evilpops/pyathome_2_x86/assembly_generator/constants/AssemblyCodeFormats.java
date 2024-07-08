@@ -86,11 +86,21 @@ public class AssemblyCodeFormats {
     public static final String LBL_DEF_PARAM_COND_END = "L_DEF_PARAM_COND_%s_END";
     public static final String LBL_DEF_PARAM_NUM_EXP = "L_DEF_PARAM_NUM_EXP_%s";
 
+    public static final String LBL_WHILE_ELSE_STAT_END = "L_WHILE_ELSE_STAT_END_%s";
+    public static final String LBL_WHILE_CONDITION_START = "L_WHILE_CONDITION_START_%s";
+    public static final String LBL_WHILE_ON_FIRST_TIME_ENTER = "L_WHILE_ON_FIRST_TIME_ENTER_%s";
+    public static final String LBL_WHILE_STAT_PART_END = "L_WHILE_STAT_PART_END_%s";
+    public static final String LBL_WHILE_BLOCK_START = "L_WHILE_BLOCK_START_%s";
+    public static final String LBL_WHILE_BLOCK_END = "L_WHILE_BLOCK_END_%s";
+    public static final String LBL_WHILE_LOOP_START = "L_WHILE_LOOP_START_%s";
+    public static final String LBL_WHILE_LOOP_END = "L_WHILE_LOOP_END_%s";
+
     public static final String LBL_IF_ELIF_ELSE_STAT_END = "L_IF_ELIF_ELSE_STAT_END_%s";
     public static final String LBL_IF_STAT_START = "L_IF_STAT_START_%s";
     public static final String LBL_IF_STAT_END = "L_IF_STAT_END_%s";
     public static final String LBL_ELIF_STAT_START = "L_ELIF_STAT_START_%s_%s";
     public static final String LBL_ELIF_STAT_END = "L_ELIF_STAT_END_%s_%s";
+
     public static final String LBL_ELSE_STAT_START = "L_ELSE_STAT_START_%s";
 
     public static final String BUILT_IN_CONCAT_STRINGS_LBL = "BUILT_IN_STRING_CONCAT";

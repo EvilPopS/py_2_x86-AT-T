@@ -59,6 +59,10 @@ public class FunctionInfoTracker {
         return this.varCounters.peek().getCount();
     }
 
+    public int getVarCounter() {
+        return this.varCounters.peek().getCount();
+    }
+
     public void decVarCounterByAmount(int amount) {
         this.varCounters.peek().decVarCountByAmount(amount);
     }
