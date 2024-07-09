@@ -54,7 +54,8 @@ public class AssignStatementCtxProcessor {
                 compilationInfoTracker.getFunctionScopeTracker().getScope(),
                 compilationInfoTracker.getBlockScopeTracker().getScope(),
                 varName,
-                compilationInfoTracker.getCurrFuncTracker().incAndGetVarCounter());
+                compilationInfoTracker.getCurrFuncTracker().incAndGetVarCounter()
+        );
         assemblyGenerator.genStackPointerDec(1);
         return idRef;
     }

@@ -26,6 +26,8 @@ public class CompilationInfoTracker {
     protected final BlockScopeTracker blockScopeTracker;
     @Getter
     protected final ReturnStatInfoTracker returnStatInfoTracker;
+    @Getter
+    protected final MultiAssignInfoTracker multiAssignInfoTracker;
 
     private CompilationInfoTracker() {
         this.funcContexts = new Stack<>();
@@ -37,6 +39,7 @@ public class CompilationInfoTracker {
         this.functionScopeTracker = new FunctionScopeTracker();
         this.blockScopeTracker = new BlockScopeTracker();
         this.returnStatInfoTracker = new ReturnStatInfoTracker();
+        this.multiAssignInfoTracker = new MultiAssignInfoTracker();
         this.onNewFunctionStart(-1);
     }
 

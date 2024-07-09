@@ -68,6 +68,56 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitAssignStatement(PyAtHomeParser.AssignStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#multiAssignStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiAssignStatement(PyAtHomeParser.MultiAssignStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#multiAssignStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiAssignStatement(PyAtHomeParser.MultiAssignStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#multiAssignIdPart}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiAssignIdPart(PyAtHomeParser.MultiAssignIdPartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#multiAssignIdPart}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiAssignIdPart(PyAtHomeParser.MultiAssignIdPartContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#multiAssignId}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiAssignId(PyAtHomeParser.MultiAssignIdContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#multiAssignId}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiAssignId(PyAtHomeParser.MultiAssignIdContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#multiAssignNumExpPart}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiAssignNumExpPart(PyAtHomeParser.MultiAssignNumExpPartContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#multiAssignNumExpPart}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiAssignNumExpPart(PyAtHomeParser.MultiAssignNumExpPartContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PyAtHomeParser#multiAssignNumExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiAssignNumExpression(PyAtHomeParser.MultiAssignNumExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PyAtHomeParser#multiAssignNumExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiAssignNumExpression(PyAtHomeParser.MultiAssignNumExpressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#returnStatement}.
 	 * @param ctx the parse tree
 	 */
