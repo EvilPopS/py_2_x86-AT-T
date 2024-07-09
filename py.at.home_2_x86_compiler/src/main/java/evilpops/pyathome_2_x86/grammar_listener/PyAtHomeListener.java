@@ -1,6 +1,7 @@
 package main.java.evilpops.pyathome_2_x86.grammar_listener;
 
 
+import main.java.evilpops.pyathome_2_x86.compilation_info_tracker.components.MultiAssignStatementCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeBaseListener;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.expressions_domain.ExpressionCtxProcessor;
@@ -12,6 +13,7 @@ import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.functio
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain.PrintFunctionCallCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_def_domain.*;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.if_and_while_statements_domain.*;
+import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.multi_assign_statement_domain.MultiAssignNumExpressionCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.shared_domain.NonTerminalBlockCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.shared_domain.TerminalBlockCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.shared_domain.ProgramCtxProcessor;
@@ -166,6 +168,24 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
     public void exitAssignStatement(PyAtHomeParser.AssignStatementContext ctx) {
         if (!logHandler.isCompilationErrorDetected())
             AssignStatementCtxProcessor.processOnExit(ctx);
+    }
+
+    @Override
+    public void enterMultiAssignStatement(PyAtHomeParser.MultiAssignStatementContext ignored) {
+        if (!logHandler.isCompilationErrorDetected())
+            MultiAssignStatementCtxProcessor.processOnEnter();
+    }
+
+    @Override
+    public void exitMultiAssignStatement(PyAtHomeParser.MultiAssignStatementContext ctx) {
+        if (!logHandler.isCompilationErrorDetected())
+            MultiAssignStatementCtxProcessor.processOnExit(ctx);
+    }
+
+    @Override
+    public void exitMultiAssignNumExpression(PyAtHomeParser.MultiAssignNumExpressionContext ctx) {
+        if (!logHandler.isCompilationErrorDetected())
+            MultiAssignNumExpressionCtxProcessor.processOnExit(ctx);
     }
 
     @Override

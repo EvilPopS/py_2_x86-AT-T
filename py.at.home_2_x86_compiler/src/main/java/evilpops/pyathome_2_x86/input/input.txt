@@ -1,10 +1,7 @@
-def printXmasTree(size: int):
-    while size > 0:
-        n = size
-        while n > 0:
-            print(n*"Q")
-            n = n-1
-        size = size - 1
+a = 1
+b = 2
+a,c,b = b, a+b, 13
 
-
-printXmasTree(4)
+print(a)
+print(b)
+print(c)

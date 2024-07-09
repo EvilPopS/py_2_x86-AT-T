@@ -58,6 +58,7 @@ statement
 
 simpleStatement
     : assignStatement
+    | multiAssignStatement
     | returnStatement
     | continueStatement
     | breakStatement
@@ -74,6 +75,26 @@ compundStatement
 
 assignStatement
     : ID varType? ASSIGN numExpression
+    ;
+
+multiAssignStatement
+    : multiAssignIdPart ASSIGN multiAssignNumExpPart
+    ;
+
+multiAssignIdPart
+    : multiAssignId (COMMA multiAssignId)+
+    ;
+
+multiAssignId
+    : ID varType?
+    ;
+
+multiAssignNumExpPart
+    : multiAssignNumExpression (COMMA multiAssignNumExpression)+
+    ;
+
+multiAssignNumExpression
+    : numExpression
     ;
 
 returnStatement
