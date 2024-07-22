@@ -110,4 +110,5 @@ public interface IAssemblyGenerator {
     String makeJmpInst(ConditionalJump conditionalJump, boolean is64bit);
 
     void printToConsole();
+    void writeToFile(String pathToFile);
 }

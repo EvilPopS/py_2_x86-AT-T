@@ -33,7 +33,7 @@ public class App {
             parser.program();
 
             LogHandler.getInstance().printWarningMessagesIfAny();
-            AssemblyGenerator.getInstance().printToConsole();
+            AssemblyGenerator.getInstance().writeToFile("./src/main/java/evilpops/pyathome_2_x86/output/output.txt");
         } catch (CompilationError compilationError) {
             LogHandler.getInstance().printErrorMessage(compilationError.getMessage());
         }

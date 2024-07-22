@@ -1,7 +1,32 @@
-a = 1
-b = 2
-a,c,b = b, a+b, 13
 
-print(a)
-print(b)
-print(c)
+def print_result(lbl: str, result: int):
+    print(lbl)
+    print(result)
+
+# 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233
+def fib(n: int) -> int:
+    if n == 1 or n == 2:
+        return 1
+    return fib(n-1) + fib(n-2)
+
+print_result("Fibonaci rez:",fib(13))
+
+def factorial(num:int)->int:
+    if num < 0:
+        return 0
+    if num == 0:
+        return 1
+
+    return num * factorial(num - 1)
+
+print_result("Factorial result:",factorial(5))
+
+def print_tree(size: int):
+    spaces = size-2
+    stars = 1
+    while stars < spaces :
+        print(" " * spaces + "*" * stars + " " * spaces)
+        spaces = spaces - 1
+        stars = stars + 2
+
+print_tree(16)

@@ -6,6 +6,9 @@ import main.java.evilpops.pyathome_2_x86.assembly_generator.enums.AssemblyRegist
 import main.java.evilpops.pyathome_2_x86.assembly_generator.enums.ConditionalJump;
 import main.java.evilpops.pyathome_2_x86.assembly_generator.utils.StackAlignmentTracker;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 import static main.java.evilpops.pyathome_2_x86.assembly_generator.constants.AssemblyCodeFormats.*;
@@ -682,6 +685,17 @@ public class AssemblyGenerator implements IAssemblyGenerator {
     @Override
     public void printToConsole() {
         System.out.println(this.dataSection.toString() + this.buildFuncDefs() + this.builtInFuncs.toString());
+    }
+
+    @Override
+    public void writeToFile(String pathToFile) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToFile))) {
+            writer.write(
+                    this.dataSection.toString() + this.buildFuncDefs() + this.builtInFuncs.toString()
+            );
+        } catch (IOException ignored) {
+            printToConsole();
+        }
     }
 
     @SuppressWarnings("SameParameterValue")
