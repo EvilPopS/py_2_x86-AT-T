@@ -1,4 +1,4 @@
-// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4 by ANTLR 4.13.1
+// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4 by ANTLR 4.13.2
 package main.java.evilpops.pyathome_2_x86.grammar.grammar_classes;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -48,15 +48,15 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitSimpleStatement(PyAtHomeParser.SimpleStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PyAtHomeParser#compundStatement}.
+	 * Enter a parse tree produced by {@link PyAtHomeParser#compoundStatement}.
 	 * @param ctx the parse tree
 	 */
-	void enterCompundStatement(PyAtHomeParser.CompundStatementContext ctx);
+	void enterCompoundStatement(PyAtHomeParser.CompoundStatementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PyAtHomeParser#compundStatement}.
+	 * Exit a parse tree produced by {@link PyAtHomeParser#compoundStatement}.
 	 * @param ctx the parse tree
 	 */
-	void exitCompundStatement(PyAtHomeParser.CompundStatementContext ctx);
+	void exitCompoundStatement(PyAtHomeParser.CompoundStatementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#assignStatement}.
 	 * @param ctx the parse tree
@@ -378,15 +378,15 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitTypes(PyAtHomeParser.TypesContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PyAtHomeParser#numExpression}.
+	 * Enter a parse tree produced by {@link PyAtHomeParser#complexExpression}.
 	 * @param ctx the parse tree
 	 */
-	void enterNumExpression(PyAtHomeParser.NumExpressionContext ctx);
+	void enterComplexExpression(PyAtHomeParser.ComplexExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PyAtHomeParser#numExpression}.
+	 * Exit a parse tree produced by {@link PyAtHomeParser#complexExpression}.
 	 * @param ctx the parse tree
 	 */
-	void exitNumExpression(PyAtHomeParser.NumExpressionContext ctx);
+	void exitComplexExpression(PyAtHomeParser.ComplexExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#addSubOperators}.
 	 * @param ctx the parse tree
@@ -438,15 +438,15 @@ public interface PyAtHomeListener extends ParseTreeListener {
 	 */
 	void exitLogicOrOperator(PyAtHomeParser.LogicOrOperatorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PyAtHomeParser#expression}.
+	 * Enter a parse tree produced by {@link PyAtHomeParser#simpleExpression}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpression(PyAtHomeParser.ExpressionContext ctx);
+	void enterSimpleExpression(PyAtHomeParser.SimpleExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PyAtHomeParser#expression}.
+	 * Exit a parse tree produced by {@link PyAtHomeParser#simpleExpression}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpression(PyAtHomeParser.ExpressionContext ctx);
+	void exitSimpleExpression(PyAtHomeParser.SimpleExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PyAtHomeParser#funcCallExpression}.
 	 * @param ctx the parse tree

@@ -14,10 +14,10 @@ public class PrintFunctionCallCtxProcessor {
 
 
     public static void processOnExit(PyAtHomeParser.PrintFunctionCallContext ctx) {
-        if (ctx.numExpression() == null) {
+        if (ctx.complexExpression() == null) {
             processPrintWhenEmpty();
         } else {
-            int numExpRef = ctx.numExpression().getRefToSymTab();
+            int numExpRef = ctx.complexExpression().getRefToSymTab();
             switch (symTabController.getDataType(numExpRef)) {
                 case INTEGER, BOOLEAN -> processPrintWhenIntOrBool(numExpRef);
                 case FLOAT -> processPrintWhenFloat(numExpRef);

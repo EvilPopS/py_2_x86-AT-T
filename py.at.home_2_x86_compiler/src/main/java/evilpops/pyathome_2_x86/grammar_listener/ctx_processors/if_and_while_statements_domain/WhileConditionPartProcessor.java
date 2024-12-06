@@ -36,7 +36,7 @@ public class WhileConditionPartProcessor {
 
     private static int processConditionPart(PyAtHomeParser.WhileConditionPartContext ctx) {
         return ConversionProcessor.processTypeConversion(
-                ctx.numExpression().getRefToSymTab(),
+                ctx.complexExpression().getRefToSymTab(),
                 DataType.BOOLEAN
         );
     }
@@ -83,9 +83,6 @@ public class WhileConditionPartProcessor {
         );
 
         assemblyGenerator.genJmpIfEqToWhileBlockStart(lblNum);
-
-        assemblyGenerator.genStackPointerInc(1);
-        compilationInfoTracker.getCurrFuncTracker().decVarCounterByAmount(1);
 
         assemblyGenerator.genJmpWhileStatPartEnd(lblNum);
     }

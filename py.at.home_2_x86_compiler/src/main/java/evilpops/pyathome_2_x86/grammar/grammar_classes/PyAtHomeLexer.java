@@ -1,4 +1,4 @@
-// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4 by ANTLR 4.13.1
+// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4 by ANTLR 4.13.2
 package main.java.evilpops.pyathome_2_x86.grammar.grammar_classes;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class PyAtHomeLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.13.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.13.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -103,13 +103,10 @@ public class PyAtHomeLexer extends Lexer {
 	@Override
 	public Token nextToken() {
 		Token tk = indentTracker.sendDentTokenIfNeeded(this.getLine());
-	    if (tk != null) {
-	        System.out.println(tk);
+	    if (tk != null)
 	        return tk;
-	    }
 
 	    tk = super.nextToken();
-	    System.out.println(tk);
 	    indentTracker.processToken(tk);
 	    return tk;
 	}

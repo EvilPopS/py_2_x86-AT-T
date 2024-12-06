@@ -14,7 +14,7 @@ public class ElifConditionPartCtxProcessor {
 
     public static void processOnExit(PyAtHomeParser.ElifConditionPartContext ctx) {
         int conditionExpRef = ConversionProcessor.processTypeConversion(
-                ctx.numExpression().getRefToSymTab(),
+                ctx.complexExpression().getRefToSymTab(),
                 DataType.BOOLEAN
         );
 

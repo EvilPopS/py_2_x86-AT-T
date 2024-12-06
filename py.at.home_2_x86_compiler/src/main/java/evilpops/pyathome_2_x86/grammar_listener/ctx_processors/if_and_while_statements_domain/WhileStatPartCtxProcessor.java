@@ -22,22 +22,22 @@ public class WhileStatPartCtxProcessor {
         assemblyGenerator.genWhileBlockEndLbl(lblNum);
 
         int newBlockVarsNum = compilationInfoTracker.getCurrFuncTracker().getNumOfNewVarsFromCurrBlock();
-        if (newBlockVarsNum != 0)
-            assemblyGenerator.genStackPointerInc(newBlockVarsNum);
+        assemblyGenerator.genStackPointerInc(newBlockVarsNum + 1);
 
         compilationInfoTracker.getCurrFuncTracker().varCounterOnBlockEnd();
+        compilationInfoTracker.getCurrFuncTracker().decVarCounterByAmount(1);
+
         symTabController.deleteCurrentBlockScope(
                 compilationInfoTracker.getBlockScopeTracker().getScope()
         );
         compilationInfoTracker.getBlockScopeTracker().decScope();
         compilationInfoTracker.getReturnStatInfoTracker().onBlockEnd();
 
-        assemblyGenerator.genStackPointerInc(1);
-        compilationInfoTracker.getCurrFuncTracker().decVarCounterByAmount(1);
-
         assemblyGenerator.genJmpWhileElseStatEnd(lblNum);
 
         assemblyGenerator.genWhileStatPartEndLbl(lblNum);
+
+        assemblyGenerator.genStackPointerInc(1);
 
         compilationInfoTracker.getWhileStatementInfoTracker().decWhileLoopDepth();
     }

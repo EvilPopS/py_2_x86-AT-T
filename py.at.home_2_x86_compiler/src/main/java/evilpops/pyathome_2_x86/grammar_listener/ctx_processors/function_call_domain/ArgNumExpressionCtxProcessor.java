@@ -15,7 +15,7 @@ public class ArgNumExpressionCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static int processOnExit(PyAtHomeParser.ArgNumExpressionContext ctx) {
-        int numExpRef = ctx.numExpression().getRefToSymTab();
+        int numExpRef = ctx.complexExpression().getRefToSymTab();
         DataType numExpDataType = symTabController.getDataType(numExpRef);
 
         boolean is64bit = !numExpDataType.equals(DataType.FLOAT);

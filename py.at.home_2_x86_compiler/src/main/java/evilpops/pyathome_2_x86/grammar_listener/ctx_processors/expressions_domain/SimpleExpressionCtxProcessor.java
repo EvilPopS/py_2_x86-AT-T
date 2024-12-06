@@ -10,12 +10,12 @@ import main.java.evilpops.pyathome_2_x86.symbol_table.ISymTabController;
 import main.java.evilpops.pyathome_2_x86.symbol_table.SymTabController;
 import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
 
-public class ExpressionCtxProcessor {
+public class SimpleExpressionCtxProcessor {
     private static final IAssemblyGenerator assemblyGenerator = AssemblyGenerator.getInstance();
     private static final ISymTabController symTabController = SymTabController.getInstance();
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
-    public static int processOnExit(PyAtHomeParser.ExpressionContext ctx) {
+    public static int processOnExit(PyAtHomeParser.SimpleExpressionContext ctx) {
         if (ctx.literal() != null)
             return processIfLiteral(ctx);
         else if (ctx.ID() != null)
@@ -26,11 +26,11 @@ public class ExpressionCtxProcessor {
             throw new BadImplementationException();
     }
 
-    private static int processIfLiteral(PyAtHomeParser.ExpressionContext ctx) {
+    private static int processIfLiteral(PyAtHomeParser.SimpleExpressionContext ctx) {
         return ctx.literal().getRefToSymTab();
     }
 
-    private static int processIfId(PyAtHomeParser.ExpressionContext ctx) {
+    private static int processIfId(PyAtHomeParser.SimpleExpressionContext ctx) {
         int varRef = symTabController.getVarRefByNameInAnyScope(ctx.ID().getText());
         int varScope = symTabController.getFuncScope(varRef);
         int currentScope = compilationInfoTracker.getFunctionScopeTracker().getScope();
@@ -40,7 +40,7 @@ public class ExpressionCtxProcessor {
             return processIdIfVarOutOfCurrScope(varRef, varScope, currentScope);
     }
 
-    private  static int processIfFuncCall(PyAtHomeParser.ExpressionContext ctx) {
+    private  static int processIfFuncCall(PyAtHomeParser.SimpleExpressionContext ctx) {
         return ctx.funcCallExpression().getRefToSymTab();
     }
 

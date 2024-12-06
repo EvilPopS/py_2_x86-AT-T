@@ -1,4 +1,4 @@
-// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4 by ANTLR 4.13.1
+// Generated from H:/Projects/diplomski/py.at.home_2_x86_compiler/py.at.home_2_x86_compiler/src/main/java/evilpops/pyathome_2_x86/grammar/PyAtHome.g4 by ANTLR 4.13.2
 package main.java.evilpops.pyathome_2_x86.grammar.grammar_classes;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -65,13 +65,13 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCompundStatement(PyAtHomeParser.CompundStatementContext ctx) { }
+	@Override public void enterCompoundStatement(PyAtHomeParser.CompoundStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCompundStatement(PyAtHomeParser.CompundStatementContext ctx) { }
+	@Override public void exitCompoundStatement(PyAtHomeParser.CompoundStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -461,13 +461,13 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNumExpression(PyAtHomeParser.NumExpressionContext ctx) { }
+	@Override public void enterComplexExpression(PyAtHomeParser.ComplexExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNumExpression(PyAtHomeParser.NumExpressionContext ctx) { }
+	@Override public void exitComplexExpression(PyAtHomeParser.ComplexExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -533,13 +533,13 @@ public class PyAtHomeBaseListener implements PyAtHomeListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpression(PyAtHomeParser.ExpressionContext ctx) { }
+	@Override public void enterSimpleExpression(PyAtHomeParser.SimpleExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpression(PyAtHomeParser.ExpressionContext ctx) { }
+	@Override public void exitSimpleExpression(PyAtHomeParser.SimpleExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

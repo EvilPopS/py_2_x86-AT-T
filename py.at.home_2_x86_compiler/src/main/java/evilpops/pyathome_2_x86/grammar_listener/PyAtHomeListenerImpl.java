@@ -4,9 +4,9 @@ package main.java.evilpops.pyathome_2_x86.grammar_listener;
 import main.java.evilpops.pyathome_2_x86.compilation_info_tracker.components.MultiAssignStatementCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeBaseListener;
 import main.java.evilpops.pyathome_2_x86.grammar.grammar_classes.PyAtHomeParser;
-import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.expressions_domain.ExpressionCtxProcessor;
+import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.expressions_domain.SimpleExpressionCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.expressions_domain.LiteralCtxProcessor;
-import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.expressions_domain.NumExpressionCtxProcessor;
+import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.expressions_domain.ComplexExpressionCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain.ArgNumExpressionCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain.FuncCallExpressionCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.function_call_domain.FunctionCallCtxProcessor;
@@ -23,7 +23,7 @@ import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.simple_
 import main.java.evilpops.pyathome_2_x86.grammar_listener.ctx_processors.simple_statements_domain.ReturnStatementCtxProcessor;
 import main.java.evilpops.pyathome_2_x86.log_handler.LogHandler;
 
-public class PyAtHomeListener extends PyAtHomeBaseListener {
+public class PyAtHomeListenerImpl extends PyAtHomeBaseListener {
     private static final LogHandler logHandler = LogHandler.getInstance();
 
     @Override
@@ -237,15 +237,15 @@ public class PyAtHomeListener extends PyAtHomeBaseListener {
     }
 
     @Override
-    public void exitNumExpression(PyAtHomeParser.NumExpressionContext ctx) {
+    public void exitComplexExpression(PyAtHomeParser.ComplexExpressionContext ctx) {
         if (!logHandler.isCompilationErrorDetected())
-            ctx.setRefToSymTab(NumExpressionCtxProcessor.processOnExit(ctx));
+            ctx.setRefToSymTab(ComplexExpressionCtxProcessor.processOnExit(ctx));
     }
 
     @Override
-    public void exitExpression(PyAtHomeParser.ExpressionContext ctx) {
+    public void exitSimpleExpression(PyAtHomeParser.SimpleExpressionContext ctx) {
         if (!logHandler.isCompilationErrorDetected())
-            ctx.setRefToSymTab(ExpressionCtxProcessor.processOnExit(ctx));
+            ctx.setRefToSymTab(SimpleExpressionCtxProcessor.processOnExit(ctx));
     }
 
     @Override

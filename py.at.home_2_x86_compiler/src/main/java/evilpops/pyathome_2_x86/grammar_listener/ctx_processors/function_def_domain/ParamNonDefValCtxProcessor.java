@@ -41,7 +41,8 @@ public class ParamNonDefValCtxProcessor {
                 compilationInfoTracker.getCurrFuncTracker().getFuncRef(),
                 false,
                 compilationInfoTracker.getCurrFuncTracker().getTotalParamCnt(),
-                perDataTypeParamOrdinality);
+                perDataTypeParamOrdinality
+        );
 
         paramRef = symTabController.transferParamToVar(
                 paramRef,

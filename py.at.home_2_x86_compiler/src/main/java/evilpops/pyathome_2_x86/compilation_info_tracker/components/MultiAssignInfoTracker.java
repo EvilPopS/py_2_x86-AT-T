@@ -44,11 +44,11 @@ public class MultiAssignInfoTracker {
         this.varInfos.pollFirst();
     }
 
-    public int getNestNumExpOrdinality() {
+    public int getNextNumExpOrdinality() {
         return this.getFirstVarInfoFromDeque().getNumExpOrdinality();
     }
 
-    public DataType getNestNumExpDataType() {
+    public DataType getNextNumExpDataType() {
         return this.getFirstVarInfoFromDeque().getNumExpDataType();
     }
 

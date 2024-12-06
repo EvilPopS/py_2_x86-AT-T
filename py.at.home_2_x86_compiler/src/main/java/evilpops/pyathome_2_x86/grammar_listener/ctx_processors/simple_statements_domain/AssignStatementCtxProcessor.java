@@ -19,7 +19,7 @@ public class AssignStatementCtxProcessor {
 
     public static void processOnExit(PyAtHomeParser.AssignStatementContext ctx) {
         String varName = ctx.ID().getText();
-        int numExpRef = ctx.numExpression().getRefToSymTab();
+        int numExpRef = ctx.complexExpression().getRefToSymTab();
         DataType numExpDataType = symTabController.getDataType(numExpRef);
 
         DataType explicitType = (ctx.varType() != null)
@@ -33,7 +33,7 @@ public class AssignStatementCtxProcessor {
         try {
             idRef = processFindVarInCurrFuncScope(varName, numExpDataType);
         } catch (VariableNotFoundException ignored) {
-             idRef = processVarRefCreate(varName, numExpDataType);
+            idRef = processVarRefCreate(varName, numExpDataType);
         }
 
         processNumExpToVarAssignment(idRef, numExpRef, numExpDataType);
@@ -66,26 +66,20 @@ public class AssignStatementCtxProcessor {
                 (symTabController.checkIfIsLiteral(numExpRef) && !is64bit)
                         || symTabController.checkIfIsVar(numExpRef)
         ) {
-            int regRef = symTabController.takeRegister(numExpDataType);
+            numExpRef = symTabController.takeRegister(numExpDataType);
             assemblyGenerator.genMoveSymbolToReg(
                     AssemblySymbolProcessor.createAssemblySymbol(numExpRef),
-                    symTabController.getRegName(regRef),
+                    symTabController.getRegName(numExpRef),
                     is64bit
 
             );
-            assemblyGenerator.genMoveSymbolToSymbol(
-                    AssemblySymbolProcessor.createAssemblySymbol(regRef),
-                    AssemblySymbolProcessor.createAssemblySymbol(idRef),
-                    is64bit
-            );
-            symTabController.freeIfIsRegister(regRef);
-        } else {
-            assemblyGenerator.genMoveSymbolToSymbol(
-                    AssemblySymbolProcessor.createAssemblySymbol(numExpRef),
-                    AssemblySymbolProcessor.createAssemblySymbol(idRef),
-                    is64bit
-            );
         }
+
+        assemblyGenerator.genMoveSymbolToSymbol(
+                AssemblySymbolProcessor.createAssemblySymbol(numExpRef),
+                AssemblySymbolProcessor.createAssemblySymbol(idRef),
+                is64bit
+        );
         symTabController.freeIfIsRegister(numExpRef);
     }
 

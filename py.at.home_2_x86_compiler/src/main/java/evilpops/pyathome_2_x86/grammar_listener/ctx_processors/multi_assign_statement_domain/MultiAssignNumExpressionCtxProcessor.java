@@ -15,7 +15,7 @@ public class MultiAssignNumExpressionCtxProcessor {
     private static final CompilationInfoTracker compilationInfoTracker = CompilationInfoTracker.getInstance();
 
     public static void processOnExit(PyAtHomeParser.MultiAssignNumExpressionContext ctx) {
-        int numExpRef = ctx.numExpression().getRefToSymTab();
+        int numExpRef = ctx.complexExpression().getRefToSymTab();
 
         int varOrdinality = compilationInfoTracker.getCurrFuncTracker().incAndGetVarCounter();
         compilationInfoTracker.getMultiAssignInfoTracker().onMultiAssignNumExpEnd(

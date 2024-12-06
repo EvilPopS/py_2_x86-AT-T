@@ -28,7 +28,7 @@ public class ParamDefValCtxProcessor {
         if (ctx.COMMA() != null)
             return;
 
-        int numExpRef = ctx.numExpression().getRefToSymTab();
+        int numExpRef = ctx.complexExpression().getRefToSymTab();
         DataType numExpDataType = symTabController.getDataType(numExpRef);
 
         if (
@@ -58,7 +58,8 @@ public class ParamDefValCtxProcessor {
                 compilationInfoTracker.getCurrFuncTracker().getFuncRef(),
                 true,
                 compilationInfoTracker.getCurrFuncTracker().getTotalParamCnt(),
-                perDataTypeParamOrdinality);
+                perDataTypeParamOrdinality
+        );
 
         int paramAsVarRef = symTabController.transferParamToVar(
                 paramRef,
@@ -106,7 +107,6 @@ public class ParamDefValCtxProcessor {
     }
 
     private static void genParamDefConditionCode(int paramRef, int paramAsVarRef) {
-        //TODO lbl counter za param def
         int lblNum = compilationInfoTracker.getDefParamsLblTracker().getLblCounter();
         assemblyGenerator.genDefParamCondStartLabel(lblNum);
 

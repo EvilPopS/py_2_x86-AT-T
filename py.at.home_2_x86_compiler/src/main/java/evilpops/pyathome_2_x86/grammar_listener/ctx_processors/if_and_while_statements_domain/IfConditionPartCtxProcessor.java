@@ -15,7 +15,7 @@ public class IfConditionPartCtxProcessor {
 
     public static void processOnExit(PyAtHomeParser.IfConditionPartContext ctx) {
         int conditionExpRef = ConversionProcessor.processTypeConversion(
-                ctx.numExpression().getRefToSymTab(),
+                ctx.complexExpression().getRefToSymTab(),
                 DataType.BOOLEAN
         );
 

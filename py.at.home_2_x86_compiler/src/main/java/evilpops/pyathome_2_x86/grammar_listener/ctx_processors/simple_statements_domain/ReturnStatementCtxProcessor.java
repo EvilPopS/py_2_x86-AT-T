@@ -29,8 +29,8 @@ public class ReturnStatementCtxProcessor {
 
         boolean is64bit = !funcRetDataType.equals(DataType.FLOAT);
 
-        int numExpRef = ctx.numExpression() != null
-                ? ctx.numExpression().getRefToSymTab()
+        int numExpRef = ctx.complexExpression() != null
+                ? ctx.complexExpression().getRefToSymTab()
                 : symTabController.addLiteralNone(
                         compilationInfoTracker.getFunctionScopeTracker().getScope(),
                         compilationInfoTracker.getBlockScopeTracker().getScope()

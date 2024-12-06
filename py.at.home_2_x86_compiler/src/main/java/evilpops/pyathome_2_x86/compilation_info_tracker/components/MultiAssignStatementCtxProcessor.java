@@ -25,8 +25,8 @@ public class MultiAssignStatementCtxProcessor {
     public static void processOnExit(PyAtHomeParser.MultiAssignStatementContext ctx) {
         for (PyAtHomeParser.MultiAssignIdContext varCtx : ctx.multiAssignIdPart().multiAssignId()) {
             String varName = varCtx.ID().getText();
-            int numExpMemOrdinality = compilationInfoTracker.getMultiAssignInfoTracker().getNestNumExpOrdinality();
-            DataType numExpDataType = compilationInfoTracker.getMultiAssignInfoTracker().getNestNumExpDataType();
+            int numExpMemOrdinality = compilationInfoTracker.getMultiAssignInfoTracker().getNextNumExpOrdinality();
+            DataType numExpDataType = compilationInfoTracker.getMultiAssignInfoTracker().getNextNumExpDataType();
 
             DataType explicitType = (varCtx.varType() != null)
                     ? TypesContextProcessor.convertTypingCtxToDataType(varCtx.varType().types())

@@ -21,12 +21,19 @@ public class FunctionCallCtxProcessor {
     public static void processOnExit(PyAtHomeParser.FunctionCallContext ctx) {
         int calledFuncRef = symTabController.getFuncRefByName(ctx.ID().getText());
 
+        List<Integer> paramRefs = symTabController.getFuncsParamRefs(calledFuncRef);
         if (ctx.arguments() != null) {
-            List<Integer> paramRefs = symTabController.getFuncsParamRefs(calledFuncRef);
             processNonIdArgs(ctx.arguments().nonIdArgs(), calledFuncRef, paramRefs);
             processIdArgs(ctx.arguments().idArgs(), calledFuncRef, paramRefs);
-            processMissingArgs(paramRefs);
+
+            int presentArgsCount = symTabController.getNumOfFuncParams(calledFuncRef) - paramRefs.size();
+            if (presentArgsCount != 0) {
+                assemblyGenerator.genStackPointerInc(presentArgsCount);
+                compilationInfoTracker.getCurrFuncTracker().decVarCounterByAmount(presentArgsCount);
+            }
+
         }
+        processMissingArgs(paramRefs);
 
         compilationInfoTracker.getNonIdArgCountTracker().resetCounter();
 
@@ -35,11 +42,6 @@ public class FunctionCallCtxProcessor {
                 symTabController.getAllGenPurposeRegsInUse()
         );
 
-        int countOfFuncParams = symTabController.getNumOfFuncParams(calledFuncRef);
-        if (countOfFuncParams != 0) {
-            assemblyGenerator.genStackPointerInc(countOfFuncParams);
-            compilationInfoTracker.getCurrFuncTracker().decVarCounterByAmount(countOfFuncParams);
-        }
     }
 
     private static void processNonIdArgs(

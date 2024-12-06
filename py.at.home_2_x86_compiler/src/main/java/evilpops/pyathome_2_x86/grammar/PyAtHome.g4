@@ -10,13 +10,10 @@ private final IndentationTracker indentTracker = new IndentationTracker();
 @Override
 public Token nextToken() {
 	Token tk = indentTracker.sendDentTokenIfNeeded(this.getLine());
-    if (tk != null) {
-        System.out.println(tk);
+    if (tk != null)
         return tk;
-    }
 
     tk = super.nextToken();
-    System.out.println(tk);
     indentTracker.processToken(tk);
     return tk;
 }
@@ -44,7 +41,7 @@ options {
 
 /* Parser rules - START */
 program
-    : NEWLINE* statementsList simpleStatement? INVALID_DENT? EOF
+    : NEWLINE* statementsList? simpleStatement? INVALID_DENT? EOF
     ;
 
 statementsList
@@ -53,7 +50,7 @@ statementsList
 
 statement
     : simpleStatement NEWLINE+
-    | compundStatement NEWLINE*
+    | compoundStatement NEWLINE*
     ;
 
 simpleStatement
@@ -67,14 +64,14 @@ simpleStatement
     | functionCall
     ;
 
-compundStatement
+compoundStatement
     : functionDef
     | whileElseStatement
     | ifElifElseStatement
     ;
 
 assignStatement
-    : ID varType? ASSIGN numExpression
+    : ID varType? ASSIGN complexExpression
     ;
 
 multiAssignStatement
@@ -94,11 +91,11 @@ multiAssignNumExpPart
     ;
 
 multiAssignNumExpression
-    : numExpression
+    : complexExpression
     ;
 
 returnStatement
-    : RETURN numExpression
+    : RETURN complexExpression
     | RETURN
     ;
 
@@ -115,7 +112,7 @@ passStatement
     ;
 
 printFunctionCall
-    : INBUILT_PRINT_FUNC L_PAREN numExpression R_PAREN
+    : INBUILT_PRINT_FUNC L_PAREN complexExpression R_PAREN
     ;
 
 functionDef
@@ -142,7 +139,7 @@ paramNonDefVal
     ;
 
 paramDefVal
-    : ID varType? ASSIGN numExpression
+    : ID varType? ASSIGN complexExpression
     | paramDefVal COMMA paramDefVal
     ;
 
@@ -155,7 +152,7 @@ whileStatPart
     ;
 
 whileConditionPart
-    : WHILE numExpression COLON NEWLINE
+    : WHILE complexExpression COLON NEWLINE
     ;
 
 ifElifElseStatement
@@ -167,7 +164,7 @@ ifStatPart
     ;
 
 ifConditionPart
-    : IF numExpression COLON NEWLINE
+    : IF complexExpression COLON NEWLINE
     ;
 
 elifStatPart
@@ -175,7 +172,7 @@ elifStatPart
     ;
 
 elifConditionPart
-    : ELIF numExpression COLON NEWLINE
+    : ELIF complexExpression COLON NEWLINE
     ;
 
 elseStatPart
@@ -210,14 +207,14 @@ types
     | T_NONE
     ;
 
-numExpression
-    : expression
-    | L_PAREN numExpression R_PAREN
-    | numExpression mulDivOperators numExpression
-    | numExpression addSubOperators numExpression
-    | numExpression relOperators numExpression
-    | numExpression logicAndOperator numExpression
-    | numExpression logicOrOperator numExpression
+complexExpression
+    : simpleExpression
+    | L_PAREN complexExpression R_PAREN
+    | complexExpression mulDivOperators complexExpression
+    | complexExpression addSubOperators complexExpression
+    | complexExpression relOperators complexExpression
+    | complexExpression logicAndOperator complexExpression
+    | complexExpression logicOrOperator complexExpression
     ;
 
 addSubOperators
@@ -247,7 +244,7 @@ logicOrOperator
     : OR
     ;
 
-expression
+simpleExpression
     : literal
     | funcCallExpression
     | ID
@@ -278,7 +275,7 @@ idArgs
     ;
 
 argNumExpression
-    : numExpression
+    : complexExpression
     ;
 
 literal

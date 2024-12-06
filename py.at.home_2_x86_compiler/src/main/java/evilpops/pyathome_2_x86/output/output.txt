@@ -5,11 +5,6 @@
 	PRINT_INT_OR_BOOL_FORMAT: .asciz "%d\n"
 	PRINT_FLOAT: .asciz "%.3f\n"
 	PRINT_STRING_FORMAT: .asciz "%s\n"
-	STRING_VAL1: .string "Fibonaci rez:"
-	STRING_VAL2: .string "Factorial result:"
-	STRING_VAL3: .string " "
-	STRING_VAL4: .string "*"
-	STRING_VAL5: .string " "
 .section .text
 .globl main
 main:
@@ -17,44 +12,19 @@ main:
 	andq $-16, %rsp
 	movq %rsp, %rbp
 	subq $16, %rsp
-	movq $STRING_VAL1, -16(%rbp)
+	movq $1, -16(%rbp)
 	subq $16, %rsp
-	movq $13, -32(%rbp)
-	movq -32(%rbp), %rdi
-	call L_FUNC_fib_2
-	addq $16, %rsp
-	movq %rax, %rbx
-	subq $16, %rsp
-	movq %rbx, -32(%rbp)
+	movq $2, -32(%rbp)
 	movq -16(%rbp), %rdi
 	movq -32(%rbp), %rsi
-	call L_FUNC_print_result_1
 	addq $32, %rsp
-	subq $16, %rsp
-	movq $STRING_VAL2, -16(%rbp)
-	subq $16, %rsp
-	movq $5, -32(%rbp)
-	movq -32(%rbp), %rdi
-	call L_FUNC_factorial_3
-	addq $16, %rsp
-	movq %rax, %rbx
-	subq $16, %rsp
-	movq %rbx, -32(%rbp)
-	movq -16(%rbp), %rdi
-	movq -32(%rbp), %rsi
-	call L_FUNC_print_result_1
-	addq $32, %rsp
-	subq $16, %rsp
-	movq $16, -16(%rbp)
-	movq -16(%rbp), %rdi
-	call L_FUNC_print_tree_4
-	addq $16, %rsp
+	call L_FUNC_a_1
 main_end:
 	movq $60, %rax
 	xorq %rdi, %rdi
 	syscall
 
-L_FUNC_print_result_1:
+L_FUNC_a_1:
 	pushq %rbp
 	movq %rsp, %rbp
 
@@ -62,236 +32,8 @@ L_FUNC_print_result_1:
 	movq %rdi, -16(%rbp)
 	subq $16, %rsp
 	movq %rsi, -32(%rbp)
-	movq $PRINT_STRING_FORMAT, %rdi
-	movq -16(%rbp), %rsi
-	call printf@plt
-	movq $PRINT_INT_OR_BOOL_FORMAT, %rdi
-	movq -32(%rbp), %rsi
-	call printf@plt
 	movq $NONE, %rax
-L_FUNC_print_result_1_END:
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-
-L_FUNC_fib_2:
-	pushq %rbp
-	movq %rsp, %rbp
-
-	subq $16, %rsp
-	movq %rdi, -16(%rbp)
-L_IF_STAT_START_1:
-	movq -16(%rbp), %rbx
-	cmpq $1, %rbx
-	je L_CMP_TRUE_1
-	movq $0, %rbx
-	jmp L_CMP_END_1
-L_CMP_TRUE_1:
-	movq $1, %rbx
-L_CMP_END_1:
-	movq -16(%rbp), %r12
-	cmpq $2, %r12
-	je L_CMP_TRUE_2
-	movq $0, %r12
-	jmp L_CMP_END_2
-L_CMP_TRUE_2:
-	movq $1, %r12
-L_CMP_END_2:
-	orq %rbx, %r12
-	cmpq $0, %r12
-	je L_IF_STAT_END_1
-	movq $1, %rax
-	jmp L_FUNC_fib_2_END
-	jmp L_IF_ELIF_ELSE_STAT_END_1
-L_IF_STAT_END_1:
-L_IF_ELIF_ELSE_STAT_END_1:
-	movq -16(%rbp), %rbx
-	subq $1, %rbx
-	subq $16, %rsp
-	movq %rbx, -32(%rbp)
-	movq -32(%rbp), %rdi
-	call L_FUNC_fib_2
-	addq $16, %rsp
-	movq %rax, %rbx
-	movq -16(%rbp), %r12
-	subq $2, %r12
-	subq $16, %rsp
-	movq %r12, -32(%rbp)
-	movq -32(%rbp), %rdi
-	push %rbx
-	subq $8, %rsp
-	call L_FUNC_fib_2
-	addq $8, %rsp
-	pop %rbx
-	addq $16, %rsp
-	movq %rax, %r12
-	addq %r12, %rbx
-	movq %rbx, %rax
-	jmp L_FUNC_fib_2_END
-L_FUNC_fib_2_END:
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-
-L_FUNC_factorial_3:
-	pushq %rbp
-	movq %rsp, %rbp
-
-	subq $16, %rsp
-	movq %rdi, -16(%rbp)
-L_IF_STAT_START_2:
-	movq -16(%rbp), %rbx
-	cmpq $0, %rbx
-	jl L_CMP_TRUE_3
-	movq $0, %rbx
-	jmp L_CMP_END_3
-L_CMP_TRUE_3:
-	movq $1, %rbx
-L_CMP_END_3:
-	cmpq $0, %rbx
-	je L_IF_STAT_END_2
-	movq $0, %rax
-	jmp L_FUNC_factorial_3_END
-	jmp L_IF_ELIF_ELSE_STAT_END_2
-L_IF_STAT_END_2:
-L_IF_ELIF_ELSE_STAT_END_2:
-L_IF_STAT_START_3:
-	movq -16(%rbp), %rbx
-	cmpq $0, %rbx
-	je L_CMP_TRUE_4
-	movq $0, %rbx
-	jmp L_CMP_END_4
-L_CMP_TRUE_4:
-	movq $1, %rbx
-L_CMP_END_4:
-	cmpq $0, %rbx
-	je L_IF_STAT_END_3
-	movq $1, %rax
-	jmp L_FUNC_factorial_3_END
-	jmp L_IF_ELIF_ELSE_STAT_END_3
-L_IF_STAT_END_3:
-L_IF_ELIF_ELSE_STAT_END_3:
-	movq -16(%rbp), %rbx
-	subq $1, %rbx
-	subq $16, %rsp
-	movq %rbx, -32(%rbp)
-	movq -32(%rbp), %rdi
-	call L_FUNC_factorial_3
-	addq $16, %rsp
-	movq %rax, %rbx
-	movq -16(%rbp), %r12
-	imulq %rbx, %r12
-	movq %r12, %rax
-	jmp L_FUNC_factorial_3_END
-L_FUNC_factorial_3_END:
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-
-L_FUNC_print_tree_4:
-	pushq %rbp
-	movq %rsp, %rbp
-
-	subq $16, %rsp
-	movq %rdi, -16(%rbp)
-	movq -16(%rbp), %rbx
-	subq $2, %rbx
-	subq $16, %rsp
-	movq %rbx, -32(%rbp)
-	subq $16, %rsp
-	movq $1, -48(%rbp)
-	subq $16, %rsp
-	movq $1, -64(%rbp)
-L_WHILE_CONDITION_START_1:
-	movq -48(%rbp), %rbx
-	cmpq -32(%rbp), %rbx
-	jl L_CMP_TRUE_5
-	movq $0, %rbx
-	jmp L_CMP_END_5
-L_CMP_TRUE_5:
-	movq $1, %rbx
-L_CMP_END_5:
-	cmpq $1, -64(%rbp)
-	je L_WHILE_ON_FIRST_TIME_ENTER_1
-	cmpq $1, %rbx
-	je L_WHILE_BLOCK_START_1
-	jmp L_WHILE_BLOCK_END_1
-L_WHILE_ON_FIRST_TIME_ENTER_1:
-	movq $0, -64(%rbp)
-	cmpq $1, %rbx
-	je L_WHILE_BLOCK_START_1
-	addq $16, %rsp
-	jmp L_WHILE_STAT_PART_END_1
-L_WHILE_BLOCK_START_1:
-	movq $STRING_VAL3, %rdi
-	movq -32(%rbp), %rsi
-	push %rbx
-	subq $8, %rsp
-	call L_FUNC_BUILT_IN_STRING_MUL
-	addq $8, %rsp
-	pop %rbx
-	movq %rax, %r12
-	movq $STRING_VAL4, %rdi
-	movq -48(%rbp), %rsi
-	push %rbx
-	push %r12
-	call L_FUNC_BUILT_IN_STRING_MUL
-	pop %r12
-	pop %rbx
-	movq %rax, %r13
-	movq %r12, %rdi
-	movq %r13, %rsi
-	push %rbx
-	push %r12
-	push %r13
-	subq $8, %rsp
-	call L_FUNC_BUILT_IN_STRING_CONCAT
-	addq $8, %rsp
-	pop %r13
-	pop %r12
-	pop %rbx
-	movq %rax, %r12
-	movq $STRING_VAL5, %rdi
-	movq -32(%rbp), %rsi
-	push %rbx
-	push %r12
-	call L_FUNC_BUILT_IN_STRING_MUL
-	pop %r12
-	pop %rbx
-	movq %rax, %r13
-	movq %r12, %rdi
-	movq %r13, %rsi
-	push %rbx
-	push %r12
-	push %r13
-	subq $8, %rsp
-	call L_FUNC_BUILT_IN_STRING_CONCAT
-	addq $8, %rsp
-	pop %r13
-	pop %r12
-	pop %rbx
-	movq %rax, %r12
-	movq $PRINT_STRING_FORMAT, %rdi
-	movq %r12, %rsi
-	push %rbx
-	subq $8, %rsp
-	call printf@plt
-	addq $8, %rsp
-	pop %rbx
-	movq -32(%rbp), %r12
-	subq $1, %r12
-	movq %r12, -32(%rbp)
-	movq -48(%rbp), %r12
-	addq $2, %r12
-	movq %r12, -48(%rbp)
-	jmp L_WHILE_CONDITION_START_1
-L_WHILE_BLOCK_END_1:
-	addq $16, %rsp
-	jmp L_WHILE_ELSE_STAT_END_1
-L_WHILE_STAT_PART_END_1:
-L_WHILE_ELSE_STAT_END_1:
-	movq $NONE, %rax
-L_FUNC_print_tree_4_END:
+L_FUNC_a_1_END:
 	movq %rbp, %rsp
 	popq %rbp
 	ret

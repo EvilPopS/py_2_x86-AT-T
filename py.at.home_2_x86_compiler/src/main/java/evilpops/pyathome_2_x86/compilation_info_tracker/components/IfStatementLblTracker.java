@@ -26,7 +26,7 @@ public class IfStatementLblTracker {
     }
 
     public void onNewStatementStart() {
-        this.countersStack.push(new Counters(++this.globalCounter, 1));
+        this.countersStack.push(new Counters(++this.globalCounter, 0));
     }
 
     public void onStatementEnd() {

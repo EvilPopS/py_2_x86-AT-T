@@ -14,32 +14,32 @@ import main.java.evilpops.pyathome_2_x86.symbol_table.data_type_utils.ResultData
 import main.java.evilpops.pyathome_2_x86.symbol_table.enums.DataType;
 
 
-public class NumExpressionCtxProcessor {
+public class ComplexExpressionCtxProcessor {
     private static final IAssemblyGenerator assemblyGenerator = AssemblyGenerator.getInstance();
     private static final ISymTabController symTabController = SymTabController.getInstance();
 
-    public static int processOnExit(PyAtHomeParser.NumExpressionContext ctx) {
-        if (ctx.expression() != null)
+    public static int processOnExit(PyAtHomeParser.ComplexExpressionContext ctx) {
+        if (ctx.simpleExpression() != null)
             return processIfExpression(ctx);
         else if (ctx.L_PAREN() != null && ctx.R_PAREN() != null)
             return processIfParenthesis(ctx);
-        else if (ctx.numExpression() != null || !ctx.numExpression().isEmpty())
+        else if (ctx.complexExpression() != null || !ctx.complexExpression().isEmpty())
             return processIfOperator(ctx);
         else
             throw new BadImplementationException();
     }
 
-    private static int processIfExpression(PyAtHomeParser.NumExpressionContext ctx) {
-        return ctx.expression().getRefToSymTab();
+    private static int processIfExpression(PyAtHomeParser.ComplexExpressionContext ctx) {
+        return ctx.simpleExpression().getRefToSymTab();
     }
 
-    private static int processIfParenthesis(PyAtHomeParser.NumExpressionContext ctx) {
-        return ctx.numExpression(0).getRefToSymTab();
+    private static int processIfParenthesis(PyAtHomeParser.ComplexExpressionContext ctx) {
+        return ctx.complexExpression(0).getRefToSymTab();
     }
 
-    private static int processIfOperator(PyAtHomeParser.NumExpressionContext ctx) {
-        int leftExpRef = ctx.numExpression(0).getRefToSymTab();
-        int rightExpRef = ctx.numExpression(1).getRefToSymTab();
+    private static int processIfOperator(PyAtHomeParser.ComplexExpressionContext ctx) {
+        int leftExpRef = ctx.complexExpression(0).getRefToSymTab();
+        int rightExpRef = ctx.complexExpression(1).getRefToSymTab();
         if (ctx.addSubOperators() != null)
             return processIfAddSubOperator(ctx.addSubOperators(), leftExpRef, rightExpRef);
         else if (ctx.mulDivOperators() != null)
@@ -350,7 +350,7 @@ public class NumExpressionCtxProcessor {
             return leftExpRef;
         } else {
             int destRegRef = symTabController.takeRegister(resultDataType);
-            assemblyGenerator.genMultiplicationSymbolToReg(
+            assemblyGenerator.genMoveSymbolToReg(
                     AssemblySymbolProcessor.createAssemblySymbol(leftExpRef),
                     symTabController.getRegName(destRegRef),
                     false
@@ -379,13 +379,25 @@ public class NumExpressionCtxProcessor {
             symTabController.freeIfIsRegister(leftExpRef);
             symTabController.freeIfIsRegister(rightExpRef);
             return resultRef;
-        } else {
-            if (leftExpDataType.equals(DataType.STRING) && rightExpDataType.equals(DataType.STRING))
-                return processStringComparison(leftExpRef, rightExpRef, jmpType);
-            else {
-                return processNumberComparison(leftExpRef, rightExpRef, jmpType);
-            }
-        }
+        } else if (
+                !leftExpDataType.equals(rightExpDataType)
+                        && (
+                        jmpType.equals(ConditionalJump.JE)
+                                || jmpType.equals(ConditionalJump.JNE)
+                )
+        ) {
+            int resultRef = symTabController.takeRegister(DataType.BOOLEAN);
+            assemblyGenerator.genMoveBoolToSymbol(
+                    !jmpType.equals(ConditionalJump.JE),
+                    assemblyGenerator.makeRegisterAccessSymbol(symTabController.getRegName(resultRef))
+            );
+            symTabController.freeIfIsRegister(leftExpRef);
+            symTabController.freeIfIsRegister(rightExpRef);
+            return resultRef;
+        } else if (leftExpDataType.equals(DataType.STRING))
+            return processStringComparison(leftExpRef, rightExpRef, jmpType);
+        else
+            return processNumberComparison(leftExpRef, rightExpRef, jmpType);
     }
 
     private static int processLogicalOperator(int leftExpRef, int rightExpRef, boolean isAnd) {
